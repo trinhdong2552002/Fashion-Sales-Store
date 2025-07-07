@@ -1,17 +1,14 @@
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import SwiperProducts from "../../components/SwiperProducts";
-
 import { Alert, Container, Grid, Snackbar, Stack } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-
-import styles from "./index.module.css";
 import { useEffect, useState } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import BrandVideo from "./shared/BrandVideo";
+import styles from "./index.module.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import SwiperProducts from "@/components/SwiperProducts";
 
 const slides = [
   "/src/assets/images/background-fashions/banner-fashion.jpg",
@@ -37,9 +34,9 @@ const Home = () => {
     message: "",
     severity: "success",
   });
-  const { data, isFetching, refetch } = useListCategoriesForUserQuery({
+  const { data, isFetching } = useListCategoriesForUserQuery({
     page: 0,
-    size: 10, // Match the API response size
+    size: 10,
     refetchOnMountOrArgChange: true,
     forceRefetch: true,
   });
@@ -59,7 +56,6 @@ const Home = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Ensure activeCategories is an array from the transformed data
   const activeCategories = Array.isArray(data)
     ? data.filter((item) => item.status === "ACTIVE")
     : [];
@@ -68,22 +64,6 @@ const Home = () => {
 
   return (
     <section>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
@@ -164,10 +144,25 @@ const Home = () => {
             </Grid>
           ))}
         </Grid>
-
-        <SwiperProducts />
       </Container>
+      <SwiperProducts />
       <BrandVideo />
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "right", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: "100%", p: "10px 20px" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </section>
   );
 };
