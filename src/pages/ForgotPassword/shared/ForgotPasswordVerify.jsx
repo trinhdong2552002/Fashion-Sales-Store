@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Grid,
   IconButton,
   InputAdornment,
   Snackbar,
@@ -15,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import customTheme from "@/components/CustemTheme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForgotPasswordVerifyMutation } from "@/services/api/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -48,31 +47,14 @@ const ForgotPasswordVerify = () => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    if (location.state?.message) {
-      setSnackbar({
-        open: true,
-        message: location.state.message || "",
-        severity: location.state.severity || "success",
-      });
-    }
-    window.history.replaceState({}, document.title);
-  }, [location]);
-
-  const handleShowSnackbar = (success) => {
-    if (success) {
-      setSnackbar({
-        open: true,
-        message: "Xác thực OTP thành công !",
-        severity: "success",
-      });
-    } else {
-      setSnackbar({
-        open: true,
-        message: "Xác thực OTP thất bại !",
-        severity: "error",
-      });
-    }
+  const handleShowSnackbar = (success, message) => {
+    setSnackbar({
+      open: true,
+      message:
+        message ||
+        (success ? "Xác thực OTP thành công !" : "Xác thực OTP thất bại !"),
+      severity: success ? "success" : "error",
+    });
   };
 
   const handleCloseSnackbar = () => {
@@ -85,10 +67,17 @@ const ForgotPasswordVerify = () => {
         email: email,
         verificationCode: data?.verificationCode,
       }).unwrap();
+      console.log("responseData", response);
+      const token = response?.result?.forgotPasswordToken;
+      localStorage.setItem("forgotPasswordToken", token);
 
       if (response) {
         handleShowSnackbar(true);
-        navigate("/forgot-password/reset-password");
+        setTimeout(() => {
+          navigate("/forgot-password/reset-password", {
+            state: { email, forgotPasswordToken: token },
+          });
+        }, 1000);
       }
     } catch (error) {
       const messageError =

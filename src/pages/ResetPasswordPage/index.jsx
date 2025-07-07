@@ -8,31 +8,29 @@ import {
   IconButton,
   InputAdornment,
   Snackbar,
-  Stack,
   TextField,
   ThemeProvider,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import customTheme from "@/components/CustemTheme";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+
 import { useResetPasswordMutation } from "@/services/api/auth";
-import { setUser } from "@/store/redux/user/reducer";
 
 const ResetPassword = () => {
   const outerTheme = useTheme();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const location = useLocation();
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "success", // or 'error'
+    severity: "success",
   });
 
   const {
@@ -42,8 +40,29 @@ const ResetPassword = () => {
     formState: { errors },
   } = useForm();
 
-  // Lấy forgotPasswordToken từ state
-  const forgotPasswordToken = location.state?.forgotPasswordToken || "";
+  const forgotPasswordToken =
+    location.state?.forgotPasswordToken ||
+    localStorage.getItem("forgotPasswordToken");
+  console.log("forgotPasswordToken", forgotPasswordToken);
+
+  const email = location.state?.email || "Không có email";
+  console.log("email", email);
+
+  const handleShowSnackbar = (success, message) => {
+    setSnackbar({
+      open: true,
+      message:
+        message ||
+        (success
+          ? "Đặt lại mật khẩu thành công !"
+          : "Đặt lại mật khẩu thất bại !"),
+      severity: success ? "success" : "error",
+    });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
 
@@ -66,57 +85,28 @@ const ResetPassword = () => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    if (location.state?.message) {
-      setSnackbar({
-        open: true,
-        message: location.state.message || "",
-        severity: location.state.severity || "success",
-      });
-    }
-    window.history.replaceState({}, document.title);
-  }, [location]);
-
-  const handleShowSnackbar = (success) => {
-    if (success) {
-      setSnackbar({
-        open: true,
-        message: "Đặt lại mật khẩu thành công !",
-        severity: "success",
-      });
-    } else {
-      setSnackbar({
-        open: true,
-        message: "Đặt lại mật khẩu thất bại !",
-        severity: "error",
-      });
-    }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   const onSubmit = async (data) => {
     try {
       const response = await resetPassword({
-        forgotPasswordToken: forgotPasswordToken,
+        forgotPasswordToken,
+        email,
         newPassword: data?.newPassword,
         confirmPassword: data?.confirmPassword,
       }).unwrap();
 
       if (response) {
-        const userData = {
-          forgotPasswordToken: response.forgotPasswordToken,
-          email: response.email,
-          newPassword: response.newPassword,
-          confirmPassword: response.confirmPassword,
-        };
-        dispatch(setUser(userData));
-        navigate("/login");
+        localStorage.removeItem("forgotPasswordToken");
+        handleShowSnackbar(true);
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
     } catch (error) {
-      handleShowSnackbar(false);
+      setSnackbar({
+        open: true,
+        message: "Đặt lại mật khẩu thất bại !",
+        severity: "error",
+      });
       console.log("Reset password failed:", error);
     }
   };
