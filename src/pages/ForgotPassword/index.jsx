@@ -54,9 +54,11 @@ const ForgotPassword = () => {
 
       if (response) {
         handleShowSnackbar(true);
-        navigate("/forgot-password/forgot-password-verify", {
-          state: { email: data.email },
-        });
+        setTimeout(() => {
+          navigate("/forgot-password/forgot-password-verify", {
+            state: { email: data.email },
+          });
+        }, 1000);
       }
     } catch (error) {
       const messageError =
