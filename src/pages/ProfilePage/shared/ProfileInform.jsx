@@ -1,4 +1,4 @@
-import { useUpdateUserMutation, useGetMyInfoQuery } from "@/services/api/auth";
+import { useGetMyInfoQuery } from "@/services/api/auth";
 import { useListRolesQuery } from "@/services/api/role"; // Thêm import roleApi
 import { setUser } from "@/store/redux/user/reducer";
 import {
@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUpdateUserMutation } from "@/services/api/user";
 
 // Hàm kiểm tra xem chuỗi có phải là URL hợp lệ không
 const isValidUrl = (string) => {
@@ -35,13 +36,24 @@ const ProfileInform = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
-  const { data: userInfo, isLoading: infoLoading, error: infoError } = useGetMyInfoQuery(undefined, {
+  const {
+    data: userInfo,
+    isLoading: infoLoading,
+    error: infoError,
+  } = useGetMyInfoQuery(undefined, {
     skip: !localStorage.getItem("accessToken"),
   });
   const { data: rolesData, isLoading: rolesLoading } = useListRolesQuery(); // Lấy danh sách roles
-  const [updateUser, { isLoading: updateLoading, error: updateError }] = useUpdateUserMutation();
+  const [updateUser, { isLoading: updateLoading, error: updateError }] =
+    useUpdateUserMutation();
 
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       name: "",
       phone: "",
@@ -54,7 +66,10 @@ const ProfileInform = () => {
 
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
+  const years = Array.from(
+    { length: 100 },
+    (_, i) => new Date().getFullYear() - i
+  );
 
   // Điền giá trị ban đầu từ userInfo hoặc user vào form
   useEffect(() => {
@@ -86,7 +101,7 @@ const ProfileInform = () => {
       setValue("avatarUrl", userData.avatarUrl || "");
       // Lấy role IDs từ userData
       if (userData.roles && Array.isArray(userData.roles)) {
-        const roleIds = userData.roles.map(role => role.id);
+        const roleIds = userData.roles.map((role) => role.id);
         setValue("roles", roleIds);
       }
       dispatch(setUser(userData));
@@ -108,7 +123,7 @@ const ProfileInform = () => {
 
       setValue("avatarUrl", user.avatarUrl || "");
       if (user.roles && Array.isArray(user.roles)) {
-        const roleIds = user.roles.map(role => role.id);
+        const roleIds = user.roles.map((role) => role.id);
         setValue("roles", roleIds);
       }
     }
@@ -124,12 +139,18 @@ const ProfileInform = () => {
 
       console.log("Form data:", data);
 
-      const dob = data.birthDate.year && data.birthDate.month && data.birthDate.date
-        ? `${data.birthDate.year}-${String(data.birthDate.month).padStart(2, "0")}-${String(data.birthDate.date).padStart(2, "0")}`
-        : undefined;
+      const dob =
+        data.birthDate.year && data.birthDate.month && data.birthDate.date
+          ? `${data.birthDate.year}-${String(data.birthDate.month).padStart(
+              2,
+              "0"
+            )}-${String(data.birthDate.date).padStart(2, "0")}`
+          : undefined;
 
       if (data.avatarUrl && !isValidUrl(data.avatarUrl)) {
-        alert("URL ảnh đại diện không hợp lệ. Vui lòng nhập URL hợp lệ (bắt đầu bằng http:// hoặc https://).");
+        alert(
+          "URL ảnh đại diện không hợp lệ. Vui lòng nhập URL hợp lệ (bắt đầu bằng http:// hoặc https://)."
+        );
         return;
       }
 
@@ -174,7 +195,8 @@ const ProfileInform = () => {
   if (infoError) {
     return (
       <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
-        Không thể tải thông tin: {infoError?.data?.message || "Lỗi không xác định"}
+        Không thể tải thông tin:{" "}
+        {infoError?.data?.message || "Lỗi không xác định"}
       </Typography>
     );
   }
@@ -234,7 +256,7 @@ const ProfileInform = () => {
         >
           <Typography variant="h6">Email: </Typography>
           <Typography variant="body1">
-            {(userInfo?.result?.email || user?.email) || "Chưa có email"}
+            {userInfo?.result?.email || user?.email || "Chưa có email"}
           </Typography>
         </Stack>
 
@@ -397,9 +419,12 @@ const ProfileInform = () => {
               multiple
               value={selectedRoles || []}
               onChange={(e) => setValue("roles", e.target.value)}
-              renderValue={(selected) => 
+              renderValue={(selected) =>
                 selected
-                  .map(id => rolesData?.items.find(role => role.id === id)?.name)
+                  .map(
+                    (id) =>
+                      rolesData?.items.find((role) => role.id === id)?.name
+                  )
                   .filter(Boolean)
                   .join(", ")
               }
@@ -407,7 +432,9 @@ const ProfileInform = () => {
             >
               {rolesData?.items?.map((role) => (
                 <MenuItem key={role.id} value={role.id}>
-                  <Checkbox checked={selectedRoles?.includes(role.id) || false} />
+                  <Checkbox
+                    checked={selectedRoles?.includes(role.id) || false}
+                  />
                   <ListItemText primary={role.name} />
                 </MenuItem>
               ))}
@@ -424,14 +451,15 @@ const ProfileInform = () => {
         >
           <Typography variant="h6">Địa chỉ: </Typography>
           <Typography variant="body1">
-            {(userInfo?.result?.address || user?.address) || "Chưa có địa chỉ"}
+            {userInfo?.result?.address || user?.address || "Chưa có địa chỉ"}
           </Typography>
         </Stack>
       </Box>
 
       {updateError && (
         <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>
-          Có lỗi xảy ra: {updateError?.data?.message || "Không thể cập nhật thông tin"}
+          Có lỗi xảy ra:{" "}
+          {updateError?.data?.message || "Không thể cập nhật thông tin"}
         </Typography>
       )}
 
