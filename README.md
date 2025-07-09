@@ -51,7 +51,7 @@ npm run dev
 
 1. Clone Repository:
   ```bash
-   git clone https://github.com/lean2708/Spring_AdamStore.git
+   git clone https://github.com/trinhdong25052002dz/Spring_AdamStore.git
    cd Spring_AdamStore
    ```
 
