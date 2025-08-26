@@ -1,4 +1,4 @@
-import { setUser } from "@/store/redux/user/reducer";
+import { setUserInfo } from "@/store/redux/user/reducer";
 import { baseApi } from "./index";
 import { TAG_KEYS } from "@/constants/tagKeys";
 import { setAuth } from "@/store/redux/auth/reducer";
@@ -7,7 +7,7 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/login",
+        url: "/v1/auth/login",
         method: "POST",
         data: {
           email: credentials.email,
@@ -40,7 +40,7 @@ export const authApi = baseApi.injectEndpoints({
         }
 
         return {
-          url: "/v1/private/auth/logout",
+          url: "/v1/auth/logout",
           method: "POST",
           data: {
             accessToken: credentials.accessToken,
@@ -52,7 +52,7 @@ export const authApi = baseApi.injectEndpoints({
 
     register: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/register",
+        url: "/v1/auth/register",
         method: "POST",
         data: {
           name: credentials.name,
@@ -66,7 +66,7 @@ export const authApi = baseApi.injectEndpoints({
 
     verifyOtp: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/register/verify",
+        url: "/v1/auth/register/verify",
         method: "POST",
         data: {
           email: credentials.email,
@@ -78,7 +78,7 @@ export const authApi = baseApi.injectEndpoints({
 
     forgotPassword: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/forgot-password",
+        url: "/v1/auth/forgot-password",
         method: "POST",
         data: {
           email: credentials.email,
@@ -89,7 +89,7 @@ export const authApi = baseApi.injectEndpoints({
 
     forgotPasswordVerify: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/forgot-password/verify-code",
+        url: "/v1/auth/forgot-password/verify-code",
         method: "POST",
         data: {
           email: credentials.email,
@@ -101,7 +101,7 @@ export const authApi = baseApi.injectEndpoints({
 
     resetPassword: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/public/auth/forgot-password/reset-password",
+        url: "/v1/auth/forgot-password/reset-password",
         method: "POST",
         data: {
           forgotPasswordToken: credentials.forgotPasswordToken,
@@ -114,7 +114,7 @@ export const authApi = baseApi.injectEndpoints({
 
     changePassword: builder.mutation({
       query: ({ oldPassword, newPassword, confirmPassword }) => ({
-        url: "/v1/private/auth/change-password",
+        url: "/v1/auth/change-password",
         method: "POST",
         data: {
           oldPassword,
@@ -127,7 +127,7 @@ export const authApi = baseApi.injectEndpoints({
 
     getMyInfo: builder.query({
       query: () => ({
-        url: "/v1/private/auth/myInfo",
+        url: "/v1/auth/myInfo",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
@@ -135,7 +135,7 @@ export const authApi = baseApi.injectEndpoints({
           console.log("getMyInfo data:", data);
 
           dispatch(
-            setUser({
+            setUserInfo({
               id: data?.result?.id || null,
               name: data?.result?.name || null,
               email: data?.result?.email || null,
@@ -144,7 +144,7 @@ export const authApi = baseApi.injectEndpoints({
               gender: data?.result?.gender || null,
             })
           );
-          console.log("setUser dispatched with:", data?.result);
+          console.log("getMyInfo queryFulfilled", data);
         } catch (error) {
           console.error("getMyInfo failed:", error);
         }

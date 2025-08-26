@@ -5,7 +5,7 @@ export const branchesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getListBranches: builder.query({
       query: () => ({
-        url: "/v1/public/branches",
+        url: "/v1/branches",
       }),
       providesTags: [TAG_KEYS.BRANCHES],
     }),

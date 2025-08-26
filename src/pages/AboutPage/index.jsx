@@ -1,9 +1,8 @@
-import { Box, CircularProgress, Container, Grid, Stack } from "@mui/material";
-
-import WallpaperRepresentative from "../../components/WallpaperRepresentative";
-
 import styles from "./index.module.css";
+import { Box, CircularProgress, Container, Grid, Stack } from "@mui/material";
+import WallpaperRepresentative from "@/components/WallpaperRepresentative";
 import { useGetListBranchesQuery } from "@/services/api/branches";
+import { useEffect } from "react";
 
 const contents = [
   {
@@ -31,25 +30,31 @@ const contents = [
 const About = () => {
   const {
     data: dataBranches,
-    isLoading: isLoadingBranches,
-    error: isErrorBranches,
+    isLoading: isLoadingBranch,
+    error: isErrorBranch,
+    refetch: refetchBranch,
   } = useGetListBranchesQuery({
     refetchOnMountOrArgChange: true,
   });
   console.log("dataBranches", dataBranches);
 
-  if (isLoadingBranches)
+  useEffect(() => {
+    refetchBranch();
+  }, [refetchBranch]);
+
+  if (isLoadingBranch)
     return (
       <Box display={"flex"}>
         <CircularProgress />
+        <p>Đang tải...</p>
       </Box>
     );
-  if (isErrorBranches) return <div>Error loading branches</div>;
+  if (isErrorBranch)
+    return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
 
   return (
     <section>
       <WallpaperRepresentative titleHeader="Về chúng tôi" />
-
       <Container maxWidth="lg">
         <Grid container sx={{ m: "80px 0" }} alignItems={"center"}>
           <Grid size={{ lg: 8, md: 8, sm: 12 }}>

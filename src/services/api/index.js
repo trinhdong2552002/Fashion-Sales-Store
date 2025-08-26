@@ -4,40 +4,28 @@ import axios from "axios";
 export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params, headers }) => {
-    // Debug
-    // console.log("Base query function called with params:", {
-    //   url,
-    //   method,
-    //   data,
-    //   params,
-    //   headers,
-    // });
-
     const publicEndpoints = [
-      "/v1/public/auth/login",
-      "/v1/public/auth/refresh-token",
-      "/v1/public/auth/register",
-      "/v1/public/auth/register/verify",
-      "/v1/public/auth/forgot-password",
-      "/v1/public/auth/forgot-password/verify-code",
-      "/v1/public/auth/forgot-password/reset-password",
-      "/v1/public/products",
-      "/v1/public/products/{productId}/reviews",
-      "/v1/public/products/{id}/details",
-      "/v1/public/products/search",
-      "/v1/public/categories",
-      "/v1/public/categories/{categoriesId}/products",
-      "/v1/public/branches",
-      "/v1/public/branches/{id}",
-      "v1/public/colors",
-      "/v1/public/sizes",
+      "/v1/auth/login",
+      "/v1/auth/refresh-token",
+      "/v1/auth/register",
+      "/v1/auth/register/verify",
+      "/v1/auth/forgot-password",
+      "/v1/auth/forgot-password/verify-code",
+      "/v1/auth/forgot-password/reset-password",
+      "/v1/products",
+      "/v1/products/{productId}/reviews",
+      "/v1/products/{id}/details",
+      "/v1/products/search",
+      "/v1/categories",
+      "/v1/categories/{categoriesId}/products",
+      "/v1/branches",
+      "/v1/branches/{id}",
+      "v1/colors",
+      "/v1/sizes",
     ];
 
     const token = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
-    // Debug
-    // console.log(`Token before request (${url}):`, token);
-    // console.log(`Refresh token before request (${url}):`, refreshToken);
 
     if (!publicEndpoints.includes(url) && !token && !refreshToken) {
       console.log("No token found for non-public endpoint:", url);

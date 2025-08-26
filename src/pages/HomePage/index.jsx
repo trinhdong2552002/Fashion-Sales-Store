@@ -72,12 +72,12 @@ const Home = () => {
         pagination={{ clickable: true }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        style={{ width: "100%", height: 700, color: "#fff" }}
+        // style={{ width: "100%", color: "#fff" }}
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <img
-              style={{ objectFit: "cover", height: "100%", width: "100%" }}
+              style={{ width: "100%", height: 900, objectFit: "cover" }}
               src={slide}
               alt={`Slide ${index + 1}`}
             />
@@ -122,7 +122,7 @@ const Home = () => {
               size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
               key={item.id}
             >
-              <Link to="/listProducts">
+              <Link to="/list-products">
                 <Stack className={styles.wrapperImg}>
                   <img
                     className={styles.mediaImg}

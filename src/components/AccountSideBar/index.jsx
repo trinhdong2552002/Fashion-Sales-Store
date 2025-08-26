@@ -1,23 +1,28 @@
+/* eslint-disable react/prop-types */
+import { Box, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 
-const menuItems = [
-  { path: "/accountInform/profile", label: "Hồ sơ cá nhân" },
-  { path: "/accountInform/changePassword", label: "Đổi mật khẩu" },
-  { path: "/accountInform/address", label: "Địa chỉ" },
-];
-const AccountSideBar = () => {
+const AccountSideBar = ({ id }) => {
   const location = useLocation();
-
+  const menuItems = [
+    { path: `/accountInform/profile/${id}`, label: "Hồ sơ cá nhân" },
+    { path: `/accountInform/changePassword/${id}`, label: "Đổi mật khẩu" },
+    { path: `/accountInform/address/${id}`, label: "Địa chỉ" },
+  ];
   return (
-    <>
-      <h2
-        style={{
-          fontSize: "1.8rem",
-          width: "100%",
-        }}
-      >
+    <Box
+      sx={{
+        border: "1px solid #ddd",
+        width: "100%",
+        p: 4,
+        borderRadius: 2,
+        backgroundColor: "#fff",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+      }}
+    >
+      <Typography variant="h5" mb={2}>
         Thông tin tài khoản
-      </h2>
+      </Typography>
 
       {menuItems.map((item) => (
         <Link
@@ -37,7 +42,7 @@ const AccountSideBar = () => {
           {item.label}
         </Link>
       ))}
-    </>
+    </Box>
   );
 };
 

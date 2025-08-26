@@ -13,16 +13,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearUser, selectUser } from "@/store/redux/user/reducer";
 import { useLogoutMutation } from "@/services/api/auth";
-import { clearAuth } from "@/store/redux/auth/reducer";
+import { clearAuth, selectAuth } from "@/store/redux/auth/reducer";
 
 const AuthButton = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
-
   const myInfo = useSelector(selectUser);
   console.log("myInfo", myInfo);
-
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -35,13 +33,14 @@ const AuthButton = () => {
 
   const handleLogout = async () => {
     try {
-      if (!localStorage.getItem("accessToken")) {
-        throw new Error("accessToken is required for logout");
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        try {
+          await logout({ accessToken }).unwrap();
+        } catch (err) {
+          console.log("Logout failed", err);
+        }
       }
-      const response = await logout({
-        accessToken: localStorage.getItem("accessToken"),
-      }).unwrap();
-      console.log("Logout response:", response);
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
@@ -65,14 +64,21 @@ const AuthButton = () => {
             sx={{ cursor: "pointer" }}
           >
             <Avatar src={myInfo.avatarUrl} alt={myInfo.name} />
-            <Typography sx={{ marginLeft: "5px" }}>{myInfo.name}</Typography>
+            {/* <Avatar /> */}
+            <Typography sx={{ marginLeft: "5px" }}>
+              {myInfo.name}
+            </Typography>
           </Stack>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={() => navigate("/accountInform/profile")}>
+            <MenuItem
+              onClick={() =>
+                navigate(`/accountInform/profile/${myInfo.id}`)
+              }
+            >
               Thông tin tài khoản
             </MenuItem>
             <MenuItem onClick={() => navigate("/myOrders")}>

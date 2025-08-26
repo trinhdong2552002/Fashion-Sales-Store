@@ -9,26 +9,19 @@ import { Fragment } from "react";
 const ShippingMethod = () => {
   return (
     <Fragment>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <Container maxWidth="lg">
-          <Stack alignItems={"center"} sx={{ m: "80px 0" }}>
-            <Stack direction={"row"} alignItems={"center"}>
-              <LocalShippingIcon fontSize="large" />
-              <Typography variant="h5" sx={{ ml: 2 }}>
-                CHỌN HÌNH THỨC GIAO HÀNG
-              </Typography>
-            </Stack>
-
-            <Order />
+      <Header />
+      <Container maxWidth="lg">
+        <Stack alignItems={"center"} sx={{ m: "80px 0" }}>
+          <Stack direction={"row"} alignItems={"center"}>
+            <LocalShippingIcon fontSize="large" />
+            <Typography variant="h5" sx={{ ml: 2 }}>
+              CHỌN HÌNH THỨC GIAO HÀNG
+            </Typography>
           </Stack>
-        </Container>
-      </main>
-      <footer>
-        <Footer />
-      </footer>
+          <Order />
+        </Stack>
+      </Container>
+      <Footer />
     </Fragment>
   );
 };

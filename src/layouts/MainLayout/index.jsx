@@ -7,15 +7,9 @@ import { Fragment } from "react";
 export default function MainLayout() {
   return (
     <Fragment>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <Outlet />
-      </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Header />
+      <Outlet />
+      <Footer />
     </Fragment>
   );
 }

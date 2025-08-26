@@ -1,38 +1,22 @@
-// pages/AddressPage/index.jsx
-import { Container, Grid, Stack } from "@mui/material";
-
+import { Grid, Typography } from "@mui/material";
 import AccountSideBar from "@/components/AccountSideBar";
-import AddressInform from "./shared/AddressInform";
+import { useParams } from "react-router-dom";
+import AddressListForUser from "./shared/AddressListForUser";
 
 const Address = () => {
+  const { id } = useParams();
+
   return (
     <section>
-      <Container maxWidth="lg">
-        <Stack sx={{ m: "80px 0" }}>
-          <Grid container>
-            <Grid size={{ xl: 3, lg: 3 }}>
-              <AccountSideBar />
-            </Grid>
+      <Grid container p={10} spacing={6}>
+        <Grid size={{ xl: 3, lg: 3 }}>
+          <AccountSideBar id={id} />
+        </Grid>
 
-            <Grid size={{ xl: 9, lg: 9 }}>
-              <h1
-                style={{
-                  fontWeight: "500",
-                  width: "100%",
-                  margin: 0,
-                  textAlign: "center",
-                }}
-              >
-                ĐỊA CHỈ
-              </h1>
-
-              <Stack alignItems={"center"}>
-                <AddressInform />
-              </Stack>
-            </Grid>
-          </Grid>
-        </Stack>
-      </Container>
+        <Grid size={{ xl: 9, lg: 9 }}>
+          <AddressListForUser id={id} />
+        </Grid>
+      </Grid>
     </section>
   );
 };

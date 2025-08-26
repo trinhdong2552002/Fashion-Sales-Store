@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAddToCartMutation, useGetCartByUserQuery, useUpdateCartMutation } from "@/services/api/cart";
 import { addToCart as addToCartAction } from "@/store/redux/cart/reducer"; // Import action addToCart
 import { setOrderData } from "@/store/redux/order/reducer";
-import { selectUserId } from "@/store/redux/user/reducer";
+// import { selectUserId } from "@/store/redux/user/reducer";
 import { useState } from "react";
 
 const ProductActions = ({
@@ -17,11 +17,9 @@ const ProductActions = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userId = useSelector(selectUserId);
+  // const userId = useSelector(selectUserId);
   const cartItems = useSelector((state) => state.cart?.cartItems || []); // Lấy cartItems từ Redux store
-  const { data: cartData, isLoading: isCartLoading, refetch } = useGetCartByUserQuery(userId, {
-    skip: !userId,
-  });
+  const { data: cartData, isLoading: isCartLoading, refetch } = useGetCartByUserQuery();
   const [addToCartApi] = useAddToCartMutation();
   const [updateCartApi] = useUpdateCartMutation();
   const [snackbar, setSnackbar] = useState({
@@ -84,14 +82,14 @@ const ProductActions = ({
   };
 
   const handleAddToCart = async () => {
-    if (!userId) {
-      setSnackbar({
-        open: true,
-        message: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!",
-        severity: "error",
-      });
-      return;
-    }
+    // if (!userId) {
+    //   setSnackbar({
+    //     open: true,
+    //     message: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!",
+    //     severity: "error",
+    //   });
+    //   return;
+    // }
 
     if (!validateInputs()) return;
 
@@ -130,18 +128,18 @@ const ProductActions = ({
           { id: cartItem.productId },
         ];
 
-        await updateCartApi({
-          id: currentCart.id,
-          cartData: {
-            userId,
-            products: updatedProducts,
-          },
-        }).unwrap();
-      } else {
-        await addToCartApi({
-          userId,
-          products: [{ id: cartItem.productId }],
-        }).unwrap();
+      //   await updateCartApi({
+      //     id: currentCart.id,
+      //     cartData: {
+      //       userId,
+      //       products: updatedProducts,
+      //     },
+      //   }).unwrap();
+      // } else {
+      //   await addToCartApi({
+      //     userId,
+      //     products: [{ id: cartItem.productId }],
+      //   }).unwrap();
       }
 
       // Cập nhật cartItems cục bộ bằng action addToCart
