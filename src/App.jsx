@@ -25,6 +25,8 @@ import ResetPassword from "./pages/ResetPasswordPage";
 import ForgotPasswordVerify from "./pages/ForgotPassword/shared/ForgotPasswordVerify";
 import ThemeProvider from "./context/ThemeProvider";
 import ProductListsLayout from "./layouts/ProductListsLayout";
+import AddressListForUser from "./pages/AddressPage/shared/AddressListForUser";
+import AddressInform from "./pages/AddressPage/shared/AddressInform";
 
 const App = () => {
   return (
@@ -53,7 +55,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/register/verify-account" element={<VerifyAccount />} />
 
-        <Route path="/listProducts" element={<ProductListsLayout />}>
+        <Route path="/list-products" element={<ProductListsLayout />}>
           <Route index element={<ProductLists />} />
         </Route>
 
@@ -61,13 +63,16 @@ const App = () => {
         <Route path="/shippingMethod" element={<ShippingMethod />} />
         <Route path="/orderConfirmation" element={<OrderConfirmation />} />
 
+        {/* Route information user */}
         <Route path="/accountInform" element={<AccountInform />}>
-          <Route path="/accountInform/profile" element={<Profile />} />
+          <Route path="profile/:id" element={<Profile />} />
+          <Route path="changePassword/:id" element={<ChangePassword />} />
+          <Route path="address/:id" element={<Address />} />
           <Route
-            path="/accountInform/changePassword"
-            element={<ChangePassword />}
+            path="addressListForUser/:id"
+            element={<AddressListForUser />}
           />
-          <Route path="/accountInform/address" element={<Address />} />
+          <Route path="newAddress/:id" element={<AddressInform />} />
         </Route>
 
         <Route path="/myOrders" element={<MyOrders />} />

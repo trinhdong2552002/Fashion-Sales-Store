@@ -5,7 +5,7 @@ export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     listProductsForUser: builder.query({
       query: () => ({
-        url: `/v1/public/products`,
+        url: `/v1/products`,
         method: "GET",
       }),
       providesTags: [TAG_KEYS.PRODUCT],
@@ -16,7 +16,7 @@ export const productApi = baseApi.injectEndpoints({
         const { q, pageNo = 1, pageSize = 10 } = params || {};
         if (!q) throw new Error("Search term is required");
         return {
-          url: `/v1/public/products/search`,
+          url: `/v1/products/search`,
           method: "GET",
           params: { q, pageNo, pageSize },
         };
@@ -30,7 +30,7 @@ export const productApi = baseApi.injectEndpoints({
       query: (id) => {
         if (!id) throw new Error("Product ID is required");
         return {
-          url: `/v1/public/products/${id}`,
+          url: `/v1/products/${id}`,
           method: "GET",
         };
       },

@@ -1,49 +1,60 @@
-import { Container } from "@mui/material";
-import Stack from "@mui/material/Stack";
+import { Container, Box, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-
 import AuthButton from "./AuthButton";
 import CartButton from "./CartButton";
-import styles from "./index.module.css";
 import NavMenu from "./NavMenu";
 import SearchBar from "./SearchBar";
 
-
 const Header = () => {
   return (
-    <nav className={styles.stickyHeader}>
-      <Stack className={styles.headerTop}>
+    <Box
+      component="nav"
+      sx={{
+        position: "sticky",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1100, // Matches MUI AppBar default z-index
+        backgroundColor: "white",
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Container maxWidth="lg">
           <Stack
-            display={"flex"}
-            direction={"row"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ py: 2 }}
           >
             <Link
               to="/"
               style={{
                 textDecoration: "none",
-                color: "black",
-                fontSize: 32,
-                fontWeight: "bold",
+                color: "inherit",
               }}
             >
-              FASHION STORE
+              <Typography
+                variant="h4"
+                component="h1"
+                sx={{ fontWeight: "bold" }}
+              >
+                FASHION STORE
+              </Typography>
             </Link>
 
             <SearchBar />
 
-            <Stack direction={"row"}>
+            <Stack direction="row" spacing={2}>
               <CartButton />
               <AuthButton />
             </Stack>
           </Stack>
         </Container>
-      </Stack>
+      </Box>
 
       <NavMenu />
-    </nav>
+    </Box>
   );
 };
 

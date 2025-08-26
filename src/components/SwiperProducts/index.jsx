@@ -5,55 +5,32 @@ import {
   CardContent,
   CardMedia,
   Stack,
+  Typography,
+  Box,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import styles from "./index.module.css";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import { useListProductsForUserQuery } from "@/services/api/product";
 
-const navCategories = [
-  { title: "SẢN PHẨM BÁN CHẠY", showButton: true },
-  { title: "SẢN PHẨM MỚI NHẤT", showButton: true },
-];
+const navCategories = [{ title: "Sản phẩm bán chạy", showButton: true }];
 
 const SwiperProducts = () => {
   const navigate = useNavigate();
 
-  // Fetch products with refetch capability
-  const {
-    data: dataProducts,
-    isLoading: isProductsLoading,
-    refetch: refetchProducts,
-  } = useListProductsForUserQuery({
-    refetchOnMountOrArgChange: true,
-    forceRefetch: true,
-  });
-  console.log("dataProducts", dataProducts);
-
-  // Fetch categories with explicit page and size
-  const {
-    data: dataCategories,
-    isLoading: isCategoriesLoading,
-    isError,
-    error,
-  } = useListCategoriesForUserQuery({
-    page: 0,
-    size: 10,
-    refetchOnMountOrArgChange: true,
-    forceRefetch: true,
-  });
-  console.log("dataCategories", dataCategories);
+  const { data: dataProducts, isLoading: isProductsLoading } =
+    useListProductsForUserQuery({
+      refetchOnMountOrArgChange: true,
+      forceRefetch: true,
+    });
 
   const handleClick = () => {
-    navigate("/listProducts");
+    navigate("/list-products");
   };
 
-  // Adjust activeProducts to handle the API response structure
   const activeProducts = Array.isArray(dataProducts?.result?.items)
     ? dataProducts.result.items.filter((item) => item.status === "ACTIVE")
     : [];
@@ -61,31 +38,36 @@ const SwiperProducts = () => {
   return (
     <>
       {navCategories.map((category, index) => (
-        <div key={index}>
-          <Stack className={styles.topSellingProducts}>
-            <h3>{category.title}</h3>
-            <nav className={styles.navigationTopSellingProducts}>
-              {isCategoriesLoading ? (
-                <p>Đang tải danh mục...</p>
-              ) : isError ? (
-                <p>
-                  Lỗi khi tải danh mục:{" "}
-                  {error?.message || "Không thể tải dữ liệu"}
-                </p>
-              ) : (
-                <ul>
-                  {dataCategories
-                    ?.filter((item) => item.status === "ACTIVE")
-                    ?.map((item) => (
-                      <li key={item.id}>
-                        <Link to="#">{item.name}</Link>
-                      </li>
-                    ))}
-                </ul>
-              )}
-            </nav>
+        <Box key={index} sx={{ mb: 6 }}>
+          {/* Section Title + Categories */}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+          >
+            <Typography variant="h5" fontWeight="bold" ml={2.5}>
+              {category.title}
+            </Typography>
+
+            {/* See More Button */}
+            {category.showButton && (
+              <Stack alignItems="center">
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "black",
+                    mr: 2.5
+                  }}
+                  onClick={handleClick}
+                >
+                  Xem tất cả
+                </Button>
+              </Stack>
+            )}
           </Stack>
 
+          {/* Swiper Products */}
           <Swiper
             loop={false}
             slidesPerView={5}
@@ -93,43 +75,53 @@ const SwiperProducts = () => {
             spaceBetween={30}
             centeredSlides={true}
             autoplay={{ delay: 3000, disableOnInteraction: true }}
-            navigation={true}
+            navigation
+            pagination
             modules={[Autoplay, Pagination, Navigation]}
             style={{
-              "--swiper-navigation-color": "white",
+              "--swiper-navigation-color": "#555",
               minHeight: 500,
               marginBottom: "20px",
               backgroundColor: "#f5f5f5",
+              padding: "20px",
+              borderRadius: "12px",
             }}
           >
             {isProductsLoading ? (
               <SwiperSlide>
-                <p>Đang tải sản phẩm...</p>
+                <Typography textAlign="center">Đang tải sản phẩm...</Typography>
               </SwiperSlide>
             ) : activeProducts.length === 0 ? (
               <SwiperSlide>
-                <p>Không có sản phẩm để hiển thị</p>
+                <Typography textAlign="center">
+                  Không có sản phẩm để hiển thị
+                </Typography>
               </SwiperSlide>
             ) : (
               activeProducts.map((product) => {
-                const variantPrice =
-                  product.variants && product.variants.length > 0
-                    ? product.variants[0].price
-                    : 0;
-
                 return (
                   <SwiperSlide key={product.id}>
                     <Card
                       onClick={() => navigate(`/productDetails/${product.id}`)}
+                      sx={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        cursor: "pointer",
+                        "&:hover": {
+                          boxShadow: 6,
+                          transform: "translateY(-4px)",
+                          transition: "all 0.3s ease",
+                        },
+                      }}
                     >
-                      <CardActionArea sx={{ minHeight: "100%" }}>
+                      <CardActionArea sx={{ flexGrow: 1 }}>
                         <CardMedia
                           component="img"
                           height="300"
-                          width="100%"
                           image={
-                            product.variants && product.variants.length > 0
-                              ? product.variants[0].imageUrl
+                            product.images?.length > 0
+                              ? product.images[0].imageUrl
                               : ""
                           }
                           alt={product.name}
@@ -139,25 +131,32 @@ const SwiperProducts = () => {
                             objectPosition: "center",
                           }}
                         />
-                        <CardContent sx={{ minHeight: "100%" }}>
-                          <h3
-                            style={{
-                              fontWeight: 400,
+                        <CardContent>
+                          <Typography
+                            variant="body1"
+                            fontWeight={500}
+                            sx={{
                               textAlign: "center",
-                              lineHeight: "1.6rem",
+                              display: "-webkit-box",
+                              WebkitBoxOrient: "vertical",
+                              WebkitLineClamp: 2,
+                              overflow: "hidden",
+                              minHeight: "3rem",
                             }}
                           >
                             {product.name}
-                          </h3>
-                          <p
-                            style={{
-                              marginTop: 12,
-                              fontSize: "1.2rem",
-                              color: "var(--text-color)",
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            textAlign="center"
+                            sx={{
+                              mt: 1,
+                              fontWeight: "bold",
+                              color: "primary.main",
                             }}
                           >
-                            {variantPrice?.toLocaleString("vi-VN")}đ
-                          </p>
+                            {product.price?.toLocaleString("vi-VN")}đ
+                          </Typography>
                         </CardContent>
                       </CardActionArea>
                     </Card>
@@ -166,25 +165,7 @@ const SwiperProducts = () => {
               })
             )}
           </Swiper>
-
-          {category.showButton && (
-            <Stack alignItems={"center"}>
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: "var(--footer-background-color)",
-                  fontSize: "1rem",
-                  marginBottom: "100px",
-                  padding: "12px 24px",
-                }}
-                onClick={handleClick}
-              >
-                XEM THÊM
-              </Button>
-            </Stack>
-          )}
-        </div>
+        </Box>
       ))}
     </>
   );

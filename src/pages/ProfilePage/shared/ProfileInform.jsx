@@ -1,495 +1,332 @@
-import { useGetMyInfoQuery } from "@/services/api/auth";
-import { useListRolesQuery } from "@/services/api/role"; // Thêm import roleApi
-import { setUser } from "@/store/redux/user/reducer";
 import {
-  alpha,
   Box,
   Button,
   CircularProgress,
   FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
-  Stack,
   TextField,
   Typography,
-  Checkbox,
-  ListItemText,
+  Avatar,
+  Grid,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUpdateUserMutation } from "@/services/api/user";
-
-// Hàm kiểm tra xem chuỗi có phải là URL hợp lệ không
-const isValidUrl = (string) => {
-  if (!string) return false;
-  const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-  return pattern.test(string);
-};
+import { PhotoCamera } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { Fragment, useEffect, useState } from "react";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+  useUploadAvatarMutation,
+} from "@/services/api/user";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { selectUser } from "@/store/redux/user/reducer";
+import { useParams } from "react-router-dom";
+import dayjs from "dayjs";
 
 const ProfileInform = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user);
-  const {
-    data: userInfo,
-    isLoading: infoLoading,
-    error: infoError,
-  } = useGetMyInfoQuery(undefined, {
-    skip: !localStorage.getItem("accessToken"),
+  const [formValues, setFormValues] = useState({
+    name: "",
+    email: "",
+    dob: null,
+    gender: null,
+    avatarUrl: "",
   });
-  const { data: rolesData, isLoading: rolesLoading } = useListRolesQuery(); // Lấy danh sách roles
-  const [updateUser, { isLoading: updateLoading, error: updateError }] =
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const { id } = useParams();
+  // const getMyInfo = useSelector(selectUser);
+
+  const { data: dataGetUserById } = useGetUserByIdQuery();
+  const [updateUser, { isLoading: isLoadingUpdateUser }] =
     useUpdateUserMutation();
+  const [uploadAvatar] = useUploadAvatarMutation();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      phone: "",
-      gender: "",
-      birthDate: { date: "", month: "", year: "" },
-      avatarUrl: "",
-      roles: [], // Thêm roles vào defaultValues
-    },
-  });
-
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const years = Array.from(
-    { length: 100 },
-    (_, i) => new Date().getFullYear() - i
-  );
-
-  // Điền giá trị ban đầu từ userInfo hoặc user vào form
+  // Load thông tin user hiện tại
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      navigate("/login");
+    if (dataGetUserById) {
+      setFormValues({
+        name: dataGetUserById.name || "",
+        email: dataGetUserById.email || "",
+        dob: dataGetUserById.dob ? dayjs(dataGetUserById.dob) : null,
+        gender: dataGetUserById.gender || null,
+        avatarUrl: dataGetUserById.avatarUrl || "",
+      });
+      setAvatarPreview(dataGetUserById.avatarUrl || null);
+    }
+  }, [dataGetUserById]);
+
+  const handleUploadImage = async (e) => {
+    const file = e.target.files[0]; // Single file only
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setSnackbar({
+        open: true,
+        message: "Vui lòng chọn một file hình ảnh!",
+        severity: "error",
+      });
       return;
     }
 
-    console.log("Access Token:", token); // Log token để debug
-
-    if (userInfo?.result) {
-      const userData = userInfo.result;
-      setValue("name", userData.name || "");
-      setValue("phone", userData.phone || "");
-      setValue("gender", userData.gender || "");
-
-      if (userData.dob) {
-        const [year, month, date] = userData.dob.split("-").map(Number);
-        setValue("birthDate.date", date || "");
-        setValue("birthDate.month", month || "");
-        setValue("birthDate.year", year || "");
-      } else if (userData.birthDate) {
-        setValue("birthDate.date", userData.birthDate.date || "");
-        setValue("birthDate.month", userData.birthDate.month || "");
-        setValue("birthDate.year", userData.birthDate.year || "");
-      }
-
-      setValue("avatarUrl", userData.avatarUrl || "");
-      // Lấy role IDs từ userData
-      if (userData.roles && Array.isArray(userData.roles)) {
-        const roleIds = userData.roles.map((role) => role.id);
-        setValue("roles", roleIds);
-      }
-      dispatch(setUser(userData));
-    } else if (user) {
-      setValue("name", user.name || "");
-      setValue("phone", user.phone || "");
-      setValue("gender", user.gender || "");
-
-      if (user.dob) {
-        const [year, month, date] = user.dob.split("-").map(Number);
-        setValue("birthDate.date", date || "");
-        setValue("birthDate.month", month || "");
-        setValue("birthDate.year", year || "");
-      } else if (user.birthDate) {
-        setValue("birthDate.date", user.birthDate.date || "");
-        setValue("birthDate.month", user.birthDate.month || "");
-        setValue("birthDate.year", user.birthDate.year || "");
-      }
-
-      setValue("avatarUrl", user.avatarUrl || "");
-      if (user.roles && Array.isArray(user.roles)) {
-        const roleIds = user.roles.map((role) => role.id);
-        setValue("roles", roleIds);
-      }
-    }
-  }, [userInfo, user, setValue, dispatch, navigate]);
-
-  const onSubmit = async (data) => {
+    setIsUploadingImage(true);
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
-      console.log("Form data:", data);
-
-      const dob =
-        data.birthDate.year && data.birthDate.month && data.birthDate.date
-          ? `${data.birthDate.year}-${String(data.birthDate.month).padStart(
-              2,
-              "0"
-            )}-${String(data.birthDate.date).padStart(2, "0")}`
-          : undefined;
-
-      if (data.avatarUrl && !isValidUrl(data.avatarUrl)) {
-        alert(
-          "URL ảnh đại diện không hợp lệ. Vui lòng nhập URL hợp lệ (bắt đầu bằng http:// hoặc https://)."
-        );
-        return;
-      }
-
-      const payload = {
-        id: user?.id || userInfo?.result?.id,
-        name: data.name,
-        phone: data.phone,
-        gender: data.gender,
-        dob: dob,
-        avatarUrl: data.avatarUrl,
-        roles: data.roles, // Gửi roles dưới dạng mảng các ID
-      };
-
-      console.log("Data sent to API:", payload);
-
-      const response = await updateUser(payload).unwrap();
-
-      console.log("API response:", response);
-
-      if (response) {
-        dispatch(
-          setUser({
-            ...user,
-            name: response.name,
-            phone: response.phone,
-            gender: response.gender,
-            birthDate: data.birthDate,
-            avatarUrl: response.avatarUrl,
-            roles: response.roles,
-          })
-        );
-      }
+      // Pass single file, not array
+      await uploadAvatar(file).unwrap();
+      setSnackbar({
+        open: true,
+        message: "Upload hình ảnh thành công!",
+        severity: "success",
+      });
+      // refetch();
+      e.target.value = ""; // Clear input
     } catch (error) {
-      console.log("Error updating user:", error);
+      setSnackbar({
+        open: true,
+        message: error?.data?.message || "Upload hình ảnh thất bại!",
+        severity: "error",
+      });
+      console.error("Lỗi upload:", error);
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
-  if (infoLoading || rolesLoading) {
-    return <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />;
-  }
+  const handleUpdateUser = async () => {
+    try {
+      await updateUser({
+        name: formValues.name.trim(),
+        avatarUrl: avatar,
+        dob: formValues.dob, // dayjs object sẽ được convert trong API
+        gender: formValues.gender,
+        roleIds: [], // Set rỗng như backend yêu cầu
+      }).unwrap();
+    } catch (error) {
+      console.error("Update user error:", error);
 
-  if (infoError) {
-    return (
-      <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
-        Không thể tải thông tin:{" "}
-        {infoError?.data?.message || "Lỗi không xác định"}
-      </Typography>
-    );
-  }
+      // Xử lý lỗi cụ thể
+      if (error.status === 400) {
+        alert("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.");
+      } else if (error.status === 404) {
+        alert("Không tìm thấy người dùng.");
+      } else {
+        alert("Có lỗi xảy ra khi cập nhật. Vui lòng thử lại.");
+      }
+    }
+  };
 
-  const avatarUrl = watch("avatarUrl");
-  const selectedRoles = watch("roles");
+  const isLoading = isLoadingUpdateUser || isUploadingImage;
 
   return (
-    <Box
-      sx={{
-        border: "1px solid black",
-        width: "100%",
-        pt: 16,
-        borderRadius: 5,
-      }}
-      component={"form"}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <Stack
-        direction={"column"}
-        alignItems={"center"}
-        justifyContent={"center"}
-      >
-        <TextField
-          variant="outlined"
-          label="URL ảnh đại diện"
-          size="small"
-          color="default"
-          sx={{ width: "300px", mb: 2 }}
-          {...register("avatarUrl")}
-        />
-        {avatarUrl && isValidUrl(avatarUrl) ? (
-          <Box sx={{ mt: 2 }}>
-            <img
-              src={avatarUrl}
-              alt="Preview"
-              style={{ width: "100px", height: "100px", objectFit: "cover" }}
-              onError={(e) => (e.target.src = "https://placehold.co/100x100")}
-            />
-          </Box>
-        ) : (
-          avatarUrl && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              URL ảnh không hợp lệ
-            </Typography>
-          )
-        )}
-      </Stack>
-
-      <Box sx={{ m: "24px 0 24px 64px" }}>
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={24}
-        >
-          <Typography variant="h6">Email: </Typography>
-          <Typography variant="body1">
-            {userInfo?.result?.email || user?.email || "Chưa có email"}
-          </Typography>
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={26}
-        >
-          <Typography variant="h6">Tên: </Typography>
-          <TextField
-            variant="outlined"
-            label="Nhập tên"
-            size="small"
-            color="default"
-            sx={{ width: "300px" }}
-            {...register("name")}
-          />
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={15}
-        >
-          <Typography variant="h6">Số điện thoại: </Typography>
-          <TextField
-            variant="outlined"
-            label="Số điện thoại"
-            size="small"
-            color="default"
-            sx={{ width: "300px" }}
-            {...register("phone")}
-          />
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={21}
-        >
-          <Typography variant="h6">Giới tính:</Typography>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group"
-            name="gender"
-            value={watch("gender") || ""}
-            onChange={(e) => setValue("gender", e.target.value)}
-          >
-            <FormControlLabel
-              value="MALE"
-              control={<Radio color="default" />}
-              label="Nam"
-            />
-            <FormControlLabel
-              value="FEMALE"
-              control={<Radio color="default" />}
-              label="Nữ"
-            />
-            <FormControlLabel
-              value="OTHER"
-              control={<Radio color="default" />}
-              label="Khác"
-            />
-          </RadioGroup>
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-        >
-          <Typography variant="h6" sx={{ width: "29%" }}>
-            Ngày sinh:{" "}
-          </Typography>
-
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="date-label" color="default">
-              Ngày
-            </InputLabel>
-            <Select
-              labelId="date-label"
-              id="date-select"
-              value={watch("birthDate.date") || ""}
-              label="Ngày"
-              onChange={(e) => setValue("birthDate.date", e.target.value)}
-              color="default"
-            >
-              <MenuItem value="">Ngày</MenuItem>
-              {days.map((day) => (
-                <MenuItem key={day} value={day}>
-                  {day}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="month-label" color="default">
-              Tháng
-            </InputLabel>
-            <Select
-              labelId="month-label"
-              id="month-select"
-              value={watch("birthDate.month") || ""}
-              label="Tháng"
-              onChange={(e) => setValue("birthDate.month", e.target.value)}
-              color="default"
-            >
-              <MenuItem value="">Tháng</MenuItem>
-              {months.map((month) => (
-                <MenuItem key={month} value={month}>
-                  {month}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="year-label" color="default">
-              Năm
-            </InputLabel>
-            <Select
-              labelId="year-label"
-              id="year-select"
-              value={watch("birthDate.year") || ""}
-              label="Năm"
-              onChange={(e) => setValue("birthDate.year", e.target.value)}
-              color="default"
-            >
-              <MenuItem value="">Năm</MenuItem>
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={22}
-        >
-          <Typography variant="h6">Vai trò:</Typography>
-          <FormControl sx={{ m: 1, width: 300 }} size="small">
-            <InputLabel id="roles-label">Chọn vai trò</InputLabel>
-            <Select
-              labelId="roles-label"
-              id="roles-select"
-              multiple
-              value={selectedRoles || []}
-              onChange={(e) => setValue("roles", e.target.value)}
-              renderValue={(selected) =>
-                selected
-                  .map(
-                    (id) =>
-                      rolesData?.items.find((role) => role.id === id)?.name
-                  )
-                  .filter(Boolean)
-                  .join(", ")
-              }
-              label="Chọn vai trò"
-            >
-              {rolesData?.items?.map((role) => (
-                <MenuItem key={role.id} value={role.id}>
-                  <Checkbox
-                    checked={selectedRoles?.includes(role.id) || false}
-                  />
-                  <ListItemText primary={role.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Stack>
-
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          sx={{ m: "40px 0" }}
-          spacing={22}
-        >
-          <Typography variant="h6">Địa chỉ: </Typography>
-          <Typography variant="body1">
-            {userInfo?.result?.address || user?.address || "Chưa có địa chỉ"}
-          </Typography>
-        </Stack>
-      </Box>
-
-      {updateError && (
-        <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>
-          Có lỗi xảy ra:{" "}
-          {updateError?.data?.message || "Không thể cập nhật thông tin"}
-        </Typography>
-      )}
-
+    <Fragment>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          border: "1px solid #ddd",
+          width: "100%",
+          py: 4,
+          borderRadius: 2,
+          backgroundColor: "#fff",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "var(--footer-background-color)",
-            marginBottom: 6,
-            padding: "12px 24px",
-            display: "flex",
-            alignItems: "center",
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpdateUser();
           }}
-          type="submit"
-          disabled={updateLoading}
         >
-          {updateLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Lưu thay đổi"
-          )}
-        </Button>
+          <Grid container>
+            <Grid
+              size={{ xl: 3, lg: 3 }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* Avatar với nút upload */}
+              <Box sx={{ position: "relative", mb: 2 }}>
+                <Avatar src={avatarPreview} sx={{ width: 100, height: 100 }} />
+                <Button
+                  component="label"
+                  disabled={isLoading}
+                  sx={{
+                    position: "absolute",
+                    bottom: -10,
+                    right: -10,
+                    minWidth: "auto",
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    backgroundColor: "primary.main",
+                    "&:hover": {
+                      backgroundColor: "primary.dark",
+                    },
+                  }}
+                >
+                  <PhotoCamera sx={{ fontSize: 16, color: "white" }} />
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleUploadImage}
+                  />
+                </Button>
+              </Box>
+
+              <Typography variant="h6" mt={2}>
+                Thông tin chung
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                mt={2}
+                mx={3}
+                textAlign={"center"}
+              >
+                Thông tin cá nhân và cập nhật thông tin avatar của tài khoản
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xl: 9, lg: 9 }}>
+              <Box sx={{ mr: 4, my: 4 }}>
+                <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
+                  Tên người dùng *
+                </Typography>
+                <TextField
+                  name="name"
+                  value={formValues.name}
+                  onChange={(e) =>
+                    setFormValues({ ...formValues, name: e.target.value })
+                  }
+                  size="small"
+                  fullWidth
+                  required
+                  error={!formValues.name.trim()}
+                  helperText={
+                    !formValues.name.trim() ? "Tên không được để trống" : ""
+                  }
+                />
+              </Box>
+
+              <Box sx={{ mr: 4, my: 4 }}>
+                <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
+                  Địa chỉ email
+                </Typography>
+                <TextField
+                  type="email"
+                  value={formValues.email}
+                  size="small"
+                  fullWidth
+                  slotProps={{
+                    input: { readOnly: true },
+                  }}
+                />
+              </Box>
+
+              <Box display={"flex"} alignItems={"flex-start"} gap={4}>
+                <Box sx={{ my: 4, flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
+                    Ngày sinh *
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        value={formValues.dob}
+                        onChange={(newValue) =>
+                          setFormValues({ ...formValues, dob: newValue })
+                        }
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            fullWidth: true,
+                            required: true,
+                            error: !formValues.dob,
+                            helperText: !formValues.dob
+                              ? "Ngày sinh không được để trống"
+                              : "",
+                          },
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Box>
+
+                <Box sx={{ my: 4, flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
+                    Giới tính *
+                  </Typography>
+                  <RadioGroup
+                    row
+                    name="gender"
+                    value={formValues.gender || ""}
+                    onChange={(e) =>
+                      setFormValues({ ...formValues, gender: e.target.value })
+                    }
+                    sx={{ mt: 1 }}
+                  >
+                    <FormControlLabel
+                      value="MALE"
+                      control={<Radio />}
+                      label="Nam"
+                    />
+                    <FormControlLabel
+                      value="FEMALE"
+                      control={<Radio />}
+                      label="Nữ"
+                    />
+                    <FormControlLabel
+                      value="OTHER"
+                      control={<Radio />}
+                      label="Khác"
+                    />
+                  </RadioGroup>
+                  {!formValues.gender && (
+                    <Typography color="error" variant="caption" sx={{ ml: 2 }}>
+                      Giới tính không được để trống
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mt: 4,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "black",
+                    mr: 4,
+                  }}
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Lưu thay đổi"
+                  )}
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </form>
       </Box>
-    </Box>
+    </Fragment>
   );
 };
 

@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCartByUserQuery } from "@/services/api/cart";
-import { selectUserId } from "@/store/redux/user/reducer";
+// import { selectUserId } from "@/store/redux/user/reducer";
 import { removeFromCart } from "@/store/redux/cart/reducer";
 
 const CartButton = () => {
@@ -31,10 +31,10 @@ const CartButton = () => {
   const [openDialog, setOpenDialog] = useState(false); // Trạng thái mở Dialog
   const [itemToRemove, setItemToRemove] = useState(null); // Lưu sản phẩm cần xóa
   const dispatch = useDispatch();
-  const userId = useSelector(selectUserId);
-  const { data: cartData, isLoading } = useGetCartByUserQuery(userId, {
-    skip: !userId,
-  });
+  // const userId = useSelector(selectUserId);
+  // const { data: cartData, isLoading } = useGetCartByUserQuery(userId, {
+  //   skip: !userId,
+  // });
   // console.log("Cart data from API:", cartData);
 
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
@@ -100,12 +100,12 @@ const CartButton = () => {
         </Box>
 
         {/* Danh sách sản phẩm với thanh cuộn */}
-        {isLoading ? (
+        {/* {isLoading ? (
           <Typography sx={{ p: 2, textAlign: "center" }}>
             Đang tải giỏ hàng...
           </Typography>
-        ) : !userId ? (
-          <Box
+        ) : !userId ? ( */}
+          {/* <Box
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -117,7 +117,7 @@ const CartButton = () => {
             <Typography variant="h6">VUI LÒNG ĐĂNG NHẬP!</Typography>
             <SentimentDissatisfiedIcon fontSize="large" />
           </Box>
-        ) : cartItems.length === 0 ? (
+        ) : cartItems.length === 0 ? ( */}
           <Box
             sx={{
               display: "flex",
@@ -130,7 +130,7 @@ const CartButton = () => {
             <Typography variant="h6">CHƯA CÓ SẢN PHẨM NÀO!</Typography>
             <SentimentDissatisfiedIcon fontSize="large" />
           </Box>
-        ) : (
+        {/* ) : ( */}
           <Box
             sx={{
               flexGrow: 1,
@@ -173,7 +173,7 @@ const CartButton = () => {
               ))}
             </Stack>
           </Box>
-        )}
+        {/* )} */}
 
         {/* Footer */}
         {cartItems.length > 0 && (

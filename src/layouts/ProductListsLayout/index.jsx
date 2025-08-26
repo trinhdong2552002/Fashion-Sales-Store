@@ -8,16 +8,10 @@ import { Fragment } from "react";
 const ProductListsLayout = () => {
   return (
     <Fragment>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <WallpaperRepresentative titleHeader="Danh sách sản phẩm" />
-        <Outlet />
-      </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Header />
+      <WallpaperRepresentative titleHeader="Danh sách sản phẩm" />
+      <Outlet />
+      <Footer />
     </Fragment>
   );
 };

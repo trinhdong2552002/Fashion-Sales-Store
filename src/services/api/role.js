@@ -4,27 +4,16 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 export const roleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     listRoles: builder.query({
-      query: ({ pageNo = 1, pageSize = 10, sortBy = "" } = {}) => ({
+      query: ({ page, size }) => ({
         url: `/v1/roles`,
-        method: "GET",
-        params: { pageNo, pageSize, sortBy },
+        params: { page, size },
       }),
       providesTags: [TAG_KEYS.ROLE],
       transformResponse: (response) => ({
-        page: response.result.page,
-        size: response.result.size,
-        totalPages: response.result.totalPages,
-        totalItems: response.result.totalItems,
-        items: response.result.items,
+        id: response.id,
+        name: response.name,
+        description: response.description,
       }),
-    }),
-
-    getRoleById: builder.query({
-      query: (id) => ({
-        url: `/v1/roles/${id}`,
-        method: "GET",
-      }),
-      providesTags: [TAG_KEYS.ROLE],
     }),
   }),
 });

@@ -1,38 +1,26 @@
-import { Container, Grid, Stack } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import ProfileInform from "./shared/ProfileInform";
 
 import AccountSideBar from "@/components/AccountSideBar";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
+  const { id } = useParams();
   return (
     <section>
-      <Container maxWidth="lg">
-        <Stack sx={{ m: "80px 0" }}>
-          <Grid container>
-            <Grid size={{ xl: 3, lg: 3 }}>
-              <AccountSideBar />
-            </Grid>
+      <Grid container p={10} spacing={6}>
+        <Grid size={{ xl: 3, lg: 3 }}>
+          <AccountSideBar id={id} />
+        </Grid>
 
-            <Grid size={{ xl: 9, lg: 9 }}>
-              <h1
-                style={{
-                  fontWeight: "500",
-                  width: "100%",
-                  margin: 0,
-                  textAlign: "center",
-                }}
-              >
-                HỒ SƠ CÁ NHÂN
-              </h1>
-
-              <Stack alignItems={"center"}>
-                <ProfileInform />
-              </Stack>
-            </Grid>
-          </Grid>
-        </Stack>
-      </Container>
+        <Grid size={{ xl: 9, lg: 9 }}>
+          <Typography variant="h4" fontWeight={600} mb={2}>
+            Hồ sơ
+          </Typography>
+          <ProfileInform id={id} />
+        </Grid>
+      </Grid>
     </section>
   );
 };

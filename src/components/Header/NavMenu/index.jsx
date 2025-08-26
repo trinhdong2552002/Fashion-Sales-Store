@@ -25,7 +25,6 @@ const NavMenu = () => {
     refetchOnMountOrArgChange: true,
     forceRefetch: true,
   });
-  console.log("dataCategories", data);
 
   useEffect(() => {
     refetch();
@@ -137,7 +136,7 @@ const NavMenu = () => {
             sx={{ padding: 2 }}
             onClick={handleMenuClose}
             component={Link}
-            to="/listProducts"
+            to="/list-products"
             key={category.id}
           >
             {category.name}
