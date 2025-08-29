@@ -1,59 +1,146 @@
-import { Container, Box, Stack, Typography } from "@mui/material";
+import {
+  Container,
+  Box,
+  Stack,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import AuthButton from "./AuthButton";
 import CartButton from "./CartButton";
-import NavMenu from "./NavMenu";
 import SearchBar from "./SearchBar";
+import { useListCategoriesForUserQuery } from "@/services/api/categories";
+import { useEffect, useState } from "react";
+import { ArticleOutlined, HelpOutline, InfoOutline } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const linkStyle = {
+    color: "black",
+    textDecoration: "none",
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const {
+    data,
+    isFetching,
+    refetch: refetchCategories,
+  } = useListCategoriesForUserQuery({
+    page: 0,
+    size: 10,
+    refetchOnMountOrArgChange: true,
+    forceRefetch: true,
+  });
+
+  useEffect(() => {
+    refetchCategories();
+  }, [refetchCategories]);
+
+  const activeCategories = Array.isArray(data)
+    ? data.filter((item) => item.status === "ACTIVE")
+    : [];
+
+  if (isFetching || !data) return null;
+
   return (
     <Box
-      component="nav"
       sx={{
         position: "sticky",
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 1100, // Matches MUI AppBar default z-index
+        zIndex: 2,
         backgroundColor: "white",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Container maxWidth="lg">
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ py: 2 }}
+      <Container maxWidth="xl">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ py: 2 }}
+        >
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+            }}
           >
-            <Link
-              to="/"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{ fontWeight: "bold" }}
-              >
-                FASHION STORE
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              FASHION STORE
+            </Typography>
+          </Link>
+
+          {/* List categories */}
+          <Link onClick={handleClick} style={linkStyle}>
+            <Box display={"flex"} alignItems={"center"}>
+              <MenuIcon />
+              <Typography variant="body1" ml={1}>
+                Danh mục
               </Typography>
-            </Link>
+            </Box>
+          </Link>
 
-            <SearchBar />
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            sx={{ mt: 1 }}
+          >
+            {activeCategories.map((category) => (
+              <Link to="/list-products" key={category.id} style={linkStyle}>
+                <MenuItem onClick={handleClose} sx={{ p: 2 }}>
+                  {category.name}
+                </MenuItem>
+              </Link>
+            ))}
+          </Menu>
 
-            <Stack direction="row" spacing={2}>
-              <CartButton />
-              <AuthButton />
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
+          <Link to="/blog" style={linkStyle}>
+            <Box display={"flex"} alignItems={"center"}>
+              <ArticleOutlined />
+              <Typography variant="body1" ml={1}>
+                Blog
+              </Typography>
+            </Box>
+          </Link>
 
-      <NavMenu />
+          <SearchBar />
+
+          <Link to={"/support"} style={linkStyle}>
+            <Box display={"flex"} alignItems={"center"}>
+              <HelpOutline />
+              <Typography variant="body1" ml={1}>
+                Hỗ trợ
+              </Typography>
+            </Box>
+          </Link>
+
+          <Link to="/about" style={linkStyle}>
+            <Box display={"flex"} alignItems={"center"}>
+              <InfoOutline />
+              <Typography variant="body1" ml={1}>
+                Về chúng tôi
+              </Typography>
+            </Box>
+          </Link>
+
+          <CartButton />
+          <AuthButton />
+        </Stack>
+      </Container>
     </Box>
   );
 };

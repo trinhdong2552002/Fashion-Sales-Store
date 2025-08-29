@@ -178,7 +178,7 @@ const ForgotPassword = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
-              src="/src/assets/images/background-fashions/background-form.jpg"
+              src="/src/assets/images/form/background-form.jpg"
             />
           </Grid>
         </Grid>

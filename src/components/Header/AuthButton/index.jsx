@@ -76,12 +76,12 @@ const AuthButton = () => {
           >
             <MenuItem
               onClick={() =>
-                navigate(`/accountInform/profile/${myInfo.id}`)
+                navigate(`/account-information/profile/${myInfo.id}`)
               }
             >
               Thông tin tài khoản
             </MenuItem>
-            <MenuItem onClick={() => navigate("/myOrders")}>
+            <MenuItem onClick={() => navigate("/my-order")}>
               Đơn hàng của tôi
             </MenuItem>
             <Divider />

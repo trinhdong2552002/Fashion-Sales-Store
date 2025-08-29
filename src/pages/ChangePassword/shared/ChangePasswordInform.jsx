@@ -96,7 +96,7 @@ const ChangePasswordInform = () => {
       });
       reset();
       setTimeout(() => {
-        navigate(`/accountInform/profile/${id}`);
+        navigate(`/account-information/profile/${id}`);
       }, 2000);
     } catch (error) {
       setSnackbar({

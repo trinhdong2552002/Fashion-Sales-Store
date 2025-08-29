@@ -1,4 +1,3 @@
-// SortProducts.jsx
 import {
   Card,
   CardContent,
@@ -147,7 +146,7 @@ const SortProducts = ({ searchTerm, onLoadingChange }) => {
                 item
                 xl={2}
                 lg={2}
-                onClick={() => navigate(`/productDetails/${product.id}`)}
+                onClick={() => navigate(`/product-details/${product.id}`)}
                 key={product.id}
               >
                 <ProductCard product={product} />

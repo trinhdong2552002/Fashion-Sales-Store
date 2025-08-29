@@ -216,10 +216,9 @@ const CartButton = () => {
     <>
       <IconButton
         aria-label="shopping-cart"
-        sx={{ mr: 4 }}
         onClick={toggleDrawer(true)}
       >
-        <ShoppingCartOutlinedIcon fontSize="large" />
+        <ShoppingCartOutlinedIcon />
         <CartBadge
           badgeContent={totalItems}
           color="primary"

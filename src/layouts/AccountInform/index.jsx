@@ -7,9 +7,15 @@ import { Fragment } from "react";
 const AccountInform = () => {
   return (
     <Fragment>
-      <Header />
-      <Outlet />
-      <Footer />
+      <header>
+        <Header />
+      </header>
+      <main>
+        <Outlet />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </Fragment>
   );
 };

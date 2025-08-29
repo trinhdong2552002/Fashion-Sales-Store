@@ -4,9 +4,9 @@ import { TAG_KEYS } from "@/constants/tagKeys";
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     listCategoriesForUser: builder.query({
-      query: () => ({
+      query: ({ pageNo, pageSize }) => ({
         url: "/v1/categories",
-        method: "GET",
+        params: { pageNo, pageSize },
       }),
       transformResponse: (response) => {
         return response.result?.items || [];
