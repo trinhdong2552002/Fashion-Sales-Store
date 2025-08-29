@@ -1,21 +1,26 @@
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Alert, Container, Grid, Snackbar, Stack } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Container,
+  Grid,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import BrandVideo from "./shared/BrandVideo";
 import styles from "./index.module.css";
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/navigation";
+import { Autoplay } from "swiper/modules";
 import SwiperProducts from "@/components/SwiperProducts";
 
 const slides = [
-  "/src/assets/images/background-fashions/banner-fashion.jpg",
-  "/src/assets/images/background-fashions/banner-fashion-1.jpg",
-  "/src/assets/images/background-fashions/banner-fashion-2.jpg",
-  "/src/assets/images/background-fashions/banner-fashion-3.jpg",
-  "/src/assets/images/background-fashions/banner-fashion-4.jpg",
+  "/src/assets/images/banner/banner-1.jpg",
+  "/src/assets/images/banner/banner-2.jpg",
+  "/src/assets/images/banner/banner-3.jpg",
+  "/src/assets/images/banner/banner-4.jpg",
 ];
 
 const categoryImageMap = {
@@ -34,7 +39,7 @@ const Home = () => {
     message: "",
     severity: "success",
   });
-  const { data, isFetching } = useListCategoriesForUserQuery({
+  const { data: dataCategories, isFetching } = useListCategoriesForUserQuery({
     page: 0,
     size: 10,
     refetchOnMountOrArgChange: true,
@@ -56,28 +61,31 @@ const Home = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const activeCategories = Array.isArray(data)
-    ? data.filter((item) => item.status === "ACTIVE")
+  const activeCategories = Array.isArray(dataCategories)
+    ? dataCategories.filter((item) => item.status === "ACTIVE")
     : [];
 
-  if (isFetching || !data) return null;
-
   return (
-    <section>
+    <Box component={"section"}>
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
+        loop={true}
         centeredSlides={true}
-        autoplay={{ delay: 5000, disableOnInteraction: true }}
-        pagination={{ clickable: true }}
-        navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
-        // style={{ width: "100%", color: "#fff" }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[Autoplay]}
+        className="mySwiper"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <img
-              style={{ width: "100%", height: 900, objectFit: "cover" }}
+              style={{ width: "100%", height: 800, objectFit: "cover" }}
               src={slide}
               alt={`Slide ${index + 1}`}
             />
@@ -85,30 +93,35 @@ const Home = () => {
         ))}
       </Swiper>
 
-      <div
-        style={{
-          textAlign: "center",
-          margin: "100px 0",
-          padding: "100px",
+      <Box
+        textAlign={"center"}
+        my={10}
+        p={10}
+        sx={{
           backgroundColor: "#f9f9f9",
         }}
       >
-        <h2 style={{ fontSize: "2rem", marginBottom: "24px" }}>
+        <Typography color="info" mb={4} fontWeight={600} variant="h4">
           Hãy tận hưởng tuổi trẻ của bạn!
-        </h2>
-        <p
-          style={{
-            maxWidth: "600px",
+        </Typography>
+        <Typography
+          component={"p"}
+          sx={{
+            fontSize: "1.2rem",
+            maxWidth: "800px",
             margin: "auto",
-            color: "var(--text-color)",
           }}
         >
           Fashion Store là nơi cung cấp thời trang hiện đại dành cho giới trẻ,
           mang đến trải nghiệm mua sắm tiện lợi và phong cách nổi bật mỗi ngày.
-        </p>
-      </div>
+        </Typography>
+      </Box>
 
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
+        <Typography color="info" fontWeight={600} variant="h4">
+          Danh mục sản phẩm
+        </Typography>
+
         <Grid container spacing={12}>
           {activeCategories.map((item) => (
             <Grid
@@ -123,7 +136,7 @@ const Home = () => {
               key={item.id}
             >
               <Link to="/list-products">
-                <Stack className={styles.wrapperImg}>
+                <Box className={styles.wrapperImg}>
                   <img
                     className={styles.mediaImg}
                     src={
@@ -132,14 +145,14 @@ const Home = () => {
                     }
                     alt={item.name}
                   />
-                  <Stack className={styles.contentImg}>
+                  <Box className={styles.contentImg}>
                     <h2
                       style={{ fontSize: 32, fontWeight: 500, color: "white" }}
                     >
                       {item.name}
                     </h2>
-                  </Stack>
-                </Stack>
+                  </Box>
+                </Box>
               </Link>
             </Grid>
           ))}
@@ -163,7 +176,7 @@ const Home = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </section>
+    </Box>
   );
 };
 

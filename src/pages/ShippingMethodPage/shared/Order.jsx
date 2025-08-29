@@ -102,7 +102,7 @@ const Order = () => {
         setIsOrderPlaced(true);
         // Đảm bảo navigate được gọi sau khi tất cả action hoàn tất
         setTimeout(() => {
-          navigate("/orderConfirmation");
+          navigate("/order-confirmation");
         }, 100);
       } else {
         dispatch(setOrderStatus("failed"));

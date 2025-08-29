@@ -4,9 +4,9 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     listProductsForUser: builder.query({
-      query: () => ({
-        url: `/v1/products`,
-        method: "GET",
+      query: ({ pageNo, pageSize }) => ({
+        url: "/v1/products",
+        params: { pageNo, pageSize },
       }),
       providesTags: [TAG_KEYS.PRODUCT],
     }),

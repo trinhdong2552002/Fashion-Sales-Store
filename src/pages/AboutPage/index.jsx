@@ -1,5 +1,5 @@
 import styles from "./index.module.css";
-import { Box, CircularProgress, Container, Grid, Stack } from "@mui/material";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
 import { useGetListBranchesQuery } from "@/services/api/branches";
 import { useEffect } from "react";
@@ -8,11 +8,9 @@ const contents = [
   {
     titleAboutUs: "Câu chuyện về chúng tôi",
     firstLineAboutUs:
-      "Mọi chuyện bắt đầu vào năm 2025 khi người sáng lập của chúng tôi đã vật lộn để tìm quần áo giá cả phải chăng, chất lượng cao và bền vững. Chúng tôi nhận ra rằng hầu hết các thương hiệu thời trang đều tập trung vào phong cách hoặc tính bền vững—nhưng hiếm khi cả hai. Đó là lúc ý tưởng về Fashion Store ra đời: một thương hiệu kết hợp các thiết kế hợp thời trang với vật liệu thân thiện với môi trường.",
+      "Mọi chuyện bắt đầu vào năm 2025 khi người sáng lập của chúng tôi đã vật lộn để tìm quần áo giá cả phải chăng, chất lượng cao và bền vững. Chúng tôi nhận ra rằng hầu hết các thương hiệu thời trang đều tập trung vào phong cách hoặc tính bền vững. Đó là lúc ý tưởng về Fashion Store ra đời một thương hiệu kết hợp các thiết kế hợp thời trang với vật liệu thân thiện với môi trường.",
     secondLineAboutUs:
       "Ngày nay, Fashion Store hợp tác với các nhà sản xuất và hỗ trợ các hoạt động thương mại công bằng để mang đến thời trang bền vững, phong cách cho những người tiêu dùng trên toàn thế giới.",
-    thirdLineAboutUs:
-      "Bạn có thắc mắc gì không? Hãy ghé qua tại các chi nhánh sau:",
   },
   {
     titleMissionUs: "Nhiệm vụ của chúng tôi",
@@ -28,47 +26,53 @@ const contents = [
 ];
 
 const About = () => {
-  const {
-    data: dataBranches,
-    isLoading: isLoadingBranch,
-    error: isErrorBranch,
-    refetch: refetchBranch,
-  } = useGetListBranchesQuery({
-    refetchOnMountOrArgChange: true,
-  });
-  console.log("dataBranches", dataBranches);
+  // const {
+  //   data: dataBranches,
+  //   isLoading: isLoadingBranch,
+  //   error: isErrorBranch,
+  //   refetch: refetchBranch,
+  // } = useGetListBranchesQuery({
+  //   refetchOnMountOrArgChange: true,
+  // });
+  // console.log("dataBranches", dataBranches);
 
-  useEffect(() => {
-    refetchBranch();
-  }, [refetchBranch]);
+  // useEffect(() => {
+  //   refetchBranch();
+  // }, [refetchBranch]);
 
-  if (isLoadingBranch)
-    return (
-      <Box display={"flex"}>
-        <CircularProgress />
-        <p>Đang tải...</p>
-      </Box>
-    );
-  if (isErrorBranch)
-    return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
+  // if (isLoadingBranch)
+  //   return (
+  //     <Box display={"flex"}>
+  //       <CircularProgress />
+  //       <p>Đang tải...</p>
+  //     </Box>
+  //   );
+  // if (isErrorBranch)
+  //   return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
 
   return (
-    <section>
-      <WallpaperRepresentative titleHeader="Về chúng tôi" />
-      <Container maxWidth="lg">
+    <Box component={"section"}>
+      <WallpaperRepresentative titleHeader="About us" />
+      <Container maxWidth="xl">
         <Grid container sx={{ m: "80px 0" }} alignItems={"center"}>
           <Grid size={{ lg: 8, md: 8, sm: 12 }}>
             {contents.map((content, index) => (
-              <Stack sx={{ marginRight: 8 }} key={index}>
-                <h2 style={{ fontSize: "2rem", fontWeight: "500" }}>
+              <Box mr={8} key={index}>
+                <Typography color="info" mb={4} fontWeight={600} variant="h4">
                   {content.titleAboutUs}
-                </h2>
-                <p className={styles.content}>{content.firstLineAboutUs}</p>
-                <p className={styles.content}>{content.secondLineAboutUs}</p>
-                <p className={styles.content}>{content.thirdLineAboutUs}</p>
-              </Stack>
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.firstLineAboutUs}
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.secondLineAboutUs}
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.thirdLineAboutUs}
+                </Typography>
+              </Box>
             ))}
-            {dataBranches && (
+            {/* {dataBranches && (
               <Stack sx={{ marginRight: 8 }}>
                 <ul>
                   {dataBranches?.result?.items.map((branch) => (
@@ -82,7 +86,7 @@ const About = () => {
                   ))}
                 </ul>
               </Stack>
-            )}
+            )} */}
           </Grid>
 
           <Grid size={{ lg: 4, md: 4, sm: 12 }}>
@@ -107,19 +111,25 @@ const About = () => {
 
           <Grid size={{ lg: 8 }}>
             {contents.map((content, index) => (
-              <Stack sx={{ marginLeft: 8 }} key={index}>
-                <h2 style={{ fontSize: "2rem", fontWeight: "500", margin: 0 }}>
+              <Box ml={8} key={index}>
+                <Typography color="info" mb={4} fontWeight={600} variant="h4">
                   {content.titleMissionUs}
-                </h2>
-                <p className={styles.content}>{content.firstLineMissionUs}</p>
-                <p className={styles.content}>{content.secondLineMissionUs}</p>
-                <p className={styles.content}>{content.thirdLineMissionUs}</p>
-              </Stack>
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.firstLineMissionUs}
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.secondLineMissionUs}
+                </Typography>
+                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                  {content.thirdLineMissionUs}
+                </Typography>
+              </Box>
             ))}
           </Grid>
         </Grid>
       </Container>
-    </section>
+    </Box>
   );
 };
 

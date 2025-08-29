@@ -5,9 +5,9 @@ import { Link, useLocation } from "react-router-dom";
 const AccountSideBar = ({ id }) => {
   const location = useLocation();
   const menuItems = [
-    { path: `/accountInform/profile/${id}`, label: "Hồ sơ cá nhân" },
-    { path: `/accountInform/changePassword/${id}`, label: "Đổi mật khẩu" },
-    { path: `/accountInform/address/${id}`, label: "Địa chỉ" },
+    { path: `/account-information/profile/${id}`, label: "Hồ sơ cá nhân" },
+    { path: `/account-information/change-password/${id}`, label: "Đổi mật khẩu" },
+    { path: `/account-information/address/${id}`, label: "Địa chỉ" },
   ];
   return (
     <Box

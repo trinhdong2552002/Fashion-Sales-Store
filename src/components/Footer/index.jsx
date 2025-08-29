@@ -54,7 +54,7 @@ const Footer = () => {
         pb: 3,
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container spacing={6}>
           {footerData.map((section, index) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index}>

@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import AccountSideBar from "@/components/AccountSideBar";
 import { useParams } from "react-router-dom";
-import AddressListForUser from "./shared/AddressListForUser";
+import AddressList from "./shared/AddressList";
 
 const Address = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const Address = () => {
         </Grid>
 
         <Grid size={{ xl: 9, lg: 9 }}>
-          <AddressListForUser id={id} />
+          <AddressList id={id} />
         </Grid>
       </Grid>
     </section>
