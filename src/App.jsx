@@ -25,6 +25,7 @@ import ThemeProvider from "./context/ThemeProvider";
 import ProductListsLayout from "./layouts/ProductListsLayout";
 import AddressInformation from "./pages/AddressPage/shared/AddressInformation";
 import AddressList from "./pages/AddressPage/shared/AddressList";
+import BlogDetail from "./pages/Blog/shared/BlogDetail";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="support" element={<Support />} />
           <Route path="blog" element={<Blog />} />
+          <Route path="blog/:id" element={<BlogDetail />} />
           <Route path="about" element={<About />} />
         </Route>
 

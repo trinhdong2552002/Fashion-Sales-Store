@@ -50,8 +50,6 @@ const Header = () => {
     ? data.filter((item) => item.status === "ACTIVE")
     : [];
 
-  if (isFetching || !data) return null;
-
   return (
     <Box
       sx={{

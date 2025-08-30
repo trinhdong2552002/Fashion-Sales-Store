@@ -10,160 +10,144 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const mockData = {
-  code: 200,
-  message: "Fetch all blog",
-  result: {
-    page: 1,
-    size: 10,
-    totalPages: 1,
-    totalItems: 1,
-    items: [
-      {
-        id: 1,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/about-us/our-mission.jpg",
-        author: {
-          id: 1,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 2,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 2,
-          name: "Michael Williams",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 3,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 3,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 4,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 4,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 5,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 5,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 6,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 6,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 7,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 7,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 8,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 8,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 9,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 9,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-      {
-        id: 10,
-        title:
-          "The Future of Al-Powered Comment Moderation: Enhancing Online Safety and Engagement",
-        body: "Explore how Al technology is revolutionizing comment moderation, making onine communities sater and more engaging. this post delves. into the latest advancements in Al, showcasing how tools like Commenter.ai are .....",
-        image: "/src/assets/images/banner/banner-1.jpg",
-        author: {
-          id: 10,
-          name: "John Doe",
-          avatar:
-            "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-        },
-        createdAt: "2025-08-30",
-      },
-    ],
+const mockData = [
+  {
+    id: 1,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 1,
+      name: "John Doe",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
+    },
+    createdAt: "2025-08-30",
   },
-};
-
-console.log;
+  {
+    id: 2,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 2,
+      name: "Grant Beatty",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/4.jpg",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 3,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 3,
+      name: "Lyle Barrows-Marquardt",
+      avatar: "https://avatars.githubusercontent.com/u/51900306",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 4,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 4,
+      name: "Phyllis Hand",
+      avatar: "https://avatars.githubusercontent.com/u/93006255",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 5,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 5,
+      name: "Angie Mayert I",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/10.jpg",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 6,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 6,
+      name: "Henrietta Ratke",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/8.jpg",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 7,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 7,
+      name: "Lee Armstrong Sr.",
+      avatar: "https://avatars.githubusercontent.com/u/69014144",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 8,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 8,
+      name: "Kate Kub",
+      avatar: "https://avatars.githubusercontent.com/u/96683538",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 9,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 9,
+      name: "Johanna Hilll",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/11.jpg",
+    },
+    createdAt: "2025-08-30",
+  },
+  {
+    id: 10,
+    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
+    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
+    image:
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    author: {
+      id: 10,
+      name: "Wayne Schinner",
+      avatar:
+        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/51.jpg",
+    },
+    createdAt: "2025-08-30",
+  },
+];
 
 const Blog = () => {
   return (
@@ -171,12 +155,16 @@ const Blog = () => {
       <WallpaperRepresentative titleHeader="Blog" />
 
       <Container maxWidth="lg">
-        <Link style={{ textDecoration: "none" }}>
-          <Grid container spacing={6} my={10}>
-            <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
-              {mockData?.result?.items.slice(0, 1).map((blog) => (
+        {mockData?.slice(0, 1).map((blog) => (
+          <Link
+            key={blog.id}
+            to={`/blog/${blog.id}`}
+            state={{ blog }}
+            style={{ textDecoration: "none" }}
+          >
+            <Grid container spacing={6} my={10}>
+              <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                 <Box
-                  key={blog.id}
                   display={"flex"}
                   justifyContent={"center"}
                   alignItems={"center"}
@@ -187,19 +175,15 @@ const Blog = () => {
                     alt={blog.title}
                     style={{
                       width: "100%",
-                      height: "100%",
-                      borderRadius: "12px",
+                      borderRadius: "4px",
                       objectFit: "cover",
                     }}
                   />
                 </Box>
-              ))}
-            </Grid>
+              </Grid>
 
-            <Grid size={{ xl: 8, lg: 8, md: 8, sm: 12, xs: 12 }}>
-              {mockData?.result?.items.slice(0, 1).map((blog) => (
+              <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                 <Box
-                  key={blog.id}
                   display={"flex"}
                   flexDirection={"column"}
                   justifyContent={"center"}
@@ -219,7 +203,7 @@ const Blog = () => {
                     mb={4}
                     sx={{
                       color: "#666",
-                      fontSize: "1.1rem",
+                      fontSize: "1.2rem",
                     }}
                   >
                     {blog.body}
@@ -262,10 +246,10 @@ const Blog = () => {
                     </Box>
                   </Box>
                 </Box>
-              ))}
+              </Grid>
             </Grid>
-          </Grid>
-        </Link>
+          </Link>
+        ))}
 
         <Grid
           container
@@ -276,63 +260,78 @@ const Blog = () => {
             alignItems: "center",
           }}
         >
-          {mockData?.result?.items.slice(1, 10).map((blog) => (
+          {mockData?.slice(1, 10).map((blog) => (
             <Grid key={blog.id} size={{ xl: 4, lg: 4, md: 6, sm: 6, xs: 12 }}>
-              <Card
-                sx={{
-                  cursor: "pointer",
-                  "&:hover": {
-                    boxShadow: 6,
-                    transition: "all 0.3s ease",
-                  },
-                }}
+              <Link
+                to={`/blog/${blog.id}`}
+                state={{ blog }}
+                style={{ textDecoration: "none" }}
               >
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  style={{ width: "100%" }}
-                />
-                <CardContent>
-                  <Typography color="info" variant="h6" fontWeight={600} mb={2}>
-                    {blog.title}
-                  </Typography>
-                  <Typography
-                    component="p"
-                    mb={2}
-                    sx={{
-                      color: "#666",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {blog.body.slice(0, 114)}
-                  </Typography>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="flex-start"
-                    mt={2}
-                  >
-                    <Avatar
-                      src={blog?.author?.avatar}
-                      alt="Avatar"
-                      sx={{ width: 50, height: 50 }}
-                    />
-                    <Box ml={2}>
-                      <Typography
-                        component="p"
-                        color="black"
-                        fontSize="1rem"
-                        fontWeight="600"
-                      >
-                        {blog?.author?.name}
-                      </Typography>
-                      <Typography component="p" color="#666" fontSize="0.9rem">
-                        {blog?.createdAt}
-                      </Typography>
+                <Card
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": {
+                      boxShadow: 6,
+                      transition: "all 0.3s ease",
+                    },
+                  }}
+                >
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    style={{ width: "100%" }}
+                  />
+                  <CardContent>
+                    <Typography
+                      color="info"
+                      variant="h6"
+                      fontWeight={600}
+                      mb={2}
+                    >
+                      {blog.title}
+                    </Typography>
+                    <Typography
+                      component="p"
+                      mb={2}
+                      sx={{
+                        color: "#666",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {blog.body.slice(0, 114)}
+                    </Typography>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="flex-start"
+                      mt={2}
+                    >
+                      <Avatar
+                        src={blog?.author?.avatar}
+                        alt="Avatar"
+                        sx={{ width: 50, height: 50 }}
+                      />
+                      <Box ml={2}>
+                        <Typography
+                          component="p"
+                          color="black"
+                          fontSize="1rem"
+                          fontWeight="600"
+                        >
+                          {blog?.author?.name}
+                        </Typography>
+                        <Typography
+                          component="p"
+                          color="#666"
+                          fontSize="0.9rem"
+                        >
+                          {blog?.createdAt}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             </Grid>
           ))}
         </Grid>
