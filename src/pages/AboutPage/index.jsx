@@ -61,13 +61,28 @@ const About = () => {
                 <Typography color="info" mb={4} fontWeight={600} variant="h4">
                   {content.titleAboutUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.firstLineAboutUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.secondLineAboutUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.thirdLineAboutUs}
                 </Typography>
               </Box>
@@ -115,13 +130,28 @@ const About = () => {
                 <Typography color="info" mb={4} fontWeight={600} variant="h4">
                   {content.titleMissionUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.firstLineMissionUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.secondLineMissionUs}
                 </Typography>
-                <Typography component={"p"} mb={3} fontSize={"1.2rem"}>
+                <Typography
+                  component={"p"}
+                  mb={3}
+                  fontSize={"1.2rem"}
+                  color="#666"
+                >
                   {content.thirdLineMissionUs}
                 </Typography>
               </Box>
