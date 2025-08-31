@@ -3,6 +3,8 @@ import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
 import { useGetListBranchesQuery } from "@/services/api/branches";
 import { useEffect } from "react";
+import our_story from "@/assets/images/about-us/our-story.jpg";
+import our_mission from "@/assets/images/about-us/our-mission.jpg";
 
 const contents = [
   {
@@ -58,7 +60,7 @@ const About = () => {
           <Grid size={{ lg: 8, md: 8, sm: 12 }}>
             {contents.map((content, index) => (
               <Box mr={8} key={index}>
-                <Typography color="info" mb={4} fontWeight={600} variant="h4">
+                <Typography mb={4} fontWeight={600} variant="h4">
                   {content.titleAboutUs}
                 </Typography>
                 <Typography
@@ -106,10 +108,7 @@ const About = () => {
 
           <Grid size={{ lg: 4, md: 4, sm: 12 }}>
             <Stack className={styles.contentImg}>
-              <img
-                src="/src/assets/images/about-us/our-story.jpg"
-                alt="Our Story"
-              />
+              <img src={our_story} alt="Our Story" />
             </Stack>
           </Grid>
         </Grid>
@@ -117,17 +116,14 @@ const About = () => {
         <Grid container sx={{ m: "80px 0" }} alignItems={"center"}>
           <Grid size={{ lg: 4 }}>
             <Stack className={styles.contentImg}>
-              <img
-                src="/src/assets/images/about-us/our-mission.jpg"
-                alt="Our Mission"
-              />
+              <img src={our_mission} alt="Our Mission" />
             </Stack>
           </Grid>
 
           <Grid size={{ lg: 8 }}>
             {contents.map((content, index) => (
               <Box ml={8} key={index}>
-                <Typography color="info" mb={4} fontWeight={600} variant="h4">
+                <Typography mb={4} fontWeight={600} variant="h4">
                   {content.titleMissionUs}
                 </Typography>
                 <Typography

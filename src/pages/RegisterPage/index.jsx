@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import customTheme from "@/components/CustemTheme";
 import { useRegisterMutation } from "@/services/api/auth";
+import background_form from "@/assets/images/form/background-form.jpg"
 
 const Register = () => {
   const outerTheme = useTheme();
@@ -259,7 +260,7 @@ const Register = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
-              src="/src/assets/images/form/background-form.jpg"
+              src={background_form}
               alt="register background"
             />
           </Grid>

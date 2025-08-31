@@ -15,21 +15,27 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import SwiperProducts from "@/components/SwiperProducts";
+import banner_1 from "@/assets/images/banner/banner-1.jpg";
+import banner_2 from "@/assets/images/banner/banner-2.jpg";
+import banner_3 from "@/assets/images/banner/banner-3.jpg";
+import banner_4 from "@/assets/images/banner/banner-4.jpg";
 
-const slides = [
-  "/src/assets/images/banner/banner-1.jpg",
-  "/src/assets/images/banner/banner-2.jpg",
-  "/src/assets/images/banner/banner-3.jpg",
-  "/src/assets/images/banner/banner-4.jpg",
-];
+import T_Shirt from "@/assets/images/categories/T-shirt.jpg";
+import Shirt from "@/assets/images/categories/Shirt.jpg";
+import Jacket from "@/assets/images/categories/Jacket.jpg";
+import Trouser from "@/assets/images/categories/Trouser.jpg";
+import Shorts from "@/assets/images/categories/Shorts.jpg";
+import Accessories from "@/assets/images/categories/Accessories.jpg";
+
+const slides = [banner_1, banner_2, banner_3, banner_4];
 
 const categoryImageMap = {
-  "Áo thun": "/src/assets/images/categories/T-shirt.jpg",
-  "Áo sơ mi": "/src/assets/images/categories/Shirt.jpg",
-  "Áo khoác": "/src/assets/images/categories/Jacket.jpg",
-  "Quần dài": "/src/assets/images/categories/Trouser.jpg",
-  "Quần shorts": "/src/assets/images/categories/Shorts.jpg",
-  "Phụ kiện": "/src/assets/images/categories/Accessories.jpg",
+  "Áo thun": T_Shirt,
+  "Áo sơ mi": Shirt,
+  "Áo khoác": Jacket,
+  "Quần dài": Trouser,
+  "Quần shorts": Shorts,
+  "Phụ kiện": Accessories,
 };
 
 const Home = () => {
@@ -39,7 +45,7 @@ const Home = () => {
     message: "",
     severity: "success",
   });
-  const { data: dataCategories, isFetching } = useListCategoriesForUserQuery({
+  const { data: dataCategories } = useListCategoriesForUserQuery({
     page: 0,
     size: 10,
     refetchOnMountOrArgChange: true,
@@ -101,7 +107,7 @@ const Home = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography color="info" mb={4} fontWeight={600} variant="h4">
+        <Typography mb={4} fontWeight={600} variant="h4">
           Hãy tận hưởng tuổi trẻ của bạn!
         </Typography>
         <Typography
@@ -118,7 +124,7 @@ const Home = () => {
       </Box>
 
       <Container maxWidth="xl">
-        <Typography color="info" fontWeight={600} variant="h4">
+        <Typography fontWeight={600} variant="h4">
           Danh mục sản phẩm
         </Typography>
 

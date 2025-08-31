@@ -54,7 +54,7 @@ const SwiperProducts = () => {
             justifyContent="space-between"
             sx={{ mb: 2 }}
           >
-            <Typography color="info" fontWeight={600} variant="h4">
+            <Typography fontWeight={600} variant="h4">
               {category.title}
             </Typography>
 
@@ -165,11 +165,8 @@ const SwiperProducts = () => {
                         <Typography
                           variant="h6"
                           textAlign="center"
-                          sx={{
-                            mt: 1,
-                            fontWeight: "bold",
-                            color: "primary.main",
-                          }}
+                          mt={1}
+                          fontWeight={"bold"}
                         >
                           {product.price?.toLocaleString("vi-VN")}đ
                         </Typography>

@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import customTheme from "@/components/CustemTheme";
 import { useState } from "react";
 import { useForgotPasswordMutation } from "@/services/api/auth";
+import background_form from "@/assets/images/form/background-form.jpg"
 
 const ForgotPassword = () => {
   const outerTheme = useTheme();
@@ -178,7 +179,7 @@ const ForgotPassword = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
-              src="/src/assets/images/form/background-form.jpg"
+              src={background_form}
             />
           </Grid>
         </Grid>
