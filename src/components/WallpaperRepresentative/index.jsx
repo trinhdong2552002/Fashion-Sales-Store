@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box } from "@mui/material";
-import backgroundFashion from "/src/assets/images/background-fashions/background-fashion.png";
+import backgroundFashion from "@/assets/images/background-fashions/background-fashion.png";
 
 const WallpaperRepresentative = ({ titleHeader, searchSupport }) => {
   return (

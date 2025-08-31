@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation, useLazyGetMyInfoQuery } from "@/services/api/auth";
 import customTheme from "@/components/CustemTheme";
+import background_form from "@/assets/images/form/background-form.jpg"
 
 const Login = () => {
   const outerTheme = useTheme();
@@ -257,7 +258,7 @@ const Login = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
-              src="/src/assets/images/form/background-form.jpg"
+              src={background_form}
               alt="Login background"
             />
           </Grid>

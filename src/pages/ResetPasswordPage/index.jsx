@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import customTheme from "@/components/CustemTheme";
 import { useLocation, useNavigate } from "react-router-dom";
+import background_form from "@/assets/images/form/background-form.jpg";
 
 import { useResetPasswordMutation } from "@/services/api/auth";
 
@@ -265,7 +266,7 @@ const ResetPassword = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
-              src="/src/assets/images/form/background-form.jpg"
+              src={background_form}
             />
           </Grid>
         </Grid>

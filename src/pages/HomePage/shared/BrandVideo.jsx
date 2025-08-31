@@ -1,4 +1,5 @@
 import { Container, Typography, Box, CardMedia } from "@mui/material";
+import introducingVideo from "@/assets/videos/introducing-fashion.mp4";
 
 const BrandVideo = () => {
   return (
@@ -11,7 +12,7 @@ const BrandVideo = () => {
     >
       <Container maxWidth="lg">
         <Box textAlign="center" mb={4}>
-          <Typography color="info" mb={4} fontWeight={600} variant="h4">
+          <Typography mb={4} fontWeight={600} variant="h4">
             Khám phá Fashion Store
           </Typography>
           <Typography
@@ -28,7 +29,7 @@ const BrandVideo = () => {
 
         <CardMedia
           component="video"
-          image="/src/assets/videos/introducing-fashion.mp4"
+          image={introducingVideo}
           title="title"
           controls
           autoPlay

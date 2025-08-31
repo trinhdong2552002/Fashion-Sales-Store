@@ -1,5 +1,12 @@
 import { Avatar, Box, Container, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import outfit_1 from "@/assets/images/blogs/outfit-1.jpg";
+import outfit_2 from "@/assets/images/blogs/outfit-2.jpg";
+import outfit_3 from "@/assets/images/blogs/outfit-3.jpg";
+import outfit_4 from "@/assets/images/blogs/outfit-4.jpg";
+import outfit_5 from "@/assets/images/blogs/outfit-5.jpg";
+import outfit_6 from "@/assets/images/blogs/outfit-6.jpg";
+import outfit_7 from "@/assets/images/blogs/outfit-7.jpg";
 
 const BlogDetail = () => {
   const location = useLocation();
@@ -54,7 +61,6 @@ const BlogDetail = () => {
           <Typography
             variant="h4"
             component="h1"
-            color="info"
             fontWeight={600}
             mb={3}
             textAlign="center"
@@ -95,86 +101,86 @@ const BlogDetail = () => {
           </Typography>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               1. Áo sơ mi trắng ngắn tay kết hợp với quần kaki đen và đôi giày
               trắng
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-1.jpg"
+              src={outfit_1}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               2. Áo thun trắng có họa tiết đơn giản nổi bật với quần kaki nam
               đen ống côn
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-2.jpg"
+              src={outfit_2}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               3. Áo thun trắng trơn với quần đen
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-3.jpg"
+              src={outfit_3}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               4. Áo phông đen nam – quần kaki đen
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-4.jpg"
+              src={outfit_4}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               5. Áo phông sẫm màu với quần jean mài màu xanh
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-5.jpg"
+              src={outfit_5}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               6. Áo phông màu với quần kaki đen
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-6.jpg"
+              src={outfit_6}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" color="info" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={600}>
               7. Áo sơ mi nam màu nhạt và quần kaki/ jean sẫm màu
             </Typography>
 
             <img
-              src="/src/assets/images/blogs/outfit-7.jpg"
+              src={outfit_7}
               alt="outfit-1"
               style={{ display: "block", margin: "auto" }}
             />
