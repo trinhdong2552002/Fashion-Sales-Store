@@ -3,7 +3,6 @@ import AccountInformation from "./layouts/AccountInformation";
 import Address from "./pages/AddressPage";
 import ChangePassword from "./pages/ChangePassword";
 import Profile from "./pages/ProfilePage";
-import ScrollToTop from "@/components/ScrollToTop";
 import ForgotPasswordLayout from "@/layouts/ForgotPasswordLayout";
 import MainLayout from "@/layouts/MainLayout";
 import About from "@/pages/AboutPage";
@@ -21,7 +20,6 @@ import Support from "@/pages/SupportPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
 import ForgotPasswordVerify from "./pages/ForgotPassword/shared/ForgotPasswordVerify";
-import ThemeProvider from "./context/ThemeProvider";
 import ProductListsLayout from "./layouts/ProductListsLayout";
 import AddressInformation from "./pages/AddressPage/shared/AddressInformation";
 import AddressList from "./pages/AddressPage/shared/AddressList";
@@ -29,61 +27,58 @@ import BlogDetail from "./pages/Blog/shared/BlogDetail";
 
 const App = () => {
   return (
-    <ThemeProvider>
-      <ScrollToTop />
-      <Routes>
-        {/* Dependencies component Header and Footer */}
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="support" element={<Support />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="blog/:id" element={<BlogDetail />} />
-          <Route path="about" element={<About />} />
-        </Route>
+    <Routes>
+      {/* Dependencies component Header and Footer */}
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="support" element={<Support />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:id" element={<BlogDetail />} />
+        <Route path="about" element={<About />} />
+      </Route>
 
-        {/* Login */}
-        <Route path="/login" element={<Login />} />
+      {/* Login */}
+      <Route path="/login" element={<Login />} />
 
-        {/* Forgot Password */}
-        <Route path="/forgot-password" element={<ForgotPasswordLayout />}>
-          <Route index element={<ForgotPassword />} />
-          <Route
-            path="forgot-password-verify"
-            element={<ForgotPasswordVerify />}
-          />
-          <Route path="reset-password" element={<ResetPassword />} />
-        </Route>
+      {/* Forgot Password */}
+      <Route path="/forgot-password" element={<ForgotPasswordLayout />}>
+        <Route index element={<ForgotPassword />} />
+        <Route
+          path="forgot-password-verify"
+          element={<ForgotPasswordVerify />}
+        />
+        <Route path="reset-password" element={<ResetPassword />} />
+      </Route>
 
-        {/* Register */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/register/verify-account" element={<VerifyAccount />} />
+      {/* Register */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/register/verify-account" element={<VerifyAccount />} />
 
-        {/* Prouduct Lists */}
-        <Route path="/list-products" element={<ProductListsLayout />}>
-          <Route index element={<ProductLists />} />
-        </Route>
+      {/* Prouduct Lists */}
+      <Route path="/list-products" element={<ProductListsLayout />}>
+        <Route index element={<ProductLists />} />
+      </Route>
 
-        {/* Product Details */}
-        <Route path="/product-details/:id" element={<ProductDetails />} />
+      {/* Product Details */}
+      <Route path="/product-details/:id" element={<ProductDetails />} />
 
-        {/* Shipping Method */}
-        <Route path="/shipping-method" element={<ShippingMethod />} />
+      {/* Shipping Method */}
+      <Route path="/shipping-method" element={<ShippingMethod />} />
 
-        {/* Order Confirmation */}
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+      {/* Order Confirmation */}
+      <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
-        {/* Account Inform */}
-        <Route path="/account-information" element={<AccountInformation />}>
-          <Route path="profile/:id" element={<Profile />} />
-          <Route path="change-password/:id" element={<ChangePassword />} />
-          <Route path="address/:id" element={<Address />} />
-          <Route path="address-list/:id" element={<AddressList />} />
-          <Route path="new-address/:id" element={<AddressInformation />} />
-        </Route>
+      {/* Account Inform */}
+      <Route path="/account-information" element={<AccountInformation />}>
+        <Route path="profile/:id" element={<Profile />} />
+        <Route path="change-password/:id" element={<ChangePassword />} />
+        <Route path="address/:id" element={<Address />} />
+        <Route path="address-list/:id" element={<AddressList />} />
+        <Route path="new-address/:id" element={<AddressInformation />} />
+      </Route>
 
-        <Route path="/my-order" element={<MyOrder />} />
-      </Routes>
-    </ThemeProvider>
+      <Route path="/my-order" element={<MyOrder />} />
+    </Routes>
   );
 };
 

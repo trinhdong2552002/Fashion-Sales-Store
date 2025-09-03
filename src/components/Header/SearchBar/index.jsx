@@ -1,19 +1,11 @@
 // SearchBar.js
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash"; // Cần cài đặt lodash: npm install lodash
-import customTheme from "@/components/CustemTheme";
+import { debounce } from "lodash";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  IconButton,
-  InputAdornment,
-  TextField,
-  ThemeProvider,
-  useTheme,
-} from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 
 const SearchBar = () => {
-  const outerTheme = useTheme();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -38,7 +30,7 @@ const SearchBar = () => {
   };
 
   return (
-    <ThemeProvider theme={customTheme(outerTheme)}>
+    <Fragment>
       <TextField
         id="outlined-basic"
         label="Tìm kiếm sản phẩm..."
@@ -65,7 +57,7 @@ const SearchBar = () => {
           },
         }}
       />
-    </ThemeProvider>
+    </Fragment>
   );
 };
 
