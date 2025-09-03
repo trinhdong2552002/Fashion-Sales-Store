@@ -1,4 +1,4 @@
-import { Box, Container, createTheme, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
@@ -72,47 +72,5 @@ const Support = () => {
     </Box>
   );
 };
-
-const customTheme = (outerTheme) =>
-  createTheme({
-    palette: {
-      mode: outerTheme.palette.mode,
-    },
-    components: {
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            "--TextField-brandBorderColor": "white",
-            "--TextField-brandBorderHoverColor": "white",
-            "--TextField-brandBorderFocusedColor": "white",
-            "& label": {
-              color: "white",
-            },
-            "& label.Mui-focused": {
-              color: "var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-      MuiInput: {
-        styleOverrides: {
-          root: {
-            fontSize: "1.2rem",
-            color: "white",
-            "&::before": {
-              borderBottom: "2px solid var(--TextField-brandBorderColor)",
-            },
-            "&:hover:not(.Mui-disabled, .Mui-error):before": {
-              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
-            },
-            "&.Mui-focused:after": {
-              borderBottom:
-                "2px solid var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-    },
-  });
 
 export default Support;

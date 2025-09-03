@@ -1,11 +1,4 @@
-import {
-  Container,
-  Box,
-  Stack,
-  Typography,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Container, Box, Typography, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 import AuthButton from "./AuthButton";
 import CartButton from "./CartButton";
@@ -63,8 +56,8 @@ const Header = () => {
       }}
     >
       <Container maxWidth="xl">
-        <Stack
-          direction="row"
+        <Box
+          display={"flex"}
           justifyContent="space-between"
           alignItems="center"
           sx={{ py: 2 }}
@@ -137,7 +130,7 @@ const Header = () => {
 
           <CartButton />
           <AuthButton />
-        </Stack>
+        </Box>
       </Container>
     </Box>
   );

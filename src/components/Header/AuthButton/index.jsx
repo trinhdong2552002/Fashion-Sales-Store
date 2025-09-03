@@ -7,6 +7,7 @@ import {
   Button,
   Avatar,
   Divider,
+  Box,
 } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -65,9 +66,7 @@ const AuthButton = () => {
           >
             <Avatar src={myInfo.avatarUrl} alt={myInfo.name} />
             {/* <Avatar /> */}
-            <Typography sx={{ marginLeft: "5px" }}>
-              {myInfo.name}
-            </Typography>
+            <Typography sx={{ marginLeft: "5px" }}>{myInfo.name}</Typography>
           </Stack>
           <Menu
             anchorEl={anchorEl}
@@ -89,20 +88,19 @@ const AuthButton = () => {
           </Menu>
         </>
       ) : (
-        <Stack
-          direction={"row"}
-          spacing={2}
-          display={"flex"}
-          alignItems={"center"}
-        >
+        <Box display={"flex"} alignItems={"center"}>
           <Button
             variant="outlined"
             sx={{
               color: "black",
+              backgroundColor: "white",
               borderColor: "#d9d9d9",
               borderRadius: 5,
-              width: 125,
+              minWidth: 120,
               height: 40,
+              textTransform: "none",
+              fontSize: "1rem",
+              mr: 1,
               "&:hover": {
                 backgroundColor: alpha("#d9d9d9", 0.5),
               },
@@ -118,8 +116,10 @@ const AuthButton = () => {
               color: "white",
               backgroundColor: "black",
               borderRadius: 5,
-              width: 125,
+              minWidth: 120,
               height: 40,
+              textTransform: "none",
+              fontSize: "1rem",
               "&:hover": {
                 backgroundColor: alpha("#333"),
               },
@@ -129,7 +129,7 @@ const AuthButton = () => {
           >
             Đăng ký
           </Button>
-        </Stack>
+        </Box>
       )}
     </Stack>
   );

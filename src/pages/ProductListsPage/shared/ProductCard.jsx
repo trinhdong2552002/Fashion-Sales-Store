@@ -18,16 +18,16 @@ const ProductCard = ({ product }) => {
           alt={product.title}
         />
         <CardContent>
-          <Typography gutterBottom variant="body1" component="div">
+          <Typography gutterBottom variant="body1" >
             {product.title}
           </Typography>
-          <Typography gutterBottom variant="body2" component="div">
+          <Typography gutterBottom variant="body2" >
             Rating: {product.rating}
           </Typography>
           <Typography
             gutterBottom
             variant="body1"
-            component="div"
+            
             sx={{
               display: "flex",
               flexDirection: "row",

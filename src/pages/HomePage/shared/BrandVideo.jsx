@@ -30,10 +30,10 @@ const BrandVideo = () => {
         <CardMedia
           component="video"
           image={introducingVideo}
-          title="title"
-          controls
+          title="Fashion Store Introduction"
           autoPlay
           muted
+          loop
         />
       </Container>
     </Box>
