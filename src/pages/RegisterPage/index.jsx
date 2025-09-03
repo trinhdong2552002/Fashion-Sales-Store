@@ -9,18 +9,15 @@ import {
   InputAdornment,
   Snackbar,
   TextField,
-  ThemeProvider,
-  useTheme,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import customTheme from "@/components/CustemTheme";
 import { useRegisterMutation } from "@/services/api/auth";
-import background_form from "@/assets/images/form/background-form.jpg"
+import background_form from "@/assets/images/form/background-form.jpg";
 
 const Register = () => {
-  const outerTheme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
@@ -76,8 +73,9 @@ const Register = () => {
   };
 
   return (
-    <section
-      style={{
+    <Box
+      component={"section"}
+      sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -90,160 +88,203 @@ const Register = () => {
           sx={{
             width: "100%",
             maxWidth: 1000,
-            px: 3,
+            px: {
+              xl: 3,
+              lg: 3,
+              md: 3,
+              sm: 0,
+              xs: 0,
+            },
             py: 6,
             backgroundColor: "white",
             borderRadius: 2,
             boxShadow: 1,
+            mx: {
+              md: 2,
+              sm: 2,
+              xs: 2,
+            },
           }}
         >
-          <Grid size={{ xs: 6, md: 6 }}>
+          <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
             <Box sx={{ m: "0 50px" }}>
-              <h1 style={{ margin: 0 }}>Tạo tài khoản</h1>
+              <Typography
+                fontWeight={"bold"}
+                sx={{
+                  fontSize: {
+                    md: "1.6rem",
+                    lg: "1.6rem",
+                    xl: "1.6rem",
+                    sm: "1.4rem",
+                    xs: "1.4rem",
+                  },
+                  textAlign: "center",
+                }}
+              >
+                Tạo tài khoản
+              </Typography>
 
-              <p style={{ margin: "20px 0", fontSize: "1.1rem" }}>
+              <Typography
+                my={4}
+                sx={{
+                  fontSize: {
+                    md: "1.1rem",
+                    lg: "1.1rem",
+                    xl: "1.1rem",
+                    sm: "1rem",
+                    xs: "1rem",
+                  },
+                  textAlign: {
+                    sm: "center",
+                    xs: "center",
+                  },
+                }}
+              >
                 Bạn đã có tài khoản ?
-                <Link
-                  style={{
+                <Typography
+                  component={Link}
+                  ml={1}
+                  sx={{
                     textDecoration: "none",
-                    color: "black",
-                    fontWeight: 500,
-                    marginLeft: 6,
+                    color: "#666",
+                    fontSize: {
+                      md: "1.1rem",
+                      lg: "1.1rem",
+                      xl: "1.1rem",
+                      sm: "1rem",
+                      xs: "1rem",
+                    },
+                    transition: "0.2s",
+                    "&:hover": {
+                      color: "black",
+                    },
                   }}
                   to="/login"
                 >
                   Đăng nhập
-                </Link>
-              </p>
+                </Typography>
+              </Typography>
 
               <form onSubmit={handleSubmit(handleRegister)}>
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="name"
-                    label="Họ và tên"
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    disabled={isLoading}
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
-                    {...register("name", {
-                      required: "Họ và tên không được để trống",
-                      pattern: {
-                        value: /^[A-Za-zÀ-Ỹà-ỹ0-9]+(?: [A-Za-zÀ-Ỹà-ỹ0-9]+)*$/,
-                        message:
-                          "Chỉ được sử dụng chữ cái, số và khoảng trắng, không có ký tự đặc biệt",
-                      },
-                    })}
-                  />
-                </ThemeProvider>
-
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="email"
-                    label="Email"
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    disabled={isLoading}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    {...register("email", {
-                      required: "Email không được để trống",
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Email không hợp lệ",
-                      },
-                    })}
-                  />
-                </ThemeProvider>
-
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="password"
-                    label="Mật khẩu"
-                    type={showPassword ? "text" : "password"}
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    disabled={isLoading}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                    {...register("password", {
-                      required: "Mật khẩu không được để trống",
-                      minLength: {
-                        value: 6,
-                        message: "Mật khẩu phải có ít nhất 6 ký tự",
-                      },
-                    })}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                            disabled={isLoading}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </ThemeProvider>
-
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="confirmPassword"
-                    label="Xác nhận mật khẩu"
-                    type={showConfirmPassword ? "text" : "password"}
-                    variant="outlined"
-                    sx={{ mb: 4 }}
-                    fullWidth
-                    disabled={isLoading}
-                    error={!!errors.confirmPassword}
-                    helperText={errors.confirmPassword?.message}
-                    {...register("confirmPassword", {
-                      required: "Vui lòng xác nhận mật khẩu",
-                      validate: (value) =>
-                        value === watch("password") ||
-                        "Mật khẩu xác nhận không khớp",
-                    })}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowConfirmPassword}
-                            edge="end"
-                            disabled={isLoading}
-                          >
-                            {showConfirmPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </ThemeProvider>
-
-                <Button
-                  variant="contained"
+                <TextField
+                  id="name"
+                  label="Họ và tên"
+                  variant="outlined"
                   fullWidth
-                  sx={{
-                    backgroundColor: "black",
-                    color: "white",
-                    padding: "10px 24px",
-                    fontSize: "1.2rem",
-                    "&:hover": { backgroundColor: "#333" },
-                  }}
-                  type="submit"
+                  sx={{ mb: 4 }}
                   disabled={isLoading}
-                >
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                  {...register("name", {
+                    required: "Họ và tên không được để trống",
+                    pattern: {
+                      value: /^[A-Za-zÀ-Ỹà-ỹ0-9]+(?: [A-Za-zÀ-Ỹà-ỹ0-9]+)*$/,
+                      message:
+                        "Chỉ được sử dụng chữ cái, số và khoảng trắng, không có ký tự đặc biệt",
+                    },
+                  })}
+                />
+
+                <TextField
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mb: 4 }}
+                  disabled={isLoading}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  {...register("email", {
+                    required: "Email không được để trống",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Email không hợp lệ",
+                    },
+                  })}
+                />
+
+                <TextField
+                  id="password"
+                  label="Mật khẩu"
+                  type={showPassword ? "text" : "password"}
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mb: 4 }}
+                  disabled={isLoading}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  {...register("password", {
+                    required: "Mật khẩu không được để trống",
+                    minLength: {
+                      value: 6,
+                      message: "Mật khẩu phải có ít nhất 6 ký tự",
+                    },
+                  })}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                          disabled={isLoading}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <TextField
+                  id="confirmPassword"
+                  label="Xác nhận mật khẩu"
+                  type={showConfirmPassword ? "text" : "password"}
+                  variant="outlined"
+                  sx={{ mb: 4 }}
+                  fullWidth
+                  disabled={isLoading}
+                  error={!!errors.confirmPassword}
+                  helperText={errors.confirmPassword?.message}
+                  {...register("confirmPassword", {
+                    required: "Vui lòng xác nhận mật khẩu",
+                    validate: (value) =>
+                      value === watch("password") ||
+                      "Mật khẩu xác nhận không khớp",
+                  })}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowConfirmPassword}
+                          edge="end"
+                          disabled={isLoading}
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Button fullWidth type="submit">
                   {isLoading ? (
-                    <CircularProgress size={34} color="inherit" />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CircularProgress
+                        size={34}
+                        color="inherit"
+                        sx={{ mr: 1 }}
+                      />
+                    </Box>
                   ) : (
                     "Đăng ký"
                   )}
@@ -252,7 +293,14 @@ const Register = () => {
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 6, md: 6 }}>
+          <Grid
+            size={{
+              xl: 6,
+              lg: 6,
+              md: 6,
+            }}
+            sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+          >
             <img
               style={{
                 width: "100%",
@@ -260,8 +308,9 @@ const Register = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
+              draggable="false"
               src={background_form}
-              alt="register background"
+              alt="background form"
             />
           </Grid>
         </Grid>
@@ -282,7 +331,7 @@ const Register = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </section>
+    </Box>
   );
 };
 

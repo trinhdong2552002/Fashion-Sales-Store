@@ -9,19 +9,15 @@ import {
   InputAdornment,
   Snackbar,
   TextField,
-  ThemeProvider,
-  useTheme,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import customTheme from "@/components/CustemTheme";
 import { useLocation, useNavigate } from "react-router-dom";
 import background_form from "@/assets/images/form/background-form.jpg";
-
 import { useResetPasswordMutation } from "@/services/api/auth";
 
 const ResetPassword = () => {
-  const outerTheme = useTheme();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
@@ -113,11 +109,12 @@ const ResetPassword = () => {
   };
 
   return (
-    <section
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+    <Box
+      component={"main"}
+      display={"flex"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      sx={{
         backgroundColor: "#f0f0f0",
       }}
     >
@@ -127,138 +124,173 @@ const ResetPassword = () => {
           sx={{
             width: "100%",
             maxWidth: 1000,
-            px: 3,
+            px: {
+              xl: 3,
+              lg: 3,
+              md: 3,
+              sm: 0,
+              xs: 0,
+            },
             py: 6,
             backgroundColor: "white",
             borderRadius: 2,
             boxShadow: 1,
+            mx: {
+              md: 2,
+              sm: 2,
+              xs: 2,
+            },
           }}
         >
-          <Grid size={{ xs: 6, md: 6 }}>
+          <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
             <Box sx={{ m: "0 50px" }}>
-              <h1 style={{ margin: 0 }}>Đặt lại mật khẩu</h1>
+              <Typography
+                fontWeight={"bold"}
+                sx={{
+                  fontSize: {
+                    md: "1.6rem",
+                    lg: "1.6rem",
+                    xl: "1.6rem",
+                    sm: "1.4rem",
+                    xs: "1.4rem",
+                  },
+                  textAlign: "center",
+                }}
+              >
+                Đặt lại mật khẩu
+              </Typography>
 
-              <p style={{ margin: "20px 0", fontSize: "1.1rem" }}>
+              <Typography
+                my={4}
+                sx={{
+                  fontSize: {
+                    md: "1.1rem",
+                    lg: "1.1rem",
+                    xl: "1.1rem",
+                    sm: "1rem",
+                    xs: "1rem",
+                  },
+                  textAlign: {
+                    sm: "center",
+                    xs: "center",
+                  },
+                }}
+              >
                 Vui lòng nhập mật khẩu mới.
-              </p>
+              </Typography>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="newPassword"
-                    label="Mật khẩu mới"
-                    fullWidth
-                    type={showNewPassword ? "text" : "password"}
-                    variant="outlined"
-                    sx={{ mt: 4, mb: 4 }}
-                    disabled={isLoading}
-                    error={!!errors.newPassword}
-                    helperText={errors.newPassword?.message}
-                    {...register("newPassword", {
-                      required: "Mật khẩu không được để trống",
-                      minLength: {
-                        value: 6,
-                        message: "Mật khẩu phải có ít nhất 6 ký tự",
-                      },
-                    })}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label={
-                              showNewPassword
-                                ? "hide the password"
-                                : "display the password"
-                            }
-                            onClick={handleClickShowNewPassword}
-                            onMouseDown={handleMouseDownNewPassword}
-                            onMouseUp={handleMouseUpNewPassword}
-                            edge="end"
-                            disabled={isLoading}
-                          >
-                            {showNewPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </ThemeProvider>
-
-                <ThemeProvider theme={customTheme(outerTheme)}>
-                  <TextField
-                    id="confirmPassword"
-                    label="Xác nhận mật khẩu"
-                    variant="outlined"
-                    fullWidth
-                    type={showConfirmPassword ? "text" : "password"}
-                    sx={{ mb: 1 }}
-                    disabled={isLoading}
-                    error={!!errors.confirmPassword}
-                    helperText={errors.confirmPassword?.message}
-                    {...register("confirmPassword", {
-                      required: "Vui lòng xác nhận mật khẩu",
-                      validate: (value) =>
-                        value === watch("newPassword") ||
-                        "Mật khẩu xác nhận không khớp",
-                    })}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label={
-                              showConfirmPassword
-                                ? "hide the password"
-                                : "display the password"
-                            }
-                            onClick={handleClickShowConfirmPassword}
-                            onMouseDown={handleMouseDownConfirmPassword}
-                            onMouseUp={handleMouseUpConfirmPassword}
-                            edge="end"
-                            disabled={isLoading}
-                          >
-                            {showConfirmPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </ThemeProvider>
-
-                <Button
-                  variant="contained"
+                <TextField
+                  id="newPassword"
+                  label="Mật khẩu mới"
                   fullWidth
-                  sx={{
-                    backgroundColor: "black",
-                    color: "white",
-                    padding: "10px 24px",
-                    marginTop: "14px",
-                    fontSize: "1.2rem",
-                    fontWeight: "regular",
-                    "&:hover": {
-                      backgroundColor: "#333",
-                    },
-                  }}
-                  type="submit"
+                  type={showNewPassword ? "text" : "password"}
+                  variant="outlined"
+                  sx={{ mb: 4 }}
                   disabled={isLoading}
-                >
+                  error={!!errors.newPassword}
+                  helperText={errors.newPassword?.message}
+                  {...register("newPassword", {
+                    required: "Mật khẩu không được để trống",
+                    minLength: {
+                      value: 6,
+                      message: "Mật khẩu phải có ít nhất 6 ký tự",
+                    },
+                  })}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={
+                            showNewPassword
+                              ? "hide the password"
+                              : "display the password"
+                          }
+                          onClick={handleClickShowNewPassword}
+                          onMouseDown={handleMouseDownNewPassword}
+                          onMouseUp={handleMouseUpNewPassword}
+                          edge="end"
+                          disabled={isLoading}
+                        >
+                          {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <TextField
+                  id="confirmPassword"
+                  label="Xác nhận mật khẩu"
+                  variant="outlined"
+                  fullWidth
+                  type={showConfirmPassword ? "text" : "password"}
+                  sx={{ mb: 4 }}
+                  disabled={isLoading}
+                  error={!!errors.confirmPassword}
+                  helperText={errors.confirmPassword?.message}
+                  {...register("confirmPassword", {
+                    required: "Vui lòng xác nhận mật khẩu",
+                    validate: (value) =>
+                      value === watch("newPassword") ||
+                      "Mật khẩu xác nhận không khớp",
+                  })}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={
+                            showConfirmPassword
+                              ? "hide the password"
+                              : "display the password"
+                          }
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownConfirmPassword}
+                          onMouseUp={handleMouseUpConfirmPassword}
+                          edge="end"
+                          disabled={isLoading}
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Button fullWidth type="submit">
                   {isLoading ? (
-                    <CircularProgress size={34} color="inherit" />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CircularProgress
+                        size={34}
+                        color="inherit"
+                        sx={{ mr: 1 }}
+                      />
+                    </Box>
                   ) : (
-                    "Đặt lại mật khẩu"
+                    "Xác nhận"
                   )}
                 </Button>
               </form>
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 6, md: 6 }}>
+          <Grid
+            size={{
+              xl: 6,
+              lg: 6,
+              md: 6,
+            }}
+            sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+          >
             <img
               style={{
                 width: "100%",
@@ -266,7 +298,9 @@ const ResetPassword = () => {
                 borderRadius: 8,
                 objectFit: "cover",
               }}
+              draggable="false"
               src={background_form}
+              alt="Background form"
             />
           </Grid>
         </Grid>
@@ -287,7 +321,7 @@ const ResetPassword = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </section>
+    </Box>
   );
 };
 
