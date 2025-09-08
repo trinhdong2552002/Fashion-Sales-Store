@@ -61,7 +61,7 @@ const BlogDetail = () => {
           <Typography
             variant="h4"
             component="h1"
-            fontWeight={600}
+            fontWeight={"bold"}
             mb={3}
             textAlign="center"
           >
@@ -101,7 +101,7 @@ const BlogDetail = () => {
           </Typography>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               1. Áo sơ mi trắng ngắn tay kết hợp với quần kaki đen và đôi giày
               trắng
             </Typography>
@@ -114,7 +114,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               2. Áo thun trắng có họa tiết đơn giản nổi bật với quần kaki nam
               đen ống côn
             </Typography>
@@ -127,7 +127,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               3. Áo thun trắng trơn với quần đen
             </Typography>
 
@@ -139,7 +139,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               4. Áo phông đen nam – quần kaki đen
             </Typography>
 
@@ -151,7 +151,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               5. Áo phông sẫm màu với quần jean mài màu xanh
             </Typography>
 
@@ -163,7 +163,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               6. Áo phông màu với quần kaki đen
             </Typography>
 
@@ -175,7 +175,7 @@ const BlogDetail = () => {
           </Box>
 
           <Box>
-            <Typography my={4} variant="h5" fontWeight={600}>
+            <Typography my={4} variant="h5" fontWeight={"bold"}>
               7. Áo sơ mi nam màu nhạt và quần kaki/ jean sẫm màu
             </Typography>
 

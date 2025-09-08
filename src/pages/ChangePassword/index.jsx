@@ -15,7 +15,7 @@ const ChangePassword = () => {
         </Grid>
 
         <Grid size={{ xl: 9, lg: 9 }}>
-          <Typography variant="h4" fontWeight={600} mb={2}>
+          <Typography variant="h4" fontWeight={"bold"} mb={2}>
             Đổi mật khẩu
           </Typography>
           <ChangePasswordInform />

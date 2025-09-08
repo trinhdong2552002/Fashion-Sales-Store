@@ -12,7 +12,7 @@ const BrandVideo = () => {
     >
       <Container maxWidth="lg">
         <Box textAlign="center" mb={4}>
-          <Typography mb={4} fontWeight={600} variant="h4">
+          <Typography mb={4} fontWeight={"bold"} variant="h4">
             Khám phá Fashion Store
           </Typography>
           <Typography

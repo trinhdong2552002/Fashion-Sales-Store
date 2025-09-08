@@ -6,7 +6,7 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import BrandVideo from "./shared/BrandVideo";
@@ -15,11 +15,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import SwiperProducts from "@/components/SwiperProducts";
+import { slugify } from "@/utils/slugify";
 import banner_1 from "@/assets/images/banner/banner-1.jpg";
 import banner_2 from "@/assets/images/banner/banner-2.jpg";
 import banner_3 from "@/assets/images/banner/banner-3.jpg";
 import banner_4 from "@/assets/images/banner/banner-4.jpg";
-
 import T_Shirt from "@/assets/images/categories/T-shirt.jpg";
 import Shirt from "@/assets/images/categories/Shirt.jpg";
 import Jacket from "@/assets/images/categories/Jacket.jpg";
@@ -40,6 +40,8 @@ const categoryImageMap = {
 
 const Home = () => {
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -70,6 +72,8 @@ const Home = () => {
   const activeCategories = Array.isArray(dataCategories)
     ? dataCategories.filter((item) => item.status === "ACTIVE")
     : [];
+
+  const currentCategory = searchParams.get("category");
 
   return (
     <Box component={"section"}>
@@ -107,7 +111,7 @@ const Home = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography mb={4} fontWeight={600} variant="h4">
+        <Typography mb={4} fontWeight={"bold"} variant="h4">
           Hãy tận hưởng tuổi trẻ của bạn!
         </Typography>
         <Typography
@@ -124,7 +128,18 @@ const Home = () => {
       </Box>
 
       <Container maxWidth="xl">
-        <Typography fontWeight={600} variant="h4">
+        <Typography
+          sx={{
+            fontSize: {
+              xl: "1.8rem",
+              lg: "1.8rem",
+              md: "1.8rem",
+              sm: "1.3rem",
+              xs: "1.3rem",
+            },
+          }}
+          fontWeight={"bold"}
+        >
           Danh mục sản phẩm
         </Typography>
 
@@ -141,8 +156,16 @@ const Home = () => {
               size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
               key={item.id}
             >
-              <Link to="/list-products">
-                <Box className={styles.wrapperImg}>
+              <Link to={`/all-products?category=${slugify(item.name)}`}>
+                <Box
+                  className={styles.wrapperImg}
+                  sx={{
+                    border:
+                      currentCategory === slugify(item.name)
+                        ? "2px solid #007bff"
+                        : "none",
+                  }}
+                >
                   <img
                     className={styles.mediaImg}
                     src={
@@ -153,7 +176,14 @@ const Home = () => {
                   />
                   <Box className={styles.contentImg}>
                     <h2
-                      style={{ fontSize: 32, fontWeight: 500, color: "white" }}
+                      style={{
+                        fontSize: 32,
+                        fontWeight: 500,
+                        color:
+                          currentCategory === slugify(item.name)
+                            ? "#007bff"
+                            : "white",
+                      }}
                     >
                       {item.name}
                     </h2>
@@ -164,8 +194,15 @@ const Home = () => {
           ))}
         </Grid>
       </Container>
-      <SwiperProducts />
+
+      {/* Product newest */}
+      <SwiperProducts title="Sản phẩm mới nhất" type="newest" />
+
+      {/* Brand video */}
       <BrandVideo />
+
+      {/* Product best seller */}
+      <SwiperProducts title="Sản phẩm bán chạy" type="bestSeller" />
 
       <Snackbar
         open={snackbar.open}

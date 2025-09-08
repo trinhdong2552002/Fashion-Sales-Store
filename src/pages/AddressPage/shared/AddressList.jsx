@@ -264,7 +264,7 @@ const AddressList = ({ id }) => {
   return (
     <Fragment>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
-        <Typography variant="h4" fontWeight={600}>
+        <Typography variant="h4" fontWeight={"bold"}>
           Địa chỉ
         </Typography>
 
