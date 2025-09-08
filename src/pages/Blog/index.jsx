@@ -189,7 +189,7 @@ const Blog = () => {
                   justifyContent={"center"}
                   height={"100%"}
                 >
-                  <Typography mb={4} fontWeight={600} fontSize={"1.8rem"}>
+                  <Typography mb={4} fontWeight={"bold"} fontSize={"1.8rem"}>
                     {blog.title}
                   </Typography>
 
@@ -277,7 +277,7 @@ const Blog = () => {
                     style={{ width: "100%" }}
                   />
                   <CardContent>
-                    <Typography variant="h6" fontWeight={600} mb={2}>
+                    <Typography variant="h6" fontWeight={"bold"} mb={2}>
                       {blog.title}
                     </Typography>
                     <Typography

@@ -15,10 +15,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useListProductsForUserQuery } from "@/services/api/product";
 import { useEffect } from "react";
+import { KeyboardArrowRight } from "@mui/icons-material";
 
-const navCategories = [{ title: "Sản phẩm bán chạy", showButton: true }];
-
-const SwiperProducts = () => {
+const SwiperProducts = ({ title, type }) => {
   const navigate = useNavigate();
 
   const {
@@ -35,91 +34,147 @@ const SwiperProducts = () => {
     refetchProduct();
   }, [refetchProduct]);
 
-  const activeProducts = Array.isArray(dataProducts?.result?.items)
+  let products = Array.isArray(dataProducts?.result?.items)
     ? dataProducts.result.items.filter((item) => item.status === "ACTIVE")
     : [];
 
+  // Filter theo type
+  if (type === "newest") {
+    products = [...products].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  } else if (type === "bestSeller") {
+    products = [...products].sort((a, b) => b.soldQuantity - a.soldQuantity);
+  }
+
   const handleClick = () => {
-    navigate("/list-products");
+    navigate("/all-products");
   };
 
   return (
     <Container maxWidth="xl">
-      {navCategories.map((category, index) => (
-        <Box key={index} sx={{ my: 6 }}>
+      <Box
+        sx={{
+          my: 6,
+          mx: {
+            md: 1,
+            xs: 1,
+            sm: 1,
+          },
+        }}
+      >
+        <Box
+          display={"flex"}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography
+            sx={{
+              fontSize: {
+                xl: "1.8rem",
+                lg: "1.8rem",
+                md: "1.8rem",
+                sm: "1.4rem",
+                xs: "1.4rem",
+              },
+            }}
+            fontWeight={"bold"}
+          >
+            {title}
+          </Typography>
+
+          <Button
+            variant="contained"
+            endIcon={<KeyboardArrowRight />}
+            sx={{
+              backgroundColor: "black",
+              fontSize: {
+                xl: "1.1rem",
+                lg: "1.1rem",
+                md: "1.1rem",
+                sm: "1rem",
+                xs: "1rem",
+              },
+            }}
+            onClick={handleClick}
+          >
+            Xem tất cả
+          </Button>
+        </Box>
+
+        {/* Swiper Products */}
+
+        {isError ? (
+          <Typography color="error" variant="h6">
+            Không thể tải sản phẩm. Vui lòng thử lại sau.
+            {error.message}
+          </Typography>
+        ) : isLoadingProduct ? (
           <Box
             display={"flex"}
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 2 }}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
           >
-            <Typography fontWeight={600} variant="h4">
-              {category.title}
+            <CircularProgress />
+            <Typography mt={2} textAlign="center" variant="h6">
+              Đang tải sản phẩm...
             </Typography>
-
-            {category.showButton && (
-              <Box display={"flex"} alignItems="center">
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "black",
-                    mr: 2.5,
-                  }}
-                  onClick={handleClick}
-                >
-                  Xem tất cả
-                </Button>
-              </Box>
-            )}
           </Box>
+        ) : dataProducts ? (
+          <Swiper
+            breakpoints={{
+              // When window width is >= 640px
+              0: {
+                slidesPerView: 1,
+                spaceBetween: 20,
+              },
+              600: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              // When window width is >= 768px
+              900: {
+                slidesPerView: 3,
+                spaceBetween: 40,
+              },
+              // When window width is >= 1024px
+              1200: {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+              1536: {
+                slidesPerView: 5,
+                spaceBetween: 50,
+              },
+            }}
+            loop={true}
+            centeredSlides={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Autoplay]}
+            className="mySwiper"
+            style={{
+              minHeight: 500,
+              marginBottom: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {products.map((product) => {
+              const mainImage =
+                product.images && product.images.length > 0
+                  ? [...product.images].sort((a, b) => a.id - b.id)[0]
+                  : null;
 
-          {/* Swiper Products */}
-
-          {isError ? (
-            <Typography color="error" variant="h6">
-              Không thể tải sản phẩm. Vui lòng thử lại sau.
-              {error.message}
-            </Typography>
-          ) : isLoadingProduct ? (
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              <CircularProgress />
-              <Typography textAlign="center" variant="h6">
-                Đang tải sản phẩm...
-              </Typography>
-            </Box>
-          ) : dataProducts ? (
-            <Swiper
-              slidesPerView={5}
-              spaceBetween={30}
-              loop={true}
-              centeredSlides={true}
-              autoplay={{
-                delay: 5000,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                clickable: true,
-              }}
-              modules={[Autoplay]}
-              className="mySwiper"
-              style={{
-                minHeight: 500,
-                marginBottom: "20px",
-                backgroundColor: "#f5f5f5",
-                padding: "20px",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {activeProducts.map((product) => (
+              return (
                 <SwiperSlide key={product.id}>
                   <Card
                     onClick={() => navigate(`/product-details/${product.id}`)}
@@ -130,17 +185,20 @@ const SwiperProducts = () => {
                         transform: "translateY(-2px)",
                         transition: "all 0.3s ease",
                       },
+                      mx: {
+                        xs: 4,
+                        sm: 0,
+                        md: 0,
+                        lg: 0,
+                        xl: 0,
+                      },
                     }}
                   >
                     <CardActionArea sx={{ flexGrow: 1 }}>
                       <CardMedia
                         component="img"
                         height="300"
-                        image={
-                          product.images?.length > 0
-                            ? product.images[0].imageUrl
-                            : ""
-                        }
+                        image={mainImage ? mainImage.imageUrl : ""}
                         alt={product.name}
                         sx={{
                           objectFit: "cover",
@@ -174,11 +232,11 @@ const SwiperProducts = () => {
                     </CardActionArea>
                   </Card>
                 </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : null}
-        </Box>
-      ))}
+              );
+            })}
+          </Swiper>
+        ) : null}
+      </Box>
     </Container>
   );
 };

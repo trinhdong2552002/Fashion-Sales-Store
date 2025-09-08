@@ -55,7 +55,7 @@ const App = () => {
       <Route path="/register/verify-account" element={<VerifyAccount />} />
 
       {/* Prouduct Lists */}
-      <Route path="/list-products" element={<ProductListsLayout />}>
+      <Route path="/all-products" element={<ProductListsLayout />}>
         <Route index element={<ProductLists />} />
       </Route>
 

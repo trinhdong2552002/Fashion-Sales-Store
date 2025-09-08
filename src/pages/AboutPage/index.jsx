@@ -60,7 +60,7 @@ const About = () => {
           <Grid size={{ lg: 8, md: 8, sm: 12 }}>
             {contents.map((content, index) => (
               <Box mr={8} key={index}>
-                <Typography mb={4} fontWeight={600} variant="h4">
+                <Typography mb={4} fontWeight={"bold"} variant="h4">
                   {content.titleAboutUs}
                 </Typography>
                 <Typography
@@ -123,7 +123,7 @@ const About = () => {
           <Grid size={{ lg: 8 }}>
             {contents.map((content, index) => (
               <Box ml={8} key={index}>
-                <Typography mb={4} fontWeight={600} variant="h4">
+                <Typography mb={4} fontWeight={"bold"} variant="h4">
                   {content.titleMissionUs}
                 </Typography>
                 <Typography
