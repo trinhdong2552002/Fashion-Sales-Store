@@ -29,14 +29,14 @@ const SwiperProducts = ({ title, type }) => {
   } = useListProductsForUserQuery({
     refetchOnMountOrArgChange: true,
   });
+  console.log(dataProducts);
 
   useEffect(() => {
     refetchProduct();
   }, [refetchProduct]);
 
-  let products = Array.isArray(dataProducts?.result?.items)
-    ? dataProducts.result.items.filter((item) => item.status === "ACTIVE")
-    : [];
+  let products =
+    dataProducts?.items.filter((item) => item.status === "ACTIVE") || [];
 
   // Filter theo type
   if (type === "newest") {
@@ -107,7 +107,7 @@ const SwiperProducts = ({ title, type }) => {
 
         {isError ? (
           <Typography color="error" variant="h6">
-            Không thể tải sản phẩm. Vui lòng thử lại sau.
+            {/* Không thể tải sản phẩm. Vui lòng thử lại sau. */}
             {error.message}
           </Typography>
         ) : isLoadingProduct ? (

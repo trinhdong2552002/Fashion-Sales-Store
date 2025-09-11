@@ -1,98 +1,123 @@
-// ProductLists.jsx
 import {
   Container,
   Grid,
-  Stack,
-  CircularProgress,
   Typography,
+  Box,
+  Card,
+  CardContent,
+  Skeleton,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import styles from "./index.module.css";
-import SortProducts from "./shared/SortProducts";
-
-const sectionTitleMenuItems = [
-  {
-    title: "Theo mục sản phẩm",
-    menuItem: [
-      "Áo thun",
-      "Áo sơ mi",
-      "Áo khoác",
-      "Quần dài",
-      "Quần shorts",
-      "Phụ kiện",
-    ],
-  },
-];
+import { useListCategoriesForUserQuery } from "@/services/api/categories";
+import { slugify } from "@/utils/slugify";
+import ProductItems from "./shared/ProductItems";
 
 const ProductLists = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const [searchTerm] = useState("");
 
-  // Đọc query parameter từ URL
+  const selectedCategory = searchParams.get("category") || "";
+
+  const {
+    data: dataCategories,
+    isLoading,
+    refetch,
+  } = useListCategoriesForUserQuery({
+    pageNo: 1,
+    pageSize: 10,
+    refetchOnMountOrArgChange: true,
+    forceRefetch: true,
+  });
+
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const search = params.get("search") || "";
-    setSearchTerm(search);
-  }, [location.search]);
-
-  const handleLoadingChange = (loading) => {
-    setIsLoading(loading);
-  };
+    refetch();
+  }, [refetch]);
 
   return (
-    <section>
-      <Container maxWidth="lg">
+    <Box component={"section"}>
+      <Box m={4}>
         {isLoading ? (
-          <Stack
-            sx={{
-              height: "100vh",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <CircularProgress />
-            <Typography sx={{ mt: 2 }}>Đang tải sản phẩm...</Typography>
-          </Stack>
+          <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+            <Card sx={{ mt: 2 }}>
+              <Skeleton variant="rectangular" height={180} />
+              <CardContent>
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+              </CardContent>
+            </Card>
+          </Box>
         ) : (
-          <Grid container>
-            <Grid item xl={2} lg={2}>
-              {sectionTitleMenuItems.map((sectionTitleMenuItem, index) => (
-                <Stack sx={{ mt: "38px" }} key={index}>
-                  <h3
-                    style={{
-                      fontSize: 18,
-                      fontWeight: "500",
-                      width: "100%",
-                      margin: 0,
-                    }}
-                  >
-                    {sectionTitleMenuItem.title}
-                    <ul className={styles.navigationSelectItems}>
-                      {sectionTitleMenuItem.menuItem.map((menuItem, index) => (
-                        <li key={index}>
-                          <Link className={styles.navigationSelectItems} to="#">
-                            <p>{menuItem}</p>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </h3>
-                </Stack>
-              ))}
-            </Grid>
+          <Box sx={{ py: 10 }}>
+            <Grid container spacing={3}>
+              <Grid
+                size={{ xl: 2, lg: 2, md: 2 }}
+                sx={{
+                  display: {
+                    xl: "block",
+                    lg: "block",
+                    md: "none",
+                    xs: "none",
+                    sm: "none",
+                  },
+                  maxHeight: 500,
+                  border: "1px solid #ddd",
+                  width: "100%",
+                  p: {
+                    xl: 4,
+                    lg: 3,
+                  },
+                  borderRadius: 2,
+                  backgroundColor: "#fff",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xl: "1.8rem",
+                      lg: "1.4rem",
+                    },
+                  }}
+                  width={"100%"}
+                  fontWeight={"bold"}
+                >
+                  Danh mục
+                </Typography>
+                {dataCategories.map((category, id) => {
+                  const categorySlug = slugify(category.name);
+                  return (
+                    <Box sx={{ mt: "38px" }} key={id}>
+                      <Link
+                        to={`/all-products?category=${categorySlug}`}
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                          fontWeight:
+                            selectedCategory === categorySlug
+                              ? "bold"
+                              : "normal",
+                        }}
+                      >
+                        {category.name}
+                      </Link>
+                    </Box>
+                  );
+                })}
+              </Grid>
 
-            <Grid item xl={10} lg={10}>
-              <SortProducts
-                searchTerm={searchTerm}
-                onLoadingChange={handleLoadingChange}
-              />
+              <Grid size={{ xl: 10, lg: 10, md: 12, xs: 12, sm: 12 }}>
+                <ProductItems
+                  searchTerm={searchTerm}
+                  selectedCategory={selectedCategory}
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
         )}
-      </Container>
-    </section>
+      </Box>
+    </Box>
   );
 };
 
