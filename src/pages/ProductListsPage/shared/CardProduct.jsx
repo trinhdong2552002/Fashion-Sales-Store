@@ -5,8 +5,12 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+const CardProduct = ({ product }) => {
+  const navigate = useNavigate();
+
+
   const mainImage =
     product.images && product.images.length > 0
       ? [...product.images].sort((a, b) => a.id - b.id)[0]
@@ -21,20 +25,14 @@ const ProductCard = ({ product }) => {
           transform: "translateY(-2px)",
           transition: "all 0.3s ease",
         },
-        mx: {
-          xs: 4,
-          sm: 0,
-          md: 0,
-          lg: 0,
-          xl: 0,
-        },
       }}
+      onClick={() => navigate(`/product-details/${product.id}`)}
     >
       <CardActionArea>
         <CardMedia
           component="img"
           height="300"
-           image={mainImage ? mainImage.imageUrl : ""}
+          image={mainImage ? mainImage.imageUrl : ""}
           alt={product.name}
           sx={{
             objectFit: "cover",
@@ -70,4 +68,4 @@ const ProductCard = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default CardProduct;

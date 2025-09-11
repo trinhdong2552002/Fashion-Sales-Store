@@ -33,15 +33,13 @@ const categoryImageMap = {
   "Áo thun": T_Shirt,
   "Áo sơ mi": Shirt,
   "Áo khoác": Jacket,
-  "Quần dài": Trouser,
+  "Quần tây": Trouser,
   "Quần shorts": Shorts,
   "Phụ kiện": Accessories,
 };
 
 const Home = () => {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const category = searchParams.get("category");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -51,7 +49,6 @@ const Home = () => {
     page: 0,
     size: 10,
     refetchOnMountOrArgChange: true,
-    forceRefetch: true,
   });
 
   useEffect(() => {
@@ -73,7 +70,6 @@ const Home = () => {
     ? dataCategories.filter((item) => item.status === "ACTIVE")
     : [];
 
-  const currentCategory = searchParams.get("category");
 
   return (
     <Box component={"section"}>
@@ -156,16 +152,13 @@ const Home = () => {
               size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
               key={item.id}
             >
-              <Link to={`/all-products?category=${slugify(item.name)}`}>
-                <Box
-                  className={styles.wrapperImg}
-                  sx={{
-                    border:
-                      currentCategory === slugify(item.name)
-                        ? "2px solid #007bff"
-                        : "none",
-                  }}
-                >
+              <Link
+                to={{
+                  pathname: "/all-products",
+                  search: `?category=${slugify(item.name)}`,
+                }}
+              >
+                <Box className={styles.wrapperImg}>
                   <img
                     className={styles.mediaImg}
                     src={
@@ -175,18 +168,9 @@ const Home = () => {
                     alt={item.name}
                   />
                   <Box className={styles.contentImg}>
-                    <h2
-                      style={{
-                        fontSize: 32,
-                        fontWeight: 500,
-                        color:
-                          currentCategory === slugify(item.name)
-                            ? "#007bff"
-                            : "white",
-                      }}
-                    >
+                    <Typography fontSize={"1.8rem"} color="white">
                       {item.name}
-                    </h2>
+                    </Typography>
                   </Box>
                 </Box>
               </Link>

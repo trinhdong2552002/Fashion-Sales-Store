@@ -1,5 +1,6 @@
 import { baseApi } from "/src/services/api/index.js";
-import { TAG_KEYS } from "/src/constants/tagKeys.js";
+import { TAG_KEYS } from "@/constants/tagKeys.js";
+import { slugify } from "@/utils/slugify";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,6 +9,9 @@ export const productApi = baseApi.injectEndpoints({
         url: "/v1/products",
         params: { pageNo, pageSize },
       }),
+      transformResponse: (response) => {
+        return response.result;
+      },
       providesTags: [TAG_KEYS.PRODUCT],
     }),
 

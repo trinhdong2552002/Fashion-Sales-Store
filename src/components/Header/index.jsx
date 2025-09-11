@@ -1,5 +1,5 @@
 import { Container, Box, Typography, Menu, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthButton from "./AuthButton";
 import CartButton from "./CartButton";
 import SearchBar from "./SearchBar";
@@ -7,32 +7,38 @@ import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import { useEffect, useState } from "react";
 import { ArticleOutlined, HelpOutline, InfoOutline } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { slugify } from "@/utils/slugify";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
   const linkStyle = {
     color: "black",
     textDecoration: "none",
+    cursor: "pointer",
   };
 
-  const handleClick = (event) => {
+  // Opening the dropdown menu
+  const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  // Closing the dropdown menu
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const {
-    data,
-    isFetching,
-    refetch: refetchCategories,
-  } = useListCategoriesForUserQuery({
+  const handleCategoryClick = (category) => {
+    handleClose();
+    navigate(`/all-products?category=${slugify(category.name)}`);
+  };
+
+  const { data, refetch: refetchCategories } = useListCategoriesForUserQuery({
     page: 0,
     size: 10,
     refetchOnMountOrArgChange: true,
-    forceRefetch: true,
   });
 
   useEffect(() => {
@@ -75,14 +81,14 @@ const Header = () => {
           </Link>
 
           {/* List categories */}
-          <Link onClick={handleClick} style={linkStyle}>
+          <Box onClick={handleMenuClick} style={linkStyle}>
             <Box display={"flex"} alignItems={"center"}>
               <MenuIcon />
               <Typography variant="body1" ml={1}>
                 Danh mục
               </Typography>
             </Box>
-          </Link>
+          </Box>
 
           <Menu
             anchorEl={anchorEl}
@@ -91,11 +97,13 @@ const Header = () => {
             sx={{ mt: 1 }}
           >
             {activeCategories.map((category) => (
-              <Link to="/list-products" key={category.id} style={linkStyle}>
-                <MenuItem onClick={handleClose} sx={{ p: 2 }}>
-                  {category.name}
-                </MenuItem>
-              </Link>
+              <MenuItem
+                key={category.id}
+                onClick={() => handleCategoryClick(category)}
+                sx={{ p: 2 }}
+              >
+                {category.name}
+              </MenuItem>
             ))}
           </Menu>
 
