@@ -52,6 +52,14 @@ const About = () => {
   // if (isErrorBranch)
   //   return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+    });
+  }, []);
+
   return (
     <Box component={"section"}>
       <WallpaperRepresentative titleHeader="About us" />

@@ -5,8 +5,11 @@ import {
   Pagination,
   Skeleton,
   Typography,
-  Button,
   Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useState, useEffect, useMemo } from "react";
 
@@ -16,60 +19,127 @@ import CardProduct from "./CardProduct";
 
 const ProductItems = ({ selectedCategory }) => {
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize] = useState(12);
+  const [pageSize] = useState(18);
+  const [sortType, setSortType] = useState("");
 
   const {
     data: dataProducts,
     isLoading,
     isError,
     error,
+    refetch: refetchProduct,
   } = useListProductsForUserQuery({
     pageNo,
     pageSize,
     refetchOnMountOrArgChange: true,
   });
-  console.log(dataProducts);
+
+  useEffect(() => {
+    refetchProduct();
+  }, [refetchProduct, pageNo]);
 
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+      behavior: "smooth",
     });
   }, [pageNo]);
 
-  const selectedProducts = dataProducts?.items?.filter((item) => {
-    if (selectedCategory) {
-      return (
-        item.category?.name && slugify(item.category.name) === selectedCategory
-      );
+  // Filter products by category
+  const filteredProducts = useMemo(() => {
+    return (
+      dataProducts?.items?.filter((item) => {
+        if (selectedCategory) {
+          return (
+            item.category?.name &&
+            slugify(item.category.name) === selectedCategory
+          );
+        }
+        return true;
+      }) || []
+    );
+  }, [dataProducts, selectedCategory]);
+
+  // Sort products based on selected sort type
+  const sortedProducts = useMemo(() => {
+    if (!filteredProducts || filteredProducts.length === 0) return [];
+
+    const products = [...filteredProducts];
+
+    switch (sortType) {
+      case "price_asc":
+        return products.sort((a, b) => a.price - b.price);
+
+      case "price_desc":
+        return products.sort((a, b) => b.price - a.price);
+
+      case "name_asc":
+        return products.sort((a, b) => {
+          const nameA = (a.name || "").toLowerCase();
+          const nameB = (b.name || "").toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+
+      case "name_desc":
+        return products.sort((a, b) => {
+          const nameA = (a.name || "").toLowerCase();
+          const nameB = (b.name || "").toLowerCase();
+          return nameB.localeCompare(nameA);
+        });
+
+      default:
+        return products;
     }
-    return true;
-  });
-  console.log(selectedProducts);
+  }, [filteredProducts, sortType]);
 
   const handlePageChange = (event, value) => {
     setPageNo(value);
   };
 
+  const handleSortChange = (event) => {
+    setSortType(event.target.value);
+  };
+
   // Check if there are no products to display
   const hasNoProducts =
-    !isLoading &&
-    !isError &&
-    (!selectedProducts || selectedProducts.length === 0);
-
-  // const sortedProducts = [...products].sort((a, b) => {
-  //   if (sortType === "asc") return a.price - b.price;
-  //   if (sortType === "desc") return b.price - a.price;
-  //   if (sortType === "popularity") return b.rating - a.rating;
-  //   if (sortType === "newest") return b.id - a.id;
-  //   return 0;
-  // });
+    !isLoading && !isError && (!sortedProducts || sortedProducts.length === 0);
 
   return (
     <>
+      {/* Sort Control */}
+      {sortedProducts && sortedProducts.length > 0 && (
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "flex-end" }}>
+          <FormControl color="inherit" size="small" sx={{ minWidth: 200 }}>
+            <InputLabel color="inherit">Sắp xếp theo</InputLabel>
+            <Select
+              color="inherit"
+              value={sortType}
+              label="Sắp xếp theo"
+              onChange={handleSortChange}
+            >
+              <MenuItem color="inherit" value="">
+                Mặc định
+              </MenuItem>
+              <MenuItem color="inherit" value="price_asc">
+                Giá: Thấp đến cao
+              </MenuItem>
+              <MenuItem color="inherit" value="price_desc">
+                Giá: Cao đến thấp
+              </MenuItem>
+              <MenuItem color="inherit" value="name_asc">
+                Tên: A-Z
+              </MenuItem>
+              <MenuItem color="inherit" value="name_desc">
+                Tên: Z-A
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      )}
+
       {isLoading ? (
-        <Grid container spacing={2} columns={10} p={2}>
+        <Grid container spacing={2} columns={10}>
           {[...Array(dataProducts?.pageSize)].map((_, index) => (
             <Grid size={2} key={index}>
               <Card sx={{ mt: 2 }}>
@@ -100,14 +170,14 @@ const ProductItems = ({ selectedCategory }) => {
         </Box>
       ) : (
         <Grid container spacing={2}>
-          {selectedProducts?.map((product) => (
+          {sortedProducts?.map((product) => (
             <Grid size={{ xl: 2, lg: 3, md: 3, sm: 4, xs: 6 }} key={product.id}>
               <CardProduct product={product} />
             </Grid>
           ))}
 
           {/* Only show pagination when there are products */}
-          {selectedProducts && selectedProducts.length > 0 && (
+          {sortedProducts && sortedProducts.length > 0 && (
             <Box
               display={"flex"}
               alignItems={"center"}

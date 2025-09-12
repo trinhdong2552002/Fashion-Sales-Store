@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 const CardProduct = ({ product }) => {
   const navigate = useNavigate();
 
-
   const mainImage =
     product.images && product.images.length > 0
       ? [...product.images].sort((a, b) => a.id - b.id)[0]
@@ -31,9 +30,10 @@ const CardProduct = ({ product }) => {
       <CardActionArea>
         <CardMedia
           component="img"
-          height="300"
           image={mainImage ? mainImage.imageUrl : ""}
           alt={product.name}
+          width={"100%"}
+          height={250}
           sx={{
             objectFit: "cover",
             objectPosition: "center",

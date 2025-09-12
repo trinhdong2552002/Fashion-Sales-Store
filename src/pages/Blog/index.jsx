@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const mockData = [
@@ -150,6 +151,14 @@ const mockData = [
 ];
 
 const Blog = () => {
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+    });
+  }, []);
+
   return (
     <Box component={"section"}>
       <WallpaperRepresentative titleHeader="Blog" />
