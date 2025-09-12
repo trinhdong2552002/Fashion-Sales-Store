@@ -3,8 +3,16 @@ import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
 import "./index.css";
+import { useEffect } from "react";
 
 const Support = () => {
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+    });
+  }, []);
   return (
     <Box component={"section"}>
       <WallpaperRepresentative titleHeader="Support" />

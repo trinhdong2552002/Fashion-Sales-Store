@@ -36,7 +36,7 @@ const ProductLists = () => {
 
   return (
     <Box component={"section"}>
-      <Box m={4}>
+      <Box m={2}>
         {isLoading ? (
           <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
             <Card sx={{ mt: 2 }}>
@@ -49,8 +49,8 @@ const ProductLists = () => {
             </Card>
           </Box>
         ) : (
-          <Box sx={{ py: 10 }}>
-            <Grid container spacing={3}>
+          <Box >
+            <Grid container spacing={{xl: 2, lg: 2}}>
               <Grid
                 size={{ xl: 2, lg: 2, md: 2 }}
                 sx={{
