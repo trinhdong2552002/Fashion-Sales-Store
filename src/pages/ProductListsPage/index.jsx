@@ -22,17 +22,16 @@ const ProductLists = () => {
   const {
     data: dataCategories,
     isLoading,
-    refetch,
+    refetch: refetchCategory,
   } = useListCategoriesForUserQuery({
     pageNo: 1,
     pageSize: 10,
     refetchOnMountOrArgChange: true,
-    forceRefetch: true,
   });
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    refetchCategory();
+  }, [refetchCategory]);
 
   return (
     <Box component={"section"}>

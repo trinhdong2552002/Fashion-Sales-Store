@@ -37,6 +37,7 @@ const ProductListsLayout = () => {
       <img
         src={getBannerImage()}
         alt={`Banner ${category || "default"}`}
+        draggable={false}
         width="100%"
       />
       <Outlet />

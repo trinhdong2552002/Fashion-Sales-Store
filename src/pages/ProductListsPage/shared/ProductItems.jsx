@@ -18,9 +18,13 @@ import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
 
 const ProductItems = ({ selectedCategory }) => {
-  const [pageNo, setPageNo] = useState(1);
+  const [clientPageNo, setClientPageNo] = useState(1);
   const [pageSize] = useState(18);
   const [sortType, setSortType] = useState("");
+
+  useEffect(() => {
+    setClientPageNo(1);
+  }, [selectedCategory]);
 
   const {
     data: dataProducts,
@@ -29,14 +33,14 @@ const ProductItems = ({ selectedCategory }) => {
     error,
     refetch: refetchProduct,
   } = useListProductsForUserQuery({
-    pageNo,
-    pageSize,
+    pageNo: 1,
+    pageSize: 100, // Fetch more products to ensure we have enough for filtering
     refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
     refetchProduct();
-  }, [refetchProduct, pageNo]);
+  }, [refetchProduct]);
 
   useEffect(() => {
     window.scrollTo({
@@ -44,7 +48,7 @@ const ProductItems = ({ selectedCategory }) => {
       left: 0,
       behavior: "smooth",
     });
-  }, [pageNo]);
+  }, [clientPageNo]);
 
   // Filter products by category
   const filteredProducts = useMemo(() => {
@@ -93,22 +97,32 @@ const ProductItems = ({ selectedCategory }) => {
     }
   }, [filteredProducts, sortType]);
 
+  // Client-side pagination calculations
+  const totalFilteredProducts = sortedProducts.length;
+  const totalClientPages = Math.ceil(totalFilteredProducts / pageSize);
+  const startIndex = (clientPageNo - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
+
   const handlePageChange = (event, value) => {
-    setPageNo(value);
+    setClientPageNo(value);
   };
 
   const handleSortChange = (event) => {
     setSortType(event.target.value);
+    setClientPageNo(1);
   };
 
   // Check if there are no products to display
   const hasNoProducts =
-    !isLoading && !isError && (!sortedProducts || sortedProducts.length === 0);
+    !isLoading &&
+    !isError &&
+    (!currentPageProducts || currentPageProducts.length === 0);
 
   return (
     <>
       {/* Sort Control */}
-      {sortedProducts && sortedProducts.length > 0 && (
+      {totalFilteredProducts > 0 && (
         <Box sx={{ mb: 3, display: "flex", justifyContent: "flex-end" }}>
           <FormControl color="inherit" size="small" sx={{ minWidth: 200 }}>
             <InputLabel color="inherit">Sắp xếp theo</InputLabel>
@@ -140,7 +154,7 @@ const ProductItems = ({ selectedCategory }) => {
 
       {isLoading ? (
         <Grid container spacing={2} columns={10}>
-          {[...Array(dataProducts?.pageSize)].map((_, index) => (
+          {[...Array(pageSize)].map((_, index) => (
             <Grid size={2} key={index}>
               <Card sx={{ mt: 2 }}>
                 <Skeleton variant="rectangular" height={180} />
@@ -170,14 +184,14 @@ const ProductItems = ({ selectedCategory }) => {
         </Box>
       ) : (
         <Grid container spacing={2}>
-          {sortedProducts?.map((product) => (
+          {currentPageProducts?.map((product) => (
             <Grid size={{ xl: 2, lg: 3, md: 3, sm: 4, xs: 6 }} key={product.id}>
               <CardProduct product={product} />
             </Grid>
           ))}
 
-          {/* Only show pagination when there are products */}
-          {sortedProducts && sortedProducts.length > 0 && (
+          {/* Client-side pagination */}
+          {totalClientPages > 0 && (
             <Box
               display={"flex"}
               alignItems={"center"}
@@ -185,8 +199,8 @@ const ProductItems = ({ selectedCategory }) => {
               sx={{ width: "100%", m: 10 }}
             >
               <Pagination
-                count={dataProducts?.totalPages}
-                page={pageNo}
+                count={totalClientPages}
+                page={clientPageNo}
                 onChange={handlePageChange}
                 size="large"
                 variant="outlined"
