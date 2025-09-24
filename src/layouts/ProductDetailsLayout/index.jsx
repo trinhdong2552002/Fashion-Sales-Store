@@ -1,10 +1,10 @@
-import { Outlet } from "react-router-dom";
+import BreadcrumbNav from "@/components/Breadcrumbs/BreadcrumbNav";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Fragment } from "react";
-import BreadcrumbNav from "@/components/Breadcrumbs/BreadcrumbNav";
+import { Outlet } from "react-router-dom";
 
-export default function MainLayout() {
+const ProductDetailsLayout = () => {
   return (
     <Fragment>
       <Header />
@@ -13,4 +13,6 @@ export default function MainLayout() {
       <Footer />
     </Fragment>
   );
-}
+};
+
+export default ProductDetailsLayout;

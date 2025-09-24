@@ -88,7 +88,7 @@ const SwiperProducts = ({ title, type }) => {
             variant="contained"
             endIcon={<KeyboardArrowRight />}
             sx={{
-              backgroundColor: "black",
+              backgroundColor: "#121212",
               fontSize: {
                 xl: "1.1rem",
                 lg: "1.1rem",

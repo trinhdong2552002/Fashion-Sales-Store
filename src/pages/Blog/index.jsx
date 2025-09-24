@@ -155,7 +155,7 @@ const Blog = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+      behavior: "smooth",
     });
   }, []);
 

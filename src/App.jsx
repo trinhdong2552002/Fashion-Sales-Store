@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AccountInformation from "./layouts/AccountInformation";
 import Address from "./pages/AddressPage";
 import ChangePassword from "./pages/ChangePassword";
@@ -24,6 +24,7 @@ import ProductListsLayout from "./layouts/ProductListsLayout";
 import AddressInformation from "./pages/AddressPage/shared/AddressInformation";
 import AddressList from "./pages/AddressPage/shared/AddressList";
 import BlogDetail from "./pages/Blog/shared/BlogDetail";
+import ProductDetailsLayout from "./layouts/ProductDetailsLayout";
 
 const App = () => {
   return (
@@ -60,7 +61,9 @@ const App = () => {
       </Route>
 
       {/* Product Details */}
-      <Route path="/product-details/:id" element={<ProductDetails />} />
+      <Route path="/product-details/:id" element={<ProductDetailsLayout />}>
+        <Route index element={<ProductDetails />} />
+      </Route>
 
       {/* Shipping Method */}
       <Route path="/shipping-method" element={<ShippingMethod />} />

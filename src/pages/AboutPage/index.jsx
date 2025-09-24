@@ -28,35 +28,11 @@ const contents = [
 ];
 
 const About = () => {
-  // const {
-  //   data: dataBranches,
-  //   isLoading: isLoadingBranch,
-  //   error: isErrorBranch,
-  //   refetch: refetchBranch,
-  // } = useGetListBranchesQuery({
-  //   refetchOnMountOrArgChange: true,
-  // });
-  // console.log("dataBranches", dataBranches);
-
-  // useEffect(() => {
-  //   refetchBranch();
-  // }, [refetchBranch]);
-
-  // if (isLoadingBranch)
-  //   return (
-  //     <Box display={"flex"}>
-  //       <CircularProgress />
-  //       <p>Đang tải...</p>
-  //     </Box>
-  //   );
-  // if (isErrorBranch)
-  //   return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
-
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+      behavior: "smooth",
     });
   }, []);
 
@@ -97,21 +73,6 @@ const About = () => {
                 </Typography>
               </Box>
             ))}
-            {/* {dataBranches && (
-              <Stack sx={{ marginRight: 8 }}>
-                <ul>
-                  {dataBranches?.result?.items.map((branch) => (
-                    <li
-                      key={branch.id}
-                      style={{ margin: "10px 0", color: "var(--text-color)" }}
-                    >
-                      {branch.name} - {branch.location} (Số điện thoại:{" "}
-                      {branch.phone})
-                    </li>
-                  ))}
-                </ul>
-              </Stack>
-            )} */}
           </Grid>
 
           <Grid size={{ lg: 4, md: 4, sm: 12 }}>
