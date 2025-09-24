@@ -1,0 +1,26 @@
+.hoverUnderlineAnimation {
+  display: inline-block;
+  position: relative;
+  color: #E0E0E0;
+  text-decoration: none;
+}
+
+.hoverUnderlineAnimation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  border-radius: 5px;
+  height: 0.05em;
+  bottom: 0;
+  left: 0;
+  /* currentColor is a keyword css to use same color #E0E0E0 */
+  background: currentcolor;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.hoverUnderlineAnimation:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
