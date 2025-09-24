@@ -41,16 +41,6 @@ const Footer = () => {
     },
   ];
 
-  if (isLoadingBranch)
-    return (
-      <Box display={"flex"}>
-        <p>Đang tải chi nhánh...</p>
-      </Box>
-    );
-
-  if (isErrorBranch)
-    return <div style={{ color: "red" }}>{errorBranch.message}</div>;
-
   return (
     <Box
       component="footer"
@@ -78,7 +68,7 @@ const Footer = () => {
                 </Typography>
               </Box>
 
-               <Box display={"flex"} alignItems={"center"} my={2}>
+              <Box display={"flex"} alignItems={"center"} my={2}>
                 <Email sx={{ color: "#E0E0E0" }} />
                 <Typography sx={{ color: "#E0E0E0", ml: 1 }}>
                   cskh@fashionstore.site.name.vn
@@ -118,20 +108,29 @@ const Footer = () => {
               sx={{ mb: 2, fontWeight: 600, fontSize: "1.1rem" }}
             >
               Hệ thống cửa hàng
-              {dataBranches?.items?.map((branch) => (
+            </Typography>
+
+            {isLoadingBranch ? (
+              <Typography color="#E0E0E0">Đang tải chi nhánh...</Typography>
+            ) : isErrorBranch ? (
+              <Typography color="#E0E0E0">
+                Không thể tải danh sách chi nhánh.
+              </Typography>
+            ) : (
+              dataBranches?.items?.map((branch) => (
                 <Box key={branch.id}>
-                  <Box display={"flex"} alignItems={"center"}>
+                  <Box display="flex" alignItems="center">
                     <LocationOn />
                     <Typography color="#E0E0E0" my={2} ml={1}>
                       {branch.name}
                     </Typography>
                   </Box>
-                  <Typography color="#E0E0E0" fontSize={"0.95rem"} ml={1}>
+                  <Typography color="#E0E0E0" fontSize="0.95rem" ml={1}>
                     {branch.location}
                   </Typography>
                 </Box>
-              ))}
-            </Typography>
+              ))
+            )}
           </Grid>
 
           {/* Social media */}
