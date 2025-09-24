@@ -8,6 +8,9 @@ export const branchesApi = baseApi.injectEndpoints({
         url: "/v1/branches",
       }),
       providesTags: [TAG_KEYS.BRANCHES],
+      transformResponse: (response) => {
+        return response.result;
+      },
     }),
   }),
 });

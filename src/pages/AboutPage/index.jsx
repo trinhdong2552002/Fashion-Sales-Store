@@ -1,7 +1,6 @@
 import styles from "./index.module.css";
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
-import { useGetListBranchesQuery } from "@/services/api/branches";
 import { useEffect } from "react";
 import our_story from "@/assets/images/about-us/our-story.jpg";
 import our_mission from "@/assets/images/about-us/our-mission.jpg";
@@ -28,35 +27,11 @@ const contents = [
 ];
 
 const About = () => {
-  // const {
-  //   data: dataBranches,
-  //   isLoading: isLoadingBranch,
-  //   error: isErrorBranch,
-  //   refetch: refetchBranch,
-  // } = useGetListBranchesQuery({
-  //   refetchOnMountOrArgChange: true,
-  // });
-  // console.log("dataBranches", dataBranches);
-
-  // useEffect(() => {
-  //   refetchBranch();
-  // }, [refetchBranch]);
-
-  // if (isLoadingBranch)
-  //   return (
-  //     <Box display={"flex"}>
-  //       <CircularProgress />
-  //       <p>Đang tải...</p>
-  //     </Box>
-  //   );
-  // if (isErrorBranch)
-  //   return <div style={{ color: "red" }}>Lỗi tải branches...</div>;
-
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth", // For smooth scrolling, use 'auto' for instant jump
+      behavior: "smooth",
     });
   }, []);
 
