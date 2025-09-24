@@ -1,5 +1,4 @@
 import {
-  Container,
   Grid,
   Typography,
   Box,
@@ -33,6 +32,14 @@ const ProductLists = () => {
     refetchCategory();
   }, [refetchCategory]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  });
+
   return (
     <Box component={"section"}>
       <Box m={2}>
@@ -48,8 +55,8 @@ const ProductLists = () => {
             </Card>
           </Box>
         ) : (
-          <Box >
-            <Grid container spacing={{xl: 2, lg: 2}}>
+          <Box>
+            <Grid container spacing={{ xl: 2, lg: 2 }}>
               <Grid
                 size={{ xl: 2, lg: 2, md: 2 }}
                 sx={{

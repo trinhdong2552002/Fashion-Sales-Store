@@ -114,7 +114,7 @@ const AuthButton = () => {
             variant="contained"
             sx={{
               color: "white",
-              backgroundColor: "black",
+              backgroundColor: "#121212",
               borderRadius: 5,
               minWidth: 120,
               height: 40,

@@ -8,6 +8,8 @@ import AoKhoac from "/src/assets/images/banner/banner_ao-khoac.jpg";
 import QuanTay from "/src/assets/images/banner/banner_quan-tay.jpg";
 import QuanShorts from "/src/assets/images/banner/banner_quan-shorts.jpg";
 import PhuKien from "/src/assets/images/banner/banner_shoes-accessories.jpg";
+import TatCaSanPham from "/src/assets/images/banner/banner_all-products.jpg";
+import BreadcrumbNav from "@/components/Breadcrumbs/BreadcrumbNav";
 
 const ProductListsLayout = () => {
   const location = useLocation();
@@ -28,17 +30,21 @@ const ProductListsLayout = () => {
         return QuanShorts;
       case "phu-kien":
         return PhuKien;
+      default:
+        return TatCaSanPham;
     }
   };
 
   return (
     <Fragment>
       <Header />
+      <BreadcrumbNav />
       <img
         src={getBannerImage()}
         alt={`Banner ${category || "default"}`}
         draggable={false}
         width="100%"
+        style={{objectFit: "cover"}}
       />
       <Outlet />
       <Footer />

@@ -78,6 +78,14 @@ const Header = () => {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               FASHION STORE
             </Typography>
+            {/* <img
+              style={{
+                width: "150px",
+                height: "auto", // auto để giữ tỉ lệ gốc
+                objectFit: "contain", // đảm bảo không bị cắt méo
+              }}
+              src="/src/assets/images/icon/fashion_store.png"
+            /> */}
           </Link>
 
           {/* List categories */}

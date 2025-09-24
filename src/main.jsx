@@ -42,7 +42,7 @@ const customTheme = createTheme({
         root: {
           textTransform: "none",
           fontSize: "1.2rem",
-          backgroundColor: "black",
+          backgroundColor: "#121212",
           color: "white",
         },
       },

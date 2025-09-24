@@ -7,11 +7,19 @@ import outfit_4 from "@/assets/images/blogs/outfit-4.jpg";
 import outfit_5 from "@/assets/images/blogs/outfit-5.jpg";
 import outfit_6 from "@/assets/images/blogs/outfit-6.jpg";
 import outfit_7 from "@/assets/images/blogs/outfit-7.jpg";
+import { useEffect } from "react";
 
 const BlogDetail = () => {
   const location = useLocation();
-
   const blog = location.state?.blog;
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  });
 
   return (
     <Box component={"section"}>

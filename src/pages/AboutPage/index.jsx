@@ -72,21 +72,6 @@ const About = () => {
                 </Typography>
               </Box>
             ))}
-            {/* {dataBranches && (
-              <Stack sx={{ marginRight: 8 }}>
-                <ul>
-                  {dataBranches?.result?.items.map((branch) => (
-                    <li
-                      key={branch.id}
-                      style={{ margin: "10px 0", color: "var(--text-color)" }}
-                    >
-                      {branch.name} - {branch.location} (Số điện thoại:{" "}
-                      {branch.phone})
-                    </li>
-                  ))}
-                </ul>
-              </Stack>
-            )} */}
           </Grid>
 
           <Grid size={{ lg: 4, md: 4, sm: 12 }}>
