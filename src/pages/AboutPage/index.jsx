@@ -37,7 +37,7 @@ const About = () => {
 
   return (
     <Box component={"section"}>
-      <WallpaperRepresentative titleHeader="About us" />
+      <WallpaperRepresentative titleHeader="Về chúng tôi" />
       <Container maxWidth="xl">
         <Grid container sx={{ m: "80px 0" }} alignItems={"center"}>
           <Grid size={{ lg: 8, md: 8, sm: 12 }}>
@@ -47,7 +47,6 @@ const About = () => {
                   {content.titleAboutUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"
@@ -55,7 +54,6 @@ const About = () => {
                   {content.firstLineAboutUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"
@@ -63,7 +61,6 @@ const About = () => {
                   {content.secondLineAboutUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"
@@ -95,7 +92,6 @@ const About = () => {
                   {content.titleMissionUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"
@@ -103,7 +99,6 @@ const About = () => {
                   {content.firstLineMissionUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"
@@ -111,7 +106,6 @@ const About = () => {
                   {content.secondLineMissionUs}
                 </Typography>
                 <Typography
-                  component={"p"}
                   mb={3}
                   fontSize={"1.2rem"}
                   color="#666"

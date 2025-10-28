@@ -14,7 +14,7 @@ const BreadcrumbNav = () => {
     "/": "Home",
     "/blog": "Blog",
     "/about": "Về chúng tôi",
-    "/support": "Hỗ trợ",
+    "/help": "Trợ giúp",
     "/all-products": "Tất cả sản phẩm",
     "/product-details": "Chi tiết sản phẩm",
     "/my-order": "Đơn hàng của tôi",

@@ -34,7 +34,7 @@ const Footer = () => {
       title: "Về chúng tôi",
       links: [
         { label: "Giới thiệu", url: "/about" },
-        { label: "Hỗ trợ", url: "/support" },
+        { label: "Hỗ trợ", url: "/help" },
         { label: "Bài viết", url: "/blog" },
         { label: "Sản phẩm", url: "/all-products" },
       ],
@@ -105,7 +105,7 @@ const Footer = () => {
             <Typography
               variant="h6"
               color="#E0E0E0"
-              sx={{ mb: 2, fontWeight: 600, fontSize: "1.1rem" }}
+              sx={{fontWeight: 600, fontSize: "1.1rem" }}
             >
               Hệ thống cửa hàng
             </Typography>
@@ -120,7 +120,7 @@ const Footer = () => {
               dataBranches?.items?.map((branch) => (
                 <Box key={branch.id}>
                   <Box display="flex" alignItems="center">
-                    <LocationOn />
+                    <LocationOn sx={{ color: "#E0E0E0" }} />
                     <Typography color="#E0E0E0" my={2} ml={1}>
                       {branch.name}
                     </Typography>
