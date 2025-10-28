@@ -126,11 +126,11 @@ const Header = () => {
 
           <SearchBar />
 
-          <Link to={"/support"} style={linkStyle}>
+          <Link to={"/help"} style={linkStyle}>
             <Box display={"flex"} alignItems={"center"}>
               <HelpOutline />
               <Typography variant="body1" ml={1}>
-                Hỗ trợ
+                Trợ giúp
               </Typography>
             </Box>
           </Link>

@@ -16,7 +16,7 @@ import ProductDetails from "@/pages/ProductDetailsPage";
 import ProductLists from "@/pages/ProductListsPage";
 import Register from "@/pages/RegisterPage";
 import ShippingMethod from "@/pages/ShippingMethodPage";
-import Support from "@/pages/SupportPage";
+import Help from "./pages/HelpPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
 import ForgotPasswordVerify from "./pages/ForgotPassword/shared/ForgotPasswordVerify";
@@ -32,7 +32,7 @@ const App = () => {
       {/* Dependencies component Header and Footer */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
-        <Route path="support" element={<Support />} />
+        <Route path="help" element={<Help />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<BlogDetail />} />
         <Route path="about" element={<About />} />

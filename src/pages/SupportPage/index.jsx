@@ -1,21 +1,51 @@
-import { Box, Container, Stack } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Box,
+  Container,
+  createTheme,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material";
 import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 
 import WallpaperRepresentative from "@/components/WallpaperRepresentative";
 import "./index.css";
-import { useEffect } from "react";
 
 const Support = () => {
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }, []);
+  const outerTheme = useTheme();
+
   return (
-    <Box component={"section"}>
-      <WallpaperRepresentative titleHeader="Support" />
+    <section>
+      <WallpaperRepresentative
+        titleHeader="Chúng tôi có thể giúp gì cho bạn ?"
+        searchSupport={
+          <ThemeProvider theme={customTheme(outerTheme)}>
+            <TextField
+              id="outlined-basic"
+              label="Tìm kiếm sự hỗ trợ"
+              variant="standard"
+              sx={{
+                width: "660px",
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton edge="end">
+                        <SearchIcon sx={{ color: "white" }} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          </ThemeProvider>
+        }
+      />
 
       <Container maxWidth="lg">
         <Stack>
@@ -77,8 +107,50 @@ const Support = () => {
           </Box>
         </Stack>
       </Container>
-    </Box>
+    </section>
   );
 };
+
+const customTheme = (outerTheme) =>
+  createTheme({
+    palette: {
+      mode: outerTheme.palette.mode,
+    },
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "--TextField-brandBorderColor": "white",
+            "--TextField-brandBorderHoverColor": "white",
+            "--TextField-brandBorderFocusedColor": "white",
+            "& label": {
+              color: "white",
+            },
+            "& label.Mui-focused": {
+              color: "var(--TextField-brandBorderFocusedColor)",
+            },
+          },
+        },
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            fontSize: "1.2rem",
+            color: "white",
+            "&::before": {
+              borderBottom: "2px solid var(--TextField-brandBorderColor)",
+            },
+            "&:hover:not(.Mui-disabled, .Mui-error):before": {
+              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
+            },
+            "&.Mui-focused:after": {
+              borderBottom:
+                "2px solid var(--TextField-brandBorderFocusedColor)",
+            },
+          },
+        },
+      },
+    },
+  });
 
 export default Support;
