@@ -1,6 +1,5 @@
 import { baseApi } from "/src/services/api/index.js";
 import { TAG_KEYS } from "@/constants/tagKeys.js";
-import { slugify } from "@/utils/slugify";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,21 +25,16 @@ export const productApi = baseApi.injectEndpoints({
         };
       },
       providesTags: [TAG_KEYS.PRODUCT],
-      keepUnusedDataFor: 60,
-      refetchOnMountOrArgChange: true,
     }),
 
     getProductById: builder.query({
       query: (id) => {
-        if (!id) throw new Error("Product ID is required");
         return {
           url: `/v1/products/${id}`,
           method: "GET",
         };
       },
       providesTags: [TAG_KEYS.PRODUCT],
-      keepUnusedDataFor: 60,
-      refetchOnMountOrArgChange: true,
     }),
   }),
 });

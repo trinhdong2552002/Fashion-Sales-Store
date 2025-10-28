@@ -1,157 +1,300 @@
 import {
+  Box,
+  Button,
   CircularProgress,
   Container,
   Grid,
-  Stack,
   Typography,
+  Alert,
 } from "@mui/material";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
-
 import ProductActions from "./shared/ProductActions";
-import ProductBrand from "./shared/ProductBrand";
-import ProductColorSection from "./shared/ProductColorSection";
-import ProductImage from "./shared/ProductImage";
-import ProductPrice from "./shared/ProductPrice";
-import ProductQuantitySelection from "./shared/ProductQuantitySelection";
-import ProductSizeSelection from "./shared/ProductSizeSelection";
-import ProductStockKeepingUnit from "./shared/ProductStockKeepingUnit";
-import ProductTitle from "./shared/ProductTitle";
+
 import { useGetProductByIdQuery } from "@/services/api/product";
-
-
-const buttonOptionSizes = ["S", "M", "L", "XL"];
+import {
+  useGetProductVariantByProductQuery,
+  // useListAllProductVariantsByProductQuery,
+} from "@/services/api/productVariant";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [colors, setColors] = useState("");
-  const [sizes, setSizes] = useState("");
 
-  // Gọi API để lấy chi tiết sản phẩm
-  const { data: product, isLoading, error } = useGetProductByIdQuery(id);
+  // Fetch products details by ID
+  const {
+    data: dataProductById,
+    isLoading: isLoadingProductById,
+    isError: isErrorProductById,
+    error: errorProductById,
+    refetch: refetchProductById,
+  } = useGetProductByIdQuery(id);
 
-  const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
+  // const { data: dataProductVariantsByProduct } =
+  //   useListAllProductVariantsByProductQuery(
+  //     id ? { id, pageNo: 1, pageSize: 50 } : skipToken
+  //   );
 
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+  // Fetch variant details when color and size are selected
+  const { data: dataProductVariantByProduct, isLoading: isLoadingVariant } =
+    useGetProductVariantByProductQuery(
+      //  Check if both color and size are selected (is true) then call api else skip the query API not called
+      selectedColor && selectedSize
+        ? {
+            productId: id,
+            colorId: selectedColor.id,
+            sizeId: selectedSize.id,
+          }
+        : // If color or size not selected, skip the query API not called
+          skipToken
+    );
+
+  useEffect(() => {
+    refetchProductById();
+  }, [refetchProductById]);
+
+  // Get available stock from variant API
+  const availableStock = dataProductVariantByProduct?.result?.quantity || 0;
+  const variantPrice = dataProductVariantByProduct?.result?.price;
+  const isVariantAvailable = dataProductVariantByProduct?.result?.isAvailable;
+
+  // Reset quantity when variant changes
+  useEffect(() => {
+    if (dataProductVariantByProduct) {
+      // Reset to 1 or max available stock if current quantity exceeds it
+      setQuantity((prevQuantity) => {
+        if (prevQuantity > availableStock) {
+          return Math.min(1, availableStock);
+        }
+        return prevQuantity;
+      });
     }
-  };
-
-  const handleSelectColor = (color) => {
-    setColors(color);
-  };
-
-  const handleSelectSize = (size) => {
-    setSizes(size);
-  };
+  }, [dataProductVariantByProduct, availableStock]);
 
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      left:0,
-      behavior: "smooth"
-    })
-  })
+      left: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
-  // Xử lý trạng thái loading và lỗi
-  if (isLoading) {
-    return (
-      <>
-        <Header />
-        <Container maxWidth="lg">
-          <Stack
-            sx={{
-              m: "80px 0",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <CircularProgress />
-            <Typography sx={{ mt: 2 }}>Đang tải sản phẩm...</Typography>
-          </Stack>
-        </Container>
-        <Footer />
-      </>
-    );
-  }
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    setQuantity(1); // Reset quantity when changing color
+  };
 
-  if (error || !product) {
-    return (
-      <>
-        <Header />
-        <Container maxWidth="lg">
-          <Typography align="center" color="error" sx={{ m: "80px 0" }}>
-            {error
-              ? `Lỗi khi tải sản phẩm: ${
-                  error?.data?.message || "Lỗi không xác định"
-                }`
-              : "Sản phẩm không tồn tại"}
-          </Typography>
-        </Container>
-        <Footer />
-      </>
-    );
-  }
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+    setQuantity(1); // Reset quantity when changing size
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < availableStock) {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+
+  const mainImage =
+    dataProductById?.result?.images &&
+    dataProductById?.result?.images.length > 0
+      ? [...dataProductById.result.images].sort((a, b) => a.id - b.id)[0]
+      : null;
+
+  // Display price from variant if available, otherwise from product
+  const displayPrice = variantPrice || dataProductById?.result?.price;
 
   return (
     <Fragment>
-      <Container maxWidth="lg">
-        <Stack sx={{ m: "80px 0" }}>
-          <Grid container spacing={4}>
-            <Grid item xl={6} lg={6}>
-              <ProductImage products={product} loading={isLoading} />
-            </Grid>
+      <Container maxWidth="xl">
+        <Box my={4}>
+          {isLoadingProductById ? (
+            <Box
+              display="flex"
+              flexDirection={"column"}
+              justifyContent="center"
+              alignItems="center"
+            >
+              Đang tải chi tiết sản phẩm...
+              <CircularProgress />
+            </Box>
+          ) : isErrorProductById ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              color={"red"}
+            >
+              Lỗi khi tải chi tiết sản phẩm:{" "}
+              {errorProductById?.data?.message || "Lỗi không xác định"}
+            </Box>
+          ) : (
+            <>
+              <Grid container spacing={4}>
+                <Grid size={{ xl: 6, lg: 6 }}>
+                  <Box>
+                    {/*TODO: Need to swiper horizontal here to get show all image */}
+                    <img
+                      key={mainImage?.id ?? "main"}
+                      src={mainImage?.imageUrl}
+                      alt={mainImage?.fileName}
+                      style={{
+                        width: "76%",
+                        borderRadius: "4px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
+                </Grid>
 
-            <Grid item xl={6} lg={6}>
-              <ProductTitle products={product} loading={isLoading} />
+                <Grid size={{ xl: 6, lg: 6 }}>
+                  {/* Product Title */}
+                  <Typography variant="h5">
+                    {dataProductById?.result?.name}
+                  </Typography>
 
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                sx={{ m: "30px 0" }}
-              >
-                <ProductPrice products={product} loading={isLoading} />
-              </Stack>
+                  <Typography
+                    mt={2}
+                    variant="body1"
+                    fontSize={"1.4rem"}
+                    fontWeight={"600"}
+                  >
+                    {displayPrice?.toLocaleString("vi-VN")}đ
+                  </Typography>
 
-              <ProductStockKeepingUnit products={product} loading={isLoading} />
-              <ProductBrand />
-              <ProductColorSection
-                products={product}
-                loading={isLoading}
-                colors={colors}
-                handleSelectColor={handleSelectColor}
-              />
-              <ProductQuantitySelection
-                products={product}
-                loading={isLoading}
-                quantity={quantity}
-                handleIncreaseQuantity={handleIncreaseQuantity}
-                handleDecreaseQuantity={handleDecreaseQuantity}
-              />
-              <ProductSizeSelection
-                products={product}
-                loading={isLoading}
-                sizes={sizes}
-                buttonOptionSizes={buttonOptionSizes}
-                handleSelectSize={handleSelectSize}
-              />
-              <ProductActions
-                products={product}
-                loading={isLoading}
-                selectedQuantity={quantity}
-                selectedColor={colors}
-                selectedSize={sizes}
-              />
-            </Grid>
-          </Grid>
-        </Stack>
+                  {/* Stock availability indicator */}
+                  {selectedColor && selectedSize && (
+                    <Box mt={2}>
+                      {isLoadingVariant ? (
+                        <Typography variant="body2" color="text.secondary">
+                          Đang kiểm tra tồn kho...
+                        </Typography>
+                      ) : isVariantAvailable ? (
+                        <Typography variant="body2" color="success.main">
+                          Còn hàng: {availableStock} sản phẩm
+                        </Typography>
+                      ) : (
+                        <Alert severity="error">
+                          Sản phẩm này hiện đã hết hàng
+                        </Alert>
+                      )}
+                    </Box>
+                  )}
+
+                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.2rem"}>
+                    Màu sắc: {selectedColor?.name || "Chưa chọn"}
+                  </Typography>
+                  {dataProductById?.result?.colors.map((color) => (
+                    <Button
+                      key={color.id}
+                      onClick={() => handleColorSelect(color)}
+                      display={"flex"}
+                      flexDirection={"row"}
+                      alignItems={"center"}
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1rem",
+                        mr: 1,
+                        borderColor:
+                          selectedColor?.id === color.id ? "white" : "black",
+                        borderWidth: selectedColor?.id === color.id ? 2 : 1,
+                        color:
+                          selectedColor?.id === color.id ? "white" : "black",
+                        bgcolor:
+                          selectedColor?.id === color.id ? "black" : "white",
+                      }}
+                    >
+                      {color.name}
+                    </Button>
+                  ))}
+
+                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.2rem"}>
+                    Kích thước: {selectedSize?.name || "Chưa chọn"}
+                  </Typography>
+                  {dataProductById?.result?.sizes.map((size) => (
+                    <Button
+                      key={size.id}
+                      onClick={() => handleSizeSelect(size)}
+                      display={"flex"}
+                      flexDirection={"row"}
+                      alignItems={"center"}
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1rem",
+                        mr: 1,
+                        borderColor:
+                          selectedSize?.id === size.id ? "white" : "black",
+                        borderWidth: selectedSize?.id === size.id ? 2 : 1,
+                        color: selectedSize?.id === size.id ? "white" : "black",
+                        bgcolor:
+                          selectedSize?.id === size.id ? "black" : "white",
+                      }}
+                    >
+                      {size.name}
+                    </Button>
+                  ))}
+
+                  <Box display={"flex"} alignItems={"center"} mt={4} mb={2}>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        bgcolor: "white",
+                        borderColor: "black",
+                        color: "black",
+                      }}
+                      onClick={handleDecreaseQuantity}
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </Button>
+                    <Typography mx={2}>{quantity}</Typography>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        bgcolor: "white",
+                        borderColor: "black",
+                        color: "black",
+                      }}
+                      onClick={handleIncreaseQuantity}
+                      disabled={
+                        quantity >= availableStock || !isVariantAvailable
+                      }
+                    >
+                      +
+                    </Button>
+                  </Box>
+
+                  {/* Show warning when reaching max quantity */}
+                  {quantity >= availableStock && availableStock > 0 && (
+                    <Typography variant="body2" color="warning.main" mb={2}>
+                      Đã đạt số lượng tối đa
+                    </Typography>
+                  )}
+
+                  {/* Product Actions buy now and add product to cart */}
+                  <ProductActions
+                    variantId={dataProductVariantByProduct?.result?.id}
+                    quantity={quantity}
+                    disabled={
+                      !selectedColor ||
+                      !selectedSize ||
+                      !isVariantAvailable ||
+                      availableStock === 0
+                    }
+                  />
+                </Grid>
+              </Grid>
+            </>
+          )}
+        </Box>
       </Container>
     </Fragment>
   );
