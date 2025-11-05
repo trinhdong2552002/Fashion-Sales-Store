@@ -70,7 +70,6 @@ const Home = () => {
     ? dataCategories.filter((item) => item.status === "ACTIVE")
     : [];
 
-
   return (
     <Box component={"section"}>
       <Swiper
@@ -102,18 +101,39 @@ const Home = () => {
       <Box
         textAlign={"center"}
         my={10}
-        p={10}
+        py={10}
+        px={{
+          xs: 2,
+          md: 0,
+        }}
         sx={{
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography mb={4} fontWeight={"bold"} variant="h4">
+        <Typography
+          mb={2}
+          fontWeight={"bold"}
+          variant="h4"
+          sx={{
+            fontSize: {
+              xl: "1.6rem",
+              lg: "1.6rem",
+              md: "1.4rem",
+              sm: "1.2rem",
+              xs: "1.2rem",
+            },
+          }}
+        >
           Hãy tận hưởng tuổi trẻ của bạn!
         </Typography>
         <Typography
-          component={"p"}
+          variant="body1"
           sx={{
-            fontSize: "1.2rem",
+            fontSize: {
+              xs: "0.9rem",
+              sm: "1rem",
+              md: "1.2rem",
+            },
             maxWidth: "800px",
             margin: "auto",
           }}
@@ -130,11 +150,12 @@ const Home = () => {
               xl: "1.8rem",
               lg: "1.8rem",
               md: "1.8rem",
-              sm: "1.3rem",
-              xs: "1.3rem",
+              sm: "1.2rem",
+              xs: "1.2rem",
             },
           }}
           fontWeight={"bold"}
+          variant="h4"
         >
           Danh mục sản phẩm
         </Typography>
@@ -142,13 +163,10 @@ const Home = () => {
         <Grid container spacing={12}>
           {activeCategories.map((item) => (
             <Grid
-              sx={{
-                marginTop: 6,
-                marginBottom: 6,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              my={6}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
               size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
               key={item.id}
             >

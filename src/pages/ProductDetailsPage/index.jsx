@@ -5,11 +5,16 @@ import {
   Container,
   Grid,
   Typography,
-  Alert,
 } from "@mui/material";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Navigation, Thumbs, FreeMode } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import "swiper/css/free-mode";
 
 import ProductActions from "./shared/ProductActions";
 
@@ -24,6 +29,8 @@ const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   // Fetch products details by ID
   const {
@@ -103,14 +110,33 @@ const ProductDetails = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
-  const mainImage =
-    dataProductById?.result?.images &&
-    dataProductById?.result?.images.length > 0
-      ? [...dataProductById.result.images].sort((a, b) => a.id - b.id)[0]
-      : null;
+  const images = dataProductById?.result?.images?.length
+    ? [...dataProductById.result.images].sort((a, b) => a.id - b.id)
+    : [];
+  const mainImage = images[0] ?? null;
+
+  // Initialize/reset selected image when product images load/change
+  useEffect(() => {
+    if (dataProductById?.result?.images?.length) {
+      const first = [...dataProductById.result.images].sort(
+        (a, b) => a.id - b.id
+      )[0];
+      setSelectedImage(first);
+    } else {
+      setSelectedImage(null);
+    }
+  }, [id, dataProductById?.result?.images]);
 
   // Display price from variant if available, otherwise from product
   const displayPrice = variantPrice || dataProductById?.result?.price;
+
+  const sortedColors = dataProductById?.result?.colors
+    ? [...dataProductById.result.colors].sort((a, b) => a.id - b.id)
+    : [];
+
+  const sortedSizes = dataProductById?.result?.sizes
+    ? [...dataProductById.result.sizes].sort((a, b) => a.id - b.id)
+    : [];
 
   return (
     <Fragment>
@@ -123,7 +149,7 @@ const ProductDetails = () => {
               justifyContent="center"
               alignItems="center"
             >
-              Đang tải chi tiết sản phẩm...
+              <Typography mb={2}>Đang tải chi tiết sản phẩm...</Typography>
               <CircularProgress />
             </Box>
           ) : isErrorProductById ? (
@@ -137,25 +163,112 @@ const ProductDetails = () => {
               {errorProductById?.data?.message || "Lỗi không xác định"}
             </Box>
           ) : (
-            <>
+            <Fragment>
               <Grid container spacing={4}>
-                <Grid size={{ xl: 6, lg: 6 }}>
-                  <Box>
-                    {/*TODO: Need to swiper horizontal here to get show all image */}
-                    <img
-                      key={mainImage?.id ?? "main"}
-                      src={mainImage?.imageUrl}
-                      alt={mainImage?.fileName}
-                      style={{
-                        width: "76%",
-                        borderRadius: "4px",
-                        objectFit: "cover",
+                {/* Left panel - product images */}
+                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                  <Box display="flex" alignItems="flex-start" gap={2}>
+                    {/* Thumbnails vertical swiper */}
+                    <Box sx={{ width: 96 }}>
+                      {images.length ? (
+                        <Swiper
+                          onSwiper={setThumbsSwiper}
+                          direction="vertical"
+                          spaceBetween={12}
+                          slidesPerView={Math.min(images.length, 5)}
+                          freeMode
+                          watchSlidesProgress
+                          modules={[FreeMode, Thumbs]}
+                          style={{ height: Math.min(images.length, 5) * 92 }}
+                        >
+                          {images.map((image) => (
+                            <SwiperSlide key={image.id}>
+                              <Box
+                                sx={{
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  width: 80,
+                                  height: 80,
+                                  border:
+                                    selectedImage?.id === image.id
+                                      ? "2px solid #1976d2"
+                                      : "1px solid #e0e0e0",
+                                  borderRadius: "6px",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                <img
+                                  src={image.imageUrl}
+                                  alt={image.fileName}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              </Box>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      ) : null}
+                    </Box>
+
+                    {/* Main image */}
+                    <Box
+                      sx={{
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "center",
                       }}
-                    />
+                    >
+                      {images.length ? (
+                        <Swiper
+                          modules={[Navigation, Thumbs, FreeMode]}
+                          navigation
+                          thumbs={{
+                            swiper:
+                              thumbsSwiper && !thumbsSwiper.destroyed
+                                ? thumbsSwiper
+                                : null,
+                          }}
+                          onSlideChange={(swiper) => {
+                            const current = images[swiper.activeIndex];
+                            if (current && current.id !== selectedImage?.id) {
+                              setSelectedImage(current);
+                            }
+                          }}
+                          initialSlide={Math.max(
+                            0,
+                            images.findIndex(
+                              (img) =>
+                                img.id === (selectedImage?.id ?? mainImage?.id)
+                            )
+                          )}
+                          style={{ width: "100%", maxWidth: 520 }}
+                        >
+                          {images.map((image) => (
+                            <SwiperSlide key={image.id}>
+                              <img
+                                src={image.imageUrl}
+                                alt={image.fileName}
+                                style={{
+                                  width: "100%",
+                                  borderRadius: "8px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      ) : null}
+                    </Box>
                   </Box>
                 </Grid>
 
-                <Grid size={{ xl: 6, lg: 6 }}>
+                {/* Right panel - product details */}
+                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                   {/* Product Title */}
                   <Typography variant="h5">
                     {dataProductById?.result?.name}
@@ -178,21 +291,21 @@ const ProductDetails = () => {
                           Đang kiểm tra tồn kho...
                         </Typography>
                       ) : isVariantAvailable ? (
-                        <Typography variant="body2" color="success.main">
+                        <Typography variant="body1" color="success">
                           Còn hàng: {availableStock} sản phẩm
                         </Typography>
                       ) : (
-                        <Alert severity="error">
-                          Sản phẩm này hiện đã hết hàng
-                        </Alert>
+                        <Typography variant="body1" color="error">
+                          Hết hàng
+                        </Typography>
                       )}
                     </Box>
                   )}
 
-                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.2rem"}>
+                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.1rem"}>
                     Màu sắc: {selectedColor?.name || "Chưa chọn"}
                   </Typography>
-                  {dataProductById?.result?.colors.map((color) => (
+                  {sortedColors.map((color) => (
                     <Button
                       key={color.id}
                       onClick={() => handleColorSelect(color)}
@@ -216,10 +329,10 @@ const ProductDetails = () => {
                     </Button>
                   ))}
 
-                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.2rem"}>
+                  <Typography mt={4} mb={2} variant="body1" fontSize={"1.1rem"}>
                     Kích thước: {selectedSize?.name || "Chưa chọn"}
                   </Typography>
-                  {dataProductById?.result?.sizes.map((size) => (
+                  {sortedSizes.map((size) => (
                     <Button
                       key={size.id}
                       onClick={() => handleSizeSelect(size)}
@@ -249,6 +362,7 @@ const ProductDetails = () => {
                         bgcolor: "white",
                         borderColor: "black",
                         color: "black",
+                        p: 0,
                       }}
                       onClick={handleDecreaseQuantity}
                       disabled={quantity <= 1}
@@ -262,6 +376,7 @@ const ProductDetails = () => {
                         bgcolor: "white",
                         borderColor: "black",
                         color: "black",
+                        p: 0,
                       }}
                       onClick={handleIncreaseQuantity}
                       disabled={
@@ -274,7 +389,7 @@ const ProductDetails = () => {
 
                   {/* Show warning when reaching max quantity */}
                   {quantity >= availableStock && availableStock > 0 && (
-                    <Typography variant="body2" color="warning.main" mb={2}>
+                    <Typography variant="body2" color="warning" mb={2}>
                       Đã đạt số lượng tối đa
                     </Typography>
                   )}
@@ -292,7 +407,7 @@ const ProductDetails = () => {
                   />
                 </Grid>
               </Grid>
-            </>
+            </Fragment>
           )}
         </Box>
       </Container>

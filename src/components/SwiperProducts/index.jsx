@@ -70,13 +70,14 @@ const SwiperProducts = ({ title, type }) => {
           justifyContent="space-between"
         >
           <Typography
+            variant="h4"
             sx={{
               fontSize: {
-                xl: "1.8rem",
-                lg: "1.8rem",
-                md: "1.8rem",
-                sm: "1.4rem",
-                xs: "1.4rem",
+                xl: "1.6rem",
+                lg: "1.6rem",
+                md: "1.4rem",
+                sm: "1.2rem",
+                xs: "1.2rem",
               },
             }}
             fontWeight={"bold"}
@@ -94,7 +95,12 @@ const SwiperProducts = ({ title, type }) => {
                 lg: "1.1rem",
                 md: "1.1rem",
                 sm: "1rem",
-                xs: "1rem",
+                xs: "0.9rem",
+              },
+              display: {
+                xs: "none",
+                sm: "inline-flex",
+                md: "inline-flex",
               },
             }}
             onClick={handleClick}
@@ -162,7 +168,6 @@ const SwiperProducts = ({ title, type }) => {
             className="mySwiper"
             style={{
               minHeight: 500,
-              marginBottom: "20px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -186,7 +191,7 @@ const SwiperProducts = ({ title, type }) => {
                         transition: "all 0.3s ease",
                       },
                       mx: {
-                        xs: 4,
+                        xs: 2,
                         sm: 0,
                         md: 0,
                         lg: 0,
@@ -236,6 +241,31 @@ const SwiperProducts = ({ title, type }) => {
             })}
           </Swiper>
         ) : null}
+
+        <Box display={"flex"} justifyContent={"center"}>
+          <Button
+            variant="contained"
+            endIcon={<KeyboardArrowRight />}
+            sx={{
+              backgroundColor: "#121212",
+              fontSize: {
+                xl: "1.1rem",
+                lg: "1.1rem",
+                md: "1.1rem",
+                sm: "1rem",
+                xs: "0.9rem",
+              },
+              display: {
+                xs: "inline-flex",
+                sm: "none",
+                md: "none",
+              },
+            }}
+            onClick={handleClick}
+          >
+            Xem tất cả
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

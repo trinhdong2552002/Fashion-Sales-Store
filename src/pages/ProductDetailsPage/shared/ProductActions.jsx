@@ -10,7 +10,7 @@ import {
 import PropTypes from "prop-types";
 
 // import { selectUserId } from "@/store/redux/user/reducer";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 const ProductActions = () => {
   const [snackbar, setSnackbar] = useState({
@@ -24,7 +24,7 @@ const ProductActions = () => {
   };
 
   return (
-    <>
+    <Fragment>
       <Box display={"flex"} alignItems={"center"} sx={{ m: "30px 0" }}>
         <Button
           variant="outlined"
@@ -68,7 +68,7 @@ const ProductActions = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </>
+    </Fragment>
   );
 };
 
