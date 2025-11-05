@@ -33,10 +33,16 @@ const CardProduct = ({ product }) => {
           image={mainImage ? mainImage.imageUrl : ""}
           alt={product.name}
           width={"100%"}
-          height={250}
           sx={{
             objectFit: "cover",
             objectPosition: "center",
+            height: {
+              xs: 200,
+              sm: 250,
+              md: 300,
+              lg: 300,
+              xl: 300,
+            },
           }}
         />
         <CardContent>
@@ -55,10 +61,17 @@ const CardProduct = ({ product }) => {
             {product.name}
           </Typography>
           <Typography
-            variant="h6"
+            variant="body1"
             textAlign="center"
             mt={1}
             fontWeight={"bold"}
+            sx={{
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1.2rem",
+              },
+            }}
           >
             {product.price?.toLocaleString("vi-VN")}đ
           </Typography>

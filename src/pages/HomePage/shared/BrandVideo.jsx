@@ -5,20 +5,37 @@ const BrandVideo = () => {
   return (
     <Box
       component={"section"}
-      p={10}
+      py={10}
       sx={{
         backgroundColor: "#f9f9f9",
       }}
     >
       <Container maxWidth="lg">
         <Box textAlign="center" mb={4}>
-          <Typography mb={4} fontWeight={"bold"} variant="h4">
+          <Typography
+            mb={4}
+            fontWeight={"bold"}
+            variant="h4"
+            sx={{
+              fontSize: {
+                xl: "1.6rem",
+                lg: "1.6rem",
+                md: "1.4rem",
+                sm: "1.2rem",
+                xs: "1.2rem",
+              },
+            }}
+          >
             Khám phá Fashion Store
           </Typography>
           <Typography
             component={"p"}
             sx={{
-              fontSize: "1.2rem",
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1.2rem",
+              },
               maxWidth: "800px",
               margin: "auto",
             }}

@@ -11,7 +11,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Fragment } from "react";
 
 import { useListProductsForUserQuery } from "@/services/api/product";
 import { slugify } from "@/utils/slugify";
@@ -120,7 +120,7 @@ const ProductItems = ({ selectedCategory }) => {
     (!currentPageProducts || currentPageProducts.length === 0);
 
   return (
-    <>
+    <Fragment>
       {/* Sort Control */}
       {totalFilteredProducts > 0 && (
         <Box sx={{ mb: 3, display: "flex", justifyContent: "flex-end" }}>
@@ -209,7 +209,7 @@ const ProductItems = ({ selectedCategory }) => {
           )}
         </Grid>
       )}
-    </>
+    </Fragment>
   );
 };
 
