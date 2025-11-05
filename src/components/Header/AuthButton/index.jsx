@@ -1,28 +1,21 @@
-import {
-  Stack,
-  Typography,
-  Menu,
-  MenuItem,
-  alpha,
-  Button,
-  Avatar,
-  Divider,
-  Box,
-} from "@mui/material";
+import { useTheme, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { clearUser, selectUser } from "@/store/redux/user/reducer";
 import { useLogoutMutation } from "@/services/api/auth";
 import { clearAuth, selectAuth } from "@/store/redux/auth/reducer";
+import DesktopAuthButton from "./DesktopAuthButton";
+import MobileAuthButton from "./MobileAuthButton";
 
 const AuthButton = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const myInfo = useSelector(selectUser);
-  console.log("myInfo", myInfo);
   const [anchorEl, setAnchorEl] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,84 +47,21 @@ const AuthButton = () => {
     }
   };
 
-  return (
-    <Stack direction="row" alignItems="center">
-      {myInfo?.id ? (
-        <>
-          <Stack
-            direction="row"
-            alignItems="center"
-            onClick={handleMenuOpen}
-            sx={{ cursor: "pointer" }}
-          >
-            <Avatar src={myInfo.avatarUrl} alt={myInfo.name} />
-            {/* <Avatar /> */}
-            <Typography sx={{ marginLeft: "5px" }}>{myInfo.name}</Typography>
-          </Stack>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem
-              onClick={() =>
-                navigate(`/account-information/profile/${myInfo.id}`)
-              }
-            >
-              Thông tin tài khoản
-            </MenuItem>
-            <MenuItem onClick={() => navigate("/my-order")}>
-              Đơn hàng của tôi
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
-          </Menu>
-        </>
-      ) : (
-        <Box display={"flex"} alignItems={"center"}>
-          <Button
-            variant="outlined"
-            sx={{
-              color: "black",
-              backgroundColor: "white",
-              borderColor: "#d9d9d9",
-              borderRadius: 5,
-              minWidth: 120,
-              height: 40,
-              textTransform: "none",
-              fontSize: "1rem",
-              mr: 1,
-              "&:hover": {
-                backgroundColor: alpha("#d9d9d9", 0.5),
-              },
-            }}
-            component={Link}
-            to="/login"
-          >
-            Đăng nhập
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              color: "white",
-              backgroundColor: "#121212",
-              borderRadius: 5,
-              minWidth: 120,
-              height: 40,
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: alpha("#333"),
-              },
-            }}
-            component={Link}
-            to="/register"
-          >
-            Đăng ký
-          </Button>
-        </Box>
-      )}
-    </Stack>
+  return isMobile ? (
+    <MobileAuthButton
+      handleLogout={handleLogout}
+      myInfo={myInfo}
+      navigate={navigate}
+    />
+  ) : (
+    <DesktopAuthButton
+      handleMenuOpen={handleMenuOpen}
+      handleLogout={handleLogout}
+      myInfo={myInfo}
+      anchorEl={anchorEl}
+      handleMenuClose={handleMenuClose}
+      navigate={navigate}
+    />
   );
 };
 

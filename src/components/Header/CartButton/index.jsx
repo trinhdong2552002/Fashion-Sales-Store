@@ -1,11 +1,9 @@
 import {
   Close,
   LocalMall,
-  SentimentDissatisfied,
   SentimentDissatisfiedOutlined,
 } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
+
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,21 +23,22 @@ import {
   DialogActions,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCartByUserQuery } from "@/services/api/cart";
-// import { selectUserId } from "@/store/redux/user/reducer";
+
 import { removeFromCart } from "@/store/redux/cart/reducer";
+import { selectUser } from "@/store/redux/user/reducer";
 
 const CartButton = () => {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const dispatch = useDispatch();
-  // const userId = useSelector(selectUserId);
-  // const { data: cartData, isLoading } = useGetCartByUserQuery(userId, {
-  //   skip: !userId,
-  // });
+  const checkUser = useSelector(selectUser);
+  const { isLoading } = useGetCartByUserQuery(checkUser, {
+    skip: !checkUser,
+  });
   // console.log("Cart data from API:", cartData);
 
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
@@ -78,26 +77,32 @@ const CartButton = () => {
     return (
       <Box
         sx={{
-          width: 400,
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
+          width: {
+            xs: 300,
+            sm: 400,
+            md: 400,
+          },
+          height: "100%",
+          p: 2,
         }}
-        role="presentation"
       >
         {/* Header */}
         <Box
           display={"flex"}
-          flexDirection={"row"}
           alignItems={"center"}
           justifyContent={"space-between"}
-          mt={4}
-          mb={1}
-          mx={1}
         >
           <Box display={"flex"} alignItems={"center"}>
             <LocalMall />
-            <Typography variant="h5" fontWeight={"bold"} ml={2}>
+            <Typography
+              variant="h5"
+              fontSize={{
+                xs: "1.2rem",
+                md: "1.3rem",
+              }}
+              fontWeight={"bold"}
+              ml={2}
+            >
               Giỏ hàng của bạn
             </Typography>
           </Box>
@@ -110,12 +115,12 @@ const CartButton = () => {
         <Divider />
 
         {/* Danh sách sản phẩm với thanh cuộn */}
-        {/* {isLoading ? (
+        {isLoading ? (
           <Typography sx={{ p: 2, textAlign: "center" }}>
             Đang tải giỏ hàng...
           </Typography>
-        ) : !userId ? ( */}
-        {/* <Box
+        ) : !checkUser ? (
+          <Box
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -124,63 +129,75 @@ const CartButton = () => {
               flexGrow: 1,
             }}
           >
-            <Typography variant="h6">VUI LÒNG ĐĂNG NHẬP!</Typography>
+            <Typography variant="h6">Vui lòng đăng nhập!</Typography>
             <SentimentDissatisfiedIcon fontSize="large" />
           </Box>
-        ) : cartItems.length === 0 ? ( */}
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Typography variant="h6">Chưa có sản phẩm nào!</Typography>
-          <SentimentDissatisfiedOutlined fontSize="large" />
-        </Box>
-        {/* ) : ( */}
-        <Box
-          sx={{
-            flexGrow: 1,
-            overflowY: "auto",
-            maxHeight: "calc(100vh - 200px)",
-            p: 2,
-          }}
-        >
-          <Stack spacing={2}>
-            {cartItems.map((item, index) => (
-              <Stack
-                key={index}
-                direction="row"
-                spacing={2}
-                alignItems="center"
-                sx={{ borderBottom: "1px solid #ddd", pb: 1 }}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{ width: 60, height: 60, objectFit: "cover" }}
-                />
-                <Stack spacing={1} sx={{ flex: 1 }}>
-                  <Typography variant="body1">{item.name}</Typography>
-                  <Typography variant="body2">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(item.price)}
-                  </Typography>
-                </Stack>
-
-                <IconButton
-                  onClick={() => handleOpenDialog(item)}
-                  sx={{ color: "black" }}
+        ) : cartItems.length === 0 ? (
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            mt={4}
+            gap={1}
+          >
+            <SentimentDissatisfiedOutlined fontSize="large" />
+            <Typography
+              variant="h6"
+              fontSize={{
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1.2rem",
+              }}
+              textAlign={"center"}
+            >
+              Chưa có sản phẩm nào trong giỏ hàng.
+            </Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              maxHeight: "calc(100vh - 200px)",
+              p: 2,
+            }}
+          >
+            <Box spacing={2}>
+              {cartItems.map((item, index) => (
+                <Box
+                  key={index}
+                  display={"flex"}
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ borderBottom: "1px solid #ddd", pb: 1 }}
                 >
-                  <DeleteIcon />
-                </IconButton>
-              </Stack>
-            ))}
-          </Stack>
-        </Box>
-        {/* )} */}
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{ width: 60, height: 60, objectFit: "cover" }}
+                  />
+                  <Stack spacing={1} sx={{ flex: 1 }}>
+                    <Typography variant="body1">{item.name}</Typography>
+                    <Typography variant="body2">
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(item.price)}
+                    </Typography>
+                  </Stack>
+
+                  <IconButton
+                    onClick={() => handleOpenDialog(item)}
+                    sx={{ color: "black" }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        )}
 
         {cartItems.length > 0 && (
           <Box sx={{ flexShrink: 0, p: 2 }}>
@@ -218,7 +235,7 @@ const CartButton = () => {
   };
 
   return (
-    <>
+    <Fragment>
       <IconButton aria-label="shopping-cart" onClick={toggleDrawer(true)}>
         <ShoppingCartOutlinedIcon />
         <CartBadge
@@ -231,7 +248,7 @@ const CartButton = () => {
       <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
         {DrawerList()}
       </Drawer>
-    </>
+    </Fragment>
   );
 };
 
