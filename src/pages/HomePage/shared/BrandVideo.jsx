@@ -13,7 +13,7 @@ const BrandVideo = () => {
       <Container maxWidth="lg">
         <Box textAlign="center" mb={4}>
           <Typography
-            mb={4}
+            mb={2}
             fontWeight={"bold"}
             variant="h4"
             sx={{
@@ -29,15 +29,14 @@ const BrandVideo = () => {
             Khám phá Fashion Store
           </Typography>
           <Typography
-            component={"p"}
+            variant="body1"
+            color="#666"
             sx={{
               fontSize: {
                 xs: "0.9rem",
                 sm: "1rem",
                 md: "1.2rem",
               },
-              maxWidth: "800px",
-              margin: "auto",
             }}
           >
             Hành trình sáng tạo & định hình phong cách thời trang hiện đại.

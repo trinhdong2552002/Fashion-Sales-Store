@@ -6,7 +6,7 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import BrandVideo from "./shared/BrandVideo";
@@ -85,12 +85,11 @@ const Home = () => {
           clickable: true,
         }}
         modules={[Autoplay]}
-        className="mySwiper"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <img
-              style={{ width: "100%", height: 800, objectFit: "cover" }}
+              className={styles.banner}
               src={slide}
               alt={`Slide ${index + 1}`}
             />
@@ -106,37 +105,32 @@ const Home = () => {
           xs: 2,
           md: 0,
         }}
-        sx={{
-          backgroundColor: "#f9f9f9",
-        }}
+        bgcolor={"#f9f9f9"}
       >
         <Typography
           mb={2}
           fontWeight={"bold"}
           variant="h4"
-          sx={{
-            fontSize: {
-              xl: "1.6rem",
-              lg: "1.6rem",
-              md: "1.4rem",
-              sm: "1.2rem",
-              xs: "1.2rem",
-            },
+          fontSize={{
+            xl: "1.6rem",
+            lg: "1.6rem",
+            md: "1.4rem",
+            sm: "1.2rem",
+            xs: "1.2rem",
           }}
         >
           Hãy tận hưởng tuổi trẻ của bạn!
         </Typography>
         <Typography
           variant="body1"
-          sx={{
-            fontSize: {
-              xs: "0.9rem",
-              sm: "1rem",
-              md: "1.2rem",
-            },
-            maxWidth: "800px",
-            margin: "auto",
+          fontSize={{
+            xs: "0.9rem",
+            sm: "1rem",
+            md: "1.2rem",
           }}
+          maxWidth={"800px"}
+          m={"auto"}
+          color="#666"
         >
           Fashion Store là nơi cung cấp thời trang hiện đại dành cho giới trẻ,
           mang đến trải nghiệm mua sắm tiện lợi và phong cách nổi bật mỗi ngày.
@@ -145,14 +139,12 @@ const Home = () => {
 
       <Container maxWidth="xl">
         <Typography
-          sx={{
-            fontSize: {
-              xl: "1.8rem",
-              lg: "1.8rem",
-              md: "1.8rem",
-              sm: "1.2rem",
-              xs: "1.2rem",
-            },
+          fontSize={{
+            xl: "1.8rem",
+            lg: "1.8rem",
+            md: "1.8rem",
+            sm: "1.2rem",
+            xs: "1.2rem",
           }}
           fontWeight={"bold"}
           variant="h4"
