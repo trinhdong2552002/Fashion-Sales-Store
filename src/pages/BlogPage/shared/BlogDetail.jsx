@@ -7,7 +7,7 @@ import outfit_4 from "@/assets/images/blogs/outfit-4.jpg";
 import outfit_5 from "@/assets/images/blogs/outfit-5.jpg";
 import outfit_6 from "@/assets/images/blogs/outfit-6.jpg";
 import outfit_7 from "@/assets/images/blogs/outfit-7.jpg";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 
 const BlogDetail = () => {
   const location = useLocation();
@@ -22,7 +22,7 @@ const BlogDetail = () => {
   });
 
   return (
-    <Box component={"section"}>
+    <Fragment>
       <Container maxWidth="lg">
         <Box my={6}>
           {/* Blog Image */}
@@ -68,7 +68,13 @@ const BlogDetail = () => {
 
           <Typography
             variant="h4"
-            component="h1"
+            fontSize={{
+              xl: "1.2rem",
+              lg: "1.2rem",
+              md: "1.2rem",
+              sm: "1.1rem",
+              xs: "1.1rem",
+            }}
             fontWeight={"bold"}
             mb={3}
             textAlign="center"
@@ -76,25 +82,45 @@ const BlogDetail = () => {
             {blog.title}
           </Typography>
 
-          <Typography my={4} component="p" color="#666" fontSize="1.2rem">
+          <Typography
+            variant="body1"
+            my={4}
+            color="#666"
+            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+          >
             Các chuyên gia thời trang nói rằng có vẻ đẹp nằm ở sự đơn giản. Và
             họ đã đúng.
           </Typography>
 
-          <Typography my={4} component="p" color="#666" fontSize="1.2rem">
+          <Typography
+            variant="body1"
+            my={4}
+            color="#666"
+            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+          >
             Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang
             phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng
             ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean
             xanh, quần jean nam, quần kaki…vv
           </Typography>
 
-          <Typography my={4} component="p" color="#666" fontSize="1.2rem">
+          <Typography
+            variant="body1"
+            my={4}
+            color="#666"
+            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+          >
             Fashion Store giúp bạn cách xây dựng tủ quần áo thời gian với những
             điều cơ bản để kết phù hợp với nhau trong hướng dẫn tủ quần áo của
             shop.
           </Typography>
 
-          <Typography my={4} component="p" color="#666" fontSize="1.2rem">
+          <Typography
+            variant="body1"
+            my={4}
+            color="#666"
+            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+          >
             Để bạn có thể tạo ra các ý tưởng trang phục tuyệt vời với những điều
             cần thiết đơn giản hàng ngày, Nam Fashion đã khảo sát 7 mẫu quần áo
             nam cho các chàng từ tài khoản Instagram của bloger thời trang. Điều
@@ -102,7 +128,12 @@ const BlogDetail = () => {
             phong cách cho dù các vấn đề hình thể hay làn da của bạn.
           </Typography>
 
-          <Typography my={4} component="p" color="#666" fontSize="1.2rem">
+          <Typography
+            variant="body1"
+            my={4}
+            color="#666"
+            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+          >
             Sẵn sàng để xem thời trang nam phong cách đường phố hàng ngày? Cuộn
             xuống dưới đây để kiểm tra 7 trang phục hàng ngày luôn làm bạn bảnh
             bao.
@@ -195,7 +226,7 @@ const BlogDetail = () => {
           </Box>
         </Box>
       </Container>
-    </Box>
+    </Fragment>
   );
 };
 
