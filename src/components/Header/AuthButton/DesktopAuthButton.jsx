@@ -20,6 +20,8 @@ const DesktopAuthButton = ({
   handleMenuClose,
   navigate,
 }) => {
+    console.log("myInfo in DesktopAuthButton:", myInfo);
+
   return (
     <Stack direction="row" alignItems="center">
       {myInfo?.id ? (

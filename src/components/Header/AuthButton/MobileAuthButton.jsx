@@ -12,6 +12,8 @@ import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
+  console.log("myInfo in MobileAuthButton:", myInfo);
+
   return (
     <Fragment>
       {myInfo?.id ? (

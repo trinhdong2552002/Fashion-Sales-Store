@@ -29,14 +29,16 @@ const BrandVideo = () => {
             Khám phá Fashion Store
           </Typography>
           <Typography
-            variant="body1"
-            fontSize={{
-              xs: "0.9rem",
-              sm: "1rem",
-              md: "1.2rem",
+            component={"p"}
+            sx={{
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1.2rem",
+              },
+              maxWidth: "800px",
+              margin: "auto",
             }}
-            m={"auto"}
-            color="#666"
           >
             Hành trình sáng tạo & định hình phong cách thời trang hiện đại.
           </Typography>
