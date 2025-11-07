@@ -10,145 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const mockBlog = [
-  {
-    id: 1,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 1,
-      name: "John Doe",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 2,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 2,
-      name: "Grant Beatty",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/4.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 3,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 3,
-      name: "Lyle Barrows-Marquardt",
-      avatar: "https://avatars.githubusercontent.com/u/51900306",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 4,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 4,
-      name: "Phyllis Hand",
-      avatar: "https://avatars.githubusercontent.com/u/93006255",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 5,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 5,
-      name: "Angie Mayert I",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/10.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 6,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 6,
-      name: "Henrietta Ratke",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/8.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 7,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 7,
-      name: "Lee Armstrong Sr.",
-      avatar: "https://avatars.githubusercontent.com/u/69014144",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 8,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 8,
-      name: "Kate Kub",
-      avatar: "https://avatars.githubusercontent.com/u/96683538",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 9,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 9,
-      name: "Johanna Hilll",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/11.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-  {
-    id: 10,
-    title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
-    body: "Bí mật để các quý ông luôn luôn trông tuyệt vời là giữ cho trang phục đơn giản. Mặc trang phục được tạo ra với những điều cơ bản hàng ngày. Chẳng hạn như áo phông nam cổ tròn trắng, màu đen hoặc áo jean xanh, quần jean nam, quần kaki…vv",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    author: {
-      id: 10,
-      name: "Wayne Schinner",
-      avatar:
-        "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/51.jpg",
-    },
-    createdAt: "30/08/2025",
-  },
-];
+import { blogData } from "@/mocks/blog";
 
 const Blog = () => {
   useEffect(() => {
@@ -164,7 +26,7 @@ const Blog = () => {
       <WallpaperRepresentative titleHeader="Blog" />
 
       <Container maxWidth="lg">
-        {mockBlog?.slice(0, 1).map((blog) => (
+        {blogData?.slice(0, 1).map((blog) => (
           <Link
             key={blog.id}
             to={`/blog/${blog.id}`}
@@ -186,6 +48,7 @@ const Blog = () => {
                       width: "100%",
                       borderRadius: "4px",
                       objectFit: "cover",
+                      backgroundPosition: "center",
                     }}
                   />
                 </Box>
@@ -210,7 +73,7 @@ const Blog = () => {
                       xs: "1.2rem",
                     }}
                   >
-                    {blog.title}
+                    {blog.title.slice(0, 100)}...
                   </Typography>
 
                   <Typography
@@ -219,7 +82,7 @@ const Blog = () => {
                     fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
                     color="#666"
                   >
-                    {blog.body}
+                    {blog.body.slice(0, 200)}...
                   </Typography>
 
                   <Box
@@ -265,7 +128,7 @@ const Blog = () => {
         ))}
 
         <Grid container direction={"row"} spacing={3}>
-          {mockBlog?.slice(1, 10).map((blog) => (
+          {blogData?.slice(1, 10).map((blog) => (
             <Grid key={blog.id} size={{ xl: 4, lg: 4, md: 4, sm: 6, xs: 12 }}>
               <Link
                 to={`/blog/${blog.id}`}
@@ -284,7 +147,12 @@ const Blog = () => {
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%",
+                      maxHeight: "200px",
+                      objectFit: "cover",
+                      backgroundPosition: "center",
+                    }}
                   />
                   <CardContent>
                     <Typography
@@ -299,7 +167,7 @@ const Blog = () => {
                       fontWeight={"bold"}
                       mb={2}
                     >
-                      {blog.title}
+                      {blog.title.slice(0, 60)}...
                     </Typography>
                     <Typography
                       component="p"
@@ -307,7 +175,7 @@ const Blog = () => {
                       fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
                       color="#666"
                     >
-                      {blog.body.slice(0, 114)}
+                      {blog.body.slice(0, 100)}...
                     </Typography>
                     <Box
                       display="flex"
