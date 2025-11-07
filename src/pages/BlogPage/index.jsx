@@ -11,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const mockData = [
+const mockBlog = [
   {
     id: 1,
     title: "7 trang phục hàng ngày luôn làm bạn bảnh bao",
@@ -24,7 +24,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/66.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 2,
@@ -38,7 +38,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/4.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const mockData = [
       name: "Lyle Barrows-Marquardt",
       avatar: "https://avatars.githubusercontent.com/u/51900306",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ const mockData = [
       name: "Phyllis Hand",
       avatar: "https://avatars.githubusercontent.com/u/93006255",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 5,
@@ -78,7 +78,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/10.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 6,
@@ -92,7 +92,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/8.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 7,
@@ -105,7 +105,7 @@ const mockData = [
       name: "Lee Armstrong Sr.",
       avatar: "https://avatars.githubusercontent.com/u/69014144",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 8,
@@ -118,7 +118,7 @@ const mockData = [
       name: "Kate Kub",
       avatar: "https://avatars.githubusercontent.com/u/96683538",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 9,
@@ -132,7 +132,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/11.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
   {
     id: 10,
@@ -146,7 +146,7 @@ const mockData = [
       avatar:
         "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/51.jpg",
     },
-    createdAt: "2025-08-30",
+    createdAt: "30/08/2025",
   },
 ];
 
@@ -164,7 +164,7 @@ const Blog = () => {
       <WallpaperRepresentative titleHeader="Blog" />
 
       <Container maxWidth="lg">
-        {mockData?.slice(0, 1).map((blog) => (
+        {mockBlog?.slice(0, 1).map((blog) => (
           <Link
             key={blog.id}
             to={`/blog/${blog.id}`}
@@ -198,17 +198,26 @@ const Blog = () => {
                   justifyContent={"center"}
                   height={"100%"}
                 >
-                  <Typography mb={4} fontWeight={"bold"} fontSize={"1.8rem"}>
+                  <Typography
+                    mb={4}
+                    variant="h4"
+                    fontWeight={"bold"}
+                    fontSize={{
+                      xl: "1.6rem",
+                      lg: "1.6rem",
+                      md: "1.4rem",
+                      sm: "1.2rem",
+                      xs: "1.2rem",
+                    }}
+                  >
                     {blog.title}
                   </Typography>
 
                   <Typography
-                    component={"p"}
+                    variant="body1"
                     mb={4}
-                    sx={{
-                      color: "#666",
-                      fontSize: "1.2rem",
-                    }}
+                    fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                    color="#666"
                   >
                     {blog.body}
                   </Typography>
@@ -255,17 +264,9 @@ const Blog = () => {
           </Link>
         ))}
 
-        <Grid
-          container
-          direction={"row"}
-          spacing={4}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {mockData?.slice(1, 10).map((blog) => (
-            <Grid key={blog.id} size={{ xl: 4, lg: 4, md: 6, sm: 6, xs: 12 }}>
+        <Grid container direction={"row"} spacing={3}>
+          {mockBlog?.slice(1, 10).map((blog) => (
+            <Grid key={blog.id} size={{ xl: 4, lg: 4, md: 4, sm: 6, xs: 12 }}>
               <Link
                 to={`/blog/${blog.id}`}
                 state={{ blog }}
@@ -286,16 +287,25 @@ const Blog = () => {
                     style={{ width: "100%" }}
                   />
                   <CardContent>
-                    <Typography variant="h6" fontWeight={"bold"} mb={2}>
+                    <Typography
+                      variant="h4"
+                      fontSize={{
+                        xl: "1.2rem",
+                        lg: "1.2rem",
+                        md: "1.2rem",
+                        sm: "1.1rem",
+                        xs: "1.1rem",
+                      }}
+                      fontWeight={"bold"}
+                      mb={2}
+                    >
                       {blog.title}
                     </Typography>
                     <Typography
                       component="p"
                       mb={2}
-                      sx={{
-                        color: "#666",
-                        fontSize: "1rem",
-                      }}
+                      fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                      color="#666"
                     >
                       {blog.body.slice(0, 114)}
                     </Typography>

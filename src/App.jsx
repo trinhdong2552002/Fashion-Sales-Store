@@ -1,13 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AccountInformation from "./layouts/AccountInformation";
 import Address from "./pages/AddressPage";
-import ChangePassword from "./pages/ChangePassword";
 import Profile from "./pages/ProfilePage";
-import ForgotPasswordLayout from "@/layouts/ForgotPasswordLayout";
 import MainLayout from "@/layouts/MainLayout";
 import About from "@/pages/AboutPage";
-import Blog from "@/pages/Blog";
-import ForgotPassword from "@/pages/ForgotPassword";
 import Home from "@/pages/HomePage";
 import Login from "@/pages/LoginPage";
 import MyOrder from "@/pages/MyOrderPage";
@@ -19,12 +15,16 @@ import ShippingMethod from "@/pages/ShippingMethodPage";
 import Help from "./pages/HelpPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
-import ForgotPasswordVerify from "./pages/ForgotPassword/shared/ForgotPasswordVerify";
 import ProductListsLayout from "./layouts/ProductListsLayout";
 import AddressInformation from "./pages/AddressPage/shared/AddressInformation";
 import AddressList from "./pages/AddressPage/shared/AddressList";
-import BlogDetail from "./pages/Blog/shared/BlogDetail";
 import ProductDetailsLayout from "./layouts/ProductDetailsLayout";
+import Blog from "./pages/BlogPage";
+import BlogDetail from "./pages/BlogPage/shared/BlogDetail";
+import ForgotPassword from "./pages/ForgotPasswordPage";
+import ChangePassword from "./pages/ChangePasswordPage";
+import ForgotPasswordLayout from "./layouts/ForgotPasswordLayout";
+import ForgotPasswordVerify from "./pages/ForgotPasswordPage/shared/ForgotPasswordVerify";
 
 const App = () => {
   return (
