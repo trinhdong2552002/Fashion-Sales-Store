@@ -1,4 +1,3 @@
-import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import {
   ArticleOutlined,
   HelpOutline,
@@ -7,7 +6,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import {
-  AppBar,
   Box,
   Container,
   Drawer,
@@ -131,6 +129,7 @@ const DesktopHeader = ({ activeCategories }) => {
               </Box>
             </Link>
 
+            {/* DESKTOP: SearchBar input component Textfield */}
             {isDesktop && <SearchBar />}
 
             <Link to={"/help"} style={linkStyle}>
@@ -158,12 +157,13 @@ const DesktopHeader = ({ activeCategories }) => {
             )}
             <CartButton />
 
+            {/* DESKTOP: Button including login, register and profile of user details */}
             <AuthButton />
           </Box>
         </Container>
       </Box>
 
-      {/* ✅ TABLET: Search Dialog/Modal */}
+      {/* TABLET: Search Dialog/Modal */}
       {isTablet && searchOpen && (
         <Drawer
           anchor="top"

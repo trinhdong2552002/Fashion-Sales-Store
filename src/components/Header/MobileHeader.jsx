@@ -23,6 +23,24 @@ const linkStyle = {
   cursor: "pointer",
 };
 
+const mapNavigation = [
+  {
+    id: 1,
+    linkNavigation: "/blog",
+    title: "Blog",
+  },
+  {
+    id: 2,
+    linkNavigation: "/help",
+    title: "Trợ giúp",
+  },
+  {
+    id: 3,
+    linkNavigation: "/about",
+    title: "Về chúng tôi",
+  },
+];
+
 const MobileHeader = ({ activeCategories }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -45,7 +63,7 @@ const MobileHeader = ({ activeCategories }) => {
   }, []);
 
   const DrawContent = () => (
-    <Box width={300} height={"100%"} p={2} sx={{scroll}}>
+    <Box width={300} height={"100%"} p={2} sx={{ scroll }}>
       <Box
         display={"flex"}
         alignItems={"center"}
@@ -75,7 +93,7 @@ const MobileHeader = ({ activeCategories }) => {
         </IconButton>
       </Box>
 
-      {/* Menu navigation with Accordion */}
+      {/* Menu navigation categories with Accordion */}
       <Accordion
         elevation={0}
         disableGutters
@@ -87,7 +105,7 @@ const MobileHeader = ({ activeCategories }) => {
         }}
       >
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography variant="h4" fontSize={"1.1rem"} ml={1}>
+          <Typography variant="h4" fontSize={"1.1rem"}>
             Danh mục
           </Typography>
         </AccordionSummary>
@@ -110,24 +128,22 @@ const MobileHeader = ({ activeCategories }) => {
         </AccordionDetails>
       </Accordion>
 
-      <Link to="/blog" style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.1rem"} ml={1} p={2}>
-          Blog
-        </Typography>
-      </Link>
+      {/* Map other links */}
+      {mapNavigation.map((navItem) => (
+        <Fragment key={navItem.id}>
+          <Link
+            to={navItem.linkNavigation}
+            style={linkStyle}
+            onClick={toggleDrawer(false)}
+          >
+            <Typography variant="h4" fontSize={"1.1rem"} p={2}>
+              {navItem.title}
+            </Typography>
+          </Link>
+        </Fragment>
+      ))}
 
-      <Link to={"/help"} style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.1rem"} ml={1} p={2}>
-          Trợ giúp
-        </Typography>
-      </Link>
-
-      <Link to="/about" style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.2rem"} ml={1} p={2}>
-          Về chúng tôi
-        </Typography>
-      </Link>
-
+      {/* Button including login, register and profile of user details */}
       <AuthButton />
     </Box>
   );
