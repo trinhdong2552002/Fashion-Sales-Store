@@ -11,14 +11,21 @@ const BreadcrumbNav = () => {
 
   // Map of paths to display names
   const breadcrumbNameMap = {
-    "/": "Home",
-    "/blog": "Blog",
+    "/blog": "Bài viết",
     "/about": "Về chúng tôi",
     "/help": "Trợ giúp",
     "/all-products": "Tất cả sản phẩm",
     "/product-details": "Chi tiết sản phẩm",
+    "/checkout": "Thanh toán",
     "/my-order": "Đơn hàng của tôi",
   };
+
+  const hiddenPaths = ["/order-success"];
+
+  // Do not render breadcrumb for these paths
+  if (hiddenPaths.includes(location.pathname)) {
+    return null;
+  }
 
   const categoryMap = {
     "ao-thun": "Áo thun",
@@ -39,7 +46,7 @@ const BreadcrumbNav = () => {
 
   return (
     <Box bgcolor={"#f9f9f9"}>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNext />}>
           {/* Always show Home link if not on root */}
           {location.pathname !== "/" && (

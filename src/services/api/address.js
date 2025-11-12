@@ -4,38 +4,13 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 export const addressApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Lấy danh sách địa chỉ của người dùng
-    getAddresses: builder.query({
-      query: ({ pageNo = 1, pageSize = 10, sortBy = "" } = {}) => ({
-        url: `/v1/addresses`,
+    getAllAddressByUser: builder.query({
+      query: ({ pageNo, pageSize } = {}) => ({
+        url: `/v1/users/addresses`,
         method: "GET",
-        params: { pageNo, pageSize, sortBy },
+        params: { pageNo, pageSize },
       }),
       providesTags: [TAG_KEYS.ADDRESS],
-      transformResponse: (response) => {
-        console.log("Get Addresses API Response:", response);
-        // Ánh xạ dữ liệu để UI dễ sử dụng
-        const items = Array.isArray(response.result?.items)
-          ? response.result.items.map((address) => {
-              console.log("Address item:", address); // Log để kiểm tra cấu trúc address
-              return {
-                ...address,
-                provinceName: address.province?.name || address.province?.ProvinceName || "",
-                districtName: address.district?.name || address.district?.DistrictName || "",
-                wardName: address.ward?.name || address.ward?.WardName || "",
-                provinceId: address.province?.id || address.province?.ProvinceID || "",
-                districtId: address.district?.id || address.district?.DistrictID || "",
-                wardCode: address.ward?.code || address.ward?.WardCode || "",
-              };
-            })
-          : [];
-        return {
-          items,
-          page: response.result?.page || 1,
-          size: response.result?.size || 10,
-          totalPages: response.result?.totalPages || 1,
-          totalItems: response.result?.totalItems || 0,
-        };
-      },
     }),
     // Thêm địa chỉ mới
     createAddress: builder.mutation({
@@ -66,4 +41,9 @@ export const addressApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAddressesQuery, useCreateAddressMutation, useUpdateAddressMutation, useDeleteAddressMutation } = addressApi;
+export const {
+  useGetAllAddressByUserQuery,
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
+} = addressApi;
