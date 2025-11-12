@@ -14,8 +14,8 @@ const MyOrder = () => {
 
   return (
     <Fragment>
-      <Header />
       <WallpaperRepresentative titleHeader="Đơn hàng của tôi" />
+
       <Container maxWidth="lg">
         <Tabs
           value={value}
@@ -35,7 +35,6 @@ const MyOrder = () => {
           <Tab value="three" label="Đã huỷ" />
         </Tabs>
       </Container>
-      <Footer />
     </Fragment>
   );
 };
