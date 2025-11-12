@@ -108,6 +108,7 @@ const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
             Đăng nhập
           </Button>
           <Button
+            variant="contained"
             fullWidth
             sx={{
               height: 40,

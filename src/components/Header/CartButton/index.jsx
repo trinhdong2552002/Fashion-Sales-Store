@@ -25,7 +25,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetCartByUserQuery } from "@/services/api/cart";
+// import { useGetCartByUserQuery } from "@/services/api/cart";
 
 import { removeFromCart } from "@/store/redux/cart/reducer";
 import { selectUser } from "@/store/redux/user/reducer";
@@ -36,9 +36,9 @@ const CartButton = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const dispatch = useDispatch();
   const checkUser = useSelector(selectUser);
-  const { isLoading } = useGetCartByUserQuery(checkUser, {
-    skip: !checkUser,
-  });
+  // const { isLoading } = useGetCartByUserQuery(checkUser, {
+  //   skip: !checkUser,
+  // });
   // console.log("Cart data from API:", cartData);
 
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
@@ -115,7 +115,7 @@ const CartButton = () => {
         <Divider />
 
         {/* Danh sách sản phẩm với thanh cuộn */}
-        {isLoading ? (
+        {/* {isLoading ? (
           <Typography sx={{ p: 2, textAlign: "center" }}>
             Đang tải giỏ hàng...
           </Typography>
@@ -197,7 +197,7 @@ const CartButton = () => {
               ))}
             </Box>
           </Box>
-        )}
+        )} */}
 
         {cartItems.length > 0 && (
           <Box sx={{ flexShrink: 0, p: 2 }}>

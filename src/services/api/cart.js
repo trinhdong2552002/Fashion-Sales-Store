@@ -12,26 +12,26 @@ export const cartApi = baseApi.injectEndpoints({
       providesTags: [TAG_KEYS.CART],
     }),
 
-    getCartByUser: builder.query({
-      query: (userId) => ({
-        url: `/carts/user/${userId}`,
-        method: "GET",
-      }),
-      providesTags: [TAG_KEYS.CART],
-      transformResponse: (response) => {
-        if (!response || !response.carts) {
-          return { carts: [] };
-        }
-        return response;
-      },
-      onQueryStarted: async (arg, { queryFulfilled }) => {
-        try {
-          await queryFulfilled;
-        } catch (error) {
-          console.error("Failed to fetch cart:", error);
-        }
-      },
-    }),
+    // getCartByUser: builder.query({
+    //   query: (userId) => ({
+    //     url: `/carts/user/${userId}`,
+    //     method: "GET",
+    //   }),
+    //   providesTags: [TAG_KEYS.CART],
+    //   transformResponse: (response) => {
+    //     if (!response || !response.carts) {
+    //       return { carts: [] };
+    //     }
+    //     return response;
+    //   },
+    //   onQueryStarted: async (arg, { queryFulfilled }) => {
+    //     try {
+    //       await queryFulfilled;
+    //     } catch (error) {
+    //       console.error("Failed to fetch cart:", error);
+    //     }
+    //   },
+    // }),
 
     addToCart: builder.mutation({
       query: (cartData) => ({
@@ -82,7 +82,7 @@ export const cartApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllCartsQuery,
-  useGetCartByUserQuery,
+  // useGetCartByUserQuery,
   useAddToCartMutation,
   useUpdateCartMutation,
   useDeleteCartMutation,

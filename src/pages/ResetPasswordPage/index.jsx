@@ -260,7 +260,12 @@ const ResetPassword = () => {
                   }}
                 />
 
-                <Button fullWidth type="submit">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  type="submit"
+                  sx={{ fontSize: "1.2rem" }}
+                >
                   {isLoading ? (
                     <Box
                       sx={{

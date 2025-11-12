@@ -52,69 +52,69 @@ const cartSlice = createSlice({
       state.cartTotalAmount = 0;
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      cartApi.endpoints.getCartByUser.matchFulfilled,
-      (state, action) => {
-        const cartData = action.payload;
-        // Nếu API trả về carts: [] nhưng cartItems đã có dữ liệu, giữ nguyên cartItems
-        if (
-          cartData &&
-          cartData.carts &&
-          cartData.carts.length === 0 &&
-          state.cartItems.length > 0
-        ) {
-          return; // Giữ nguyên dữ liệu hiện tại
-        }
+  // extraReducers: (builder) => {
+  //   builder.addMatcher(
+  //     cartApi.endpoints.getCartByUser.matchFulfilled,
+  //     (state, action) => {
+  //       const cartData = action.payload;
+  //       // Nếu API trả về carts: [] nhưng cartItems đã có dữ liệu, giữ nguyên cartItems
+  //       if (
+  //         cartData &&
+  //         cartData.carts &&
+  //         cartData.carts.length === 0 &&
+  //         state.cartItems.length > 0
+  //       ) {
+  //         return; // Giữ nguyên dữ liệu hiện tại
+  //       }
 
-        if (cartData && cartData.carts && cartData.carts.length > 0) {
-          const serverCart = cartData.carts[0];
-          state.cartItems = serverCart.products.map((product) => ({
-            productId: product.id,
-            image: product.thumbnail,
-            name: product.title,
-            price: product.price,
-            color: "TRẮNG",
-            size: "S",
-          }));
+  //       if (cartData && cartData.carts && cartData.carts.length > 0) {
+  //         const serverCart = cartData.carts[0];
+  //         state.cartItems = serverCart.products.map((product) => ({
+  //           productId: product.id,
+  //           image: product.thumbnail,
+  //           name: product.title,
+  //           price: product.price,
+  //           color: "TRẮNG",
+  //           size: "S",
+  //         }));
 
-          state.cartTotalQuantity = state.cartItems.length;
-          state.cartTotalAmount = state.cartItems.reduce(
-            (total, item) => total + item.price,
-            0
-          );
-        } else {
-          state.cartItems = [];
-          state.cartTotalQuantity = 0;
-          state.cartTotalAmount = 0;
-        }
-      }
-    );
+  //         state.cartTotalQuantity = state.cartItems.length;
+  //         state.cartTotalAmount = state.cartItems.reduce(
+  //           (total, item) => total + item.price,
+  //           0
+  //         );
+  //       } else {
+  //         state.cartItems = [];
+  //         state.cartTotalQuantity = 0;
+  //         state.cartTotalAmount = 0;
+  //       }
+  //     }
+  //   );
 
-    // Không đồng bộ cartItems từ response của addToCart và updateCart
-    builder.addMatcher(
-      cartApi.endpoints.addToCart.matchFulfilled,
-      (state) => {
-        // Không làm gì, vì cartItems đã được cập nhật qua action addToCart
-      }
-    );
+  //   // Không đồng bộ cartItems từ response của addToCart và updateCart
+  //   builder.addMatcher(
+  //     cartApi.endpoints.addToCart.matchFulfilled,
+  //     (state) => {
+  //       // Không làm gì, vì cartItems đã được cập nhật qua action addToCart
+  //     }
+  //   );
 
-    builder.addMatcher(
-      cartApi.endpoints.updateCart.matchFulfilled,
-      (state) => {
-        // Không làm gì, vì cartItems đã được cập nhật qua action addToCart
-      }
-    );
+  //   builder.addMatcher(
+  //     cartApi.endpoints.updateCart.matchFulfilled,
+  //     (state) => {
+  //       // Không làm gì, vì cartItems đã được cập nhật qua action addToCart
+  //     }
+  //   );
 
-    builder.addMatcher(
-      cartApi.endpoints.deleteCart.matchFulfilled,
-      (state) => {
-        state.cartItems = [];
-        state.cartTotalQuantity = 0;
-        state.cartTotalAmount = 0;
-      }
-    );
-  },
+  //   builder.addMatcher(
+  //     cartApi.endpoints.deleteCart.matchFulfilled,
+  //     (state) => {
+  //       state.cartItems = [];
+  //       state.cartTotalQuantity = 0;
+  //       state.cartTotalAmount = 0;
+  //     }
+  //   );
+  // },
 });
 
 export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;

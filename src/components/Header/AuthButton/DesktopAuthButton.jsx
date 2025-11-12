@@ -20,7 +20,7 @@ const DesktopAuthButton = ({
   handleMenuClose,
   navigate,
 }) => {
-    console.log("myInfo in DesktopAuthButton:", myInfo);
+  console.log("myInfo in DesktopAuthButton:", myInfo);
 
   return (
     <Stack direction="row" alignItems="center">
@@ -59,14 +59,9 @@ const DesktopAuthButton = ({
           <Button
             variant="outlined"
             sx={{
-              color: "black",
-              backgroundColor: "white",
-              borderColor: "#d9d9d9",
               borderRadius: 5,
               minWidth: 120,
               height: 40,
-              textTransform: "none",
-              fontSize: "1rem",
               mr: 1,
               "&:hover": {
                 backgroundColor: alpha("#d9d9d9", 0.5),
@@ -85,11 +80,6 @@ const DesktopAuthButton = ({
               borderRadius: 5,
               minWidth: 120,
               height: 40,
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: alpha("#333"),
-              },
             }}
             component={Link}
             to="/register"

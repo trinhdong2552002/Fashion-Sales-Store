@@ -6,12 +6,9 @@ import MainLayout from "@/layouts/MainLayout";
 import About from "@/pages/AboutPage";
 import Home from "@/pages/HomePage";
 import Login from "@/pages/LoginPage";
-import MyOrder from "@/pages/MyOrderPage";
-import OrderConfirmation from "@/pages/OrderConfirmationPage";
 import ProductDetails from "@/pages/ProductDetailsPage";
 import ProductLists from "@/pages/ProductListsPage";
 import Register from "@/pages/RegisterPage";
-import ShippingMethod from "@/pages/ShippingMethodPage";
 import Help from "./pages/HelpPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
@@ -25,6 +22,9 @@ import ForgotPassword from "./pages/ForgotPasswordPage";
 import ChangePassword from "./pages/ChangePasswordPage";
 import ForgotPasswordLayout from "./layouts/ForgotPasswordLayout";
 import ForgotPasswordVerify from "./pages/ForgotPasswordPage/shared/ForgotPasswordVerify";
+import MyOrders from "./pages/MyOrderPage";
+import Checkout from "./pages/CheckoutPage";
+import OrderSuccess from "./pages/OrderSuccess";
 
 const App = () => {
   return (
@@ -36,6 +36,9 @@ const App = () => {
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<BlogDetail />} />
         <Route path="about" element={<About />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="order-success" element={<OrderSuccess />} />
+        <Route path="my-order" element={<MyOrders />} />  
       </Route>
 
       {/* Login */}
@@ -65,12 +68,6 @@ const App = () => {
         <Route index element={<ProductDetails />} />
       </Route>
 
-      {/* Shipping Method */}
-      <Route path="/shipping-method" element={<ShippingMethod />} />
-
-      {/* Order Confirmation */}
-      <Route path="/order-confirmation" element={<OrderConfirmation />} />
-
       {/* Account Inform */}
       <Route path="/account-information" element={<AccountInformation />}>
         <Route path="profile/:id" element={<Profile />} />
@@ -79,8 +76,6 @@ const App = () => {
         <Route path="address-list/:id" element={<AddressList />} />
         <Route path="new-address/:id" element={<AddressInformation />} />
       </Route>
-
-      <Route path="/my-order" element={<MyOrder />} />
     </Routes>
   );
 };
