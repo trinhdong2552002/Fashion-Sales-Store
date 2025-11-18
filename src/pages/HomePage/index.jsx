@@ -26,6 +26,7 @@ import Jacket from "@/assets/images/categories/Jacket.jpg";
 import Trouser from "@/assets/images/categories/Trouser.jpg";
 import Shorts from "@/assets/images/categories/Shorts.jpg";
 import Accessories from "@/assets/images/categories/Accessories.jpg";
+import { useSnackbar } from "@/components/Snackbar";
 
 const slides = [banner_1, banner_2, banner_3, banner_4];
 
@@ -40,11 +41,7 @@ const categoryImageMap = {
 
 const Home = () => {
   const location = useLocation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
   const { data: dataCategories } = useListCategoriesForUserQuery({
     page: 0,
     size: 10,
@@ -53,18 +50,10 @@ const Home = () => {
 
   useEffect(() => {
     if (location.state?.message) {
-      setSnackbar({
-        open: true,
-        message: location.state.message || "",
-        severity: location.state.severity || "success",
-      });
+      showSnackbar(location.state.message, "success");
     }
     window.history.replaceState({}, document.title);
   }, [location]);
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const activeCategories = Array.isArray(dataCategories)
     ? dataCategories.filter((item) => item.status === "ACTIVE")
@@ -197,22 +186,6 @@ const Home = () => {
 
       {/* Product best seller */}
       <SwiperProducts title="Sản phẩm bán chạy" type="bestSeller" />
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

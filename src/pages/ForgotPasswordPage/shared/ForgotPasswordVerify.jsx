@@ -1,48 +1,29 @@
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
   FormHelperText,
-  Snackbar,
   Typography,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useForgotPasswordVerifyMutation } from "@/services/api/auth";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import { useSnackbar } from "@/components/Snackbar";
 
 const ForgotPasswordVerify = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showSnackbar } = useSnackbar();
+
   const [forgotPasswordVerify, { isLoading }] =
     useForgotPasswordVerifyMutation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
       otp: "",
     },
   });
-
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message ||
-        (success ? "Xác thực OTP thành công !" : "Xác thực OTP thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const handleForgotPasswordVerify = async (data) => {
     try {
@@ -55,7 +36,7 @@ const ForgotPasswordVerify = () => {
       localStorage.setItem("forgotPasswordToken", token);
 
       if (response) {
-        handleShowSnackbar(true);
+        showSnackbar("Xác thực OTP thành công!", "success");
         setTimeout(() => {
           navigate("/forgot-password/reset-password", {
             state: { email, forgotPasswordToken: token },
@@ -63,11 +44,10 @@ const ForgotPasswordVerify = () => {
         }, 1000);
       }
     } catch (error) {
-      const messageError =
-        error?.message || error?.data?.message || "Xác thực OTP thất bại !";
-      handleShowSnackbar(false, messageError);
-
-      console.log("OTP verification failed:", error);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -215,22 +195,6 @@ const ForgotPasswordVerify = () => {
           </form>
         </Box>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

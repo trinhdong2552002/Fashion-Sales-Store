@@ -1,13 +1,11 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,11 +14,13 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/services/api/auth";
 import background_form from "@/assets/images/form/background-form.jpg";
+import { useSnackbar } from "@/components/Snackbar";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
   const [registerAccount, { isLoading }] = useRegisterMutation();
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -39,17 +39,6 @@ const Register = () => {
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword((show) => !show);
 
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message || (success ? "Đăng ký thành công !" : "Đăng ký thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
-
   const handleRegister = async (data) => {
     try {
       const response = await registerAccount({
@@ -61,14 +50,17 @@ const Register = () => {
       }).unwrap();
 
       if (response) {
-        handleShowSnackbar(true);
+        showSnackbar(
+          "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
+          "success"
+        );
         navigate("/register/verify-account", { state: { email: data.email } });
       }
     } catch (error) {
-      const messageError =
-        error?.message || error?.data?.message || "Đăng ký thất bại !";
-      handleShowSnackbar(false, messageError);
-      console.error("Register failed:", error);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -320,22 +312,6 @@ const Register = () => {
           </Grid>
         </Grid>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

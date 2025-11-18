@@ -49,7 +49,6 @@ export const axiosBaseQuery =
         },
         baseURL: import.meta.env.VITE_API_URL,
       });
-      // Debug
       // console.log("Axios response received:", result);
 
       if (result.status >= 400) {
@@ -61,7 +60,6 @@ export const axiosBaseQuery =
           },
         };
       }
-      // Debug
       // console.log("Axios response success:", result.data);
       return { data: result.data };
     } catch (axiosError) {

@@ -1,26 +1,20 @@
 import {
-  Alert,
   Button,
   CircularProgress,
-  Snackbar,
   Box,
   Typography,
   FormHelperText,
 } from "@mui/material";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useVerifyOtpMutation } from "@/services/api/auth";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import { useSnackbar } from "@/components/Snackbar";
 
 const VerifyAccount = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -30,22 +24,6 @@ const VerifyAccount = () => {
 
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
 
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message ||
-        (success
-          ? "Xác thực tài khoản thành công !"
-          : "Xác thực tài khoản thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   const handleVerifyAccount = async (data) => {
     try {
       const response = await verifyOtp({
@@ -54,17 +32,16 @@ const VerifyAccount = () => {
       }).unwrap();
 
       if (response) {
-        handleShowSnackbar(true);
+        showSnackbar("Xác thực tài khoản thành công!", "success");
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       }
     } catch (error) {
-      const messageError =
-        error?.message ||
-        error?.data?.message ||
-        "Xác thực tài khoản thất bại !";
-      handleShowSnackbar(false, messageError);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -207,22 +184,6 @@ const VerifyAccount = () => {
           </form>
         </Box>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

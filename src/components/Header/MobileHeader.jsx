@@ -17,11 +17,11 @@ import CartButton from "./CartButton";
 
 import { slugify } from "@/utils/slugify";
 
-const linkStyle = {
-  color: "black",
-  textDecoration: "none",
-  cursor: "pointer",
-};
+const mapListMenuLinkMobile = [
+  { id: 1, name: "Blog", link: "/blog" },
+  { id: 2, name: "Trợ giúp", link: "/help" },
+  { id: 3, name: "Về chúng tôi", link: "/about" },
+];
 
 const MobileHeader = ({ activeCategories }) => {
   const [open, setOpen] = useState(false);
@@ -45,7 +45,7 @@ const MobileHeader = ({ activeCategories }) => {
   }, []);
 
   const DrawContent = () => (
-    <Box width={300} height={"100%"} p={2} sx={{scroll}}>
+    <Box width={300} height={"100%"} p={2}>
       <Box
         display={"flex"}
         alignItems={"center"}
@@ -110,23 +110,18 @@ const MobileHeader = ({ activeCategories }) => {
         </AccordionDetails>
       </Accordion>
 
-      <Link to="/blog" style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.1rem"} ml={1} p={2}>
-          Blog
-        </Typography>
-      </Link>
-
-      <Link to={"/help"} style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.1rem"} ml={1} p={2}>
-          Trợ giúp
-        </Typography>
-      </Link>
-
-      <Link to="/about" style={linkStyle} onClick={toggleDrawer(false)}>
-        <Typography variant="h4" fontSize={"1.2rem"} ml={1} p={2}>
-          Về chúng tôi
-        </Typography>
-      </Link>
+      {mapListMenuLinkMobile.map((item) => (
+        <Link
+          key={item.id}
+          to={item.link}
+          style={{ color: "black", textDecoration: "none", cursor: "pointer" }}
+          onClick={toggleDrawer(false)}
+        >
+          <Typography variant="h4" fontSize={"1.1rem"} ml={1} p={2}>
+            {item.name}
+          </Typography>
+        </Link>
+      ))}
 
       <AuthButton />
     </Box>
@@ -153,8 +148,8 @@ const MobileHeader = ({ activeCategories }) => {
             p={1}
           >
             <Box display={"flex"} alignItems={"center"}>
-              <IconButton onClick={toggleDrawer(true)} sx={{ p: 0 }}>
-                <Menu />
+              <IconButton>
+                <Menu onClick={toggleDrawer(true)} />
               </IconButton>
               <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
                 <DrawContent />

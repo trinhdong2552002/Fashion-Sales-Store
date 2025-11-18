@@ -75,36 +75,34 @@ const Help = () => {
 
           <Box>
             {mapAccordions.map((accordion) => (
-              <>
-                <Accordion sx={{ my: 4 }} key={accordion.id}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMore />}
-                    aria-controls={`panel-${accordion.id}-content`}
-                    id={`panel-${accordion.id}-header`}
+              <Accordion sx={{ my: 4 }} key={accordion.id}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls={`panel-${accordion.id}-content`}
+                  id={`panel-${accordion.id}-header`}
+                >
+                  <Typography
+                    fontWeight={"bold"}
+                    fontSize={{
+                      xl: "1.4rem",
+                      lg: "1.4rem",
+                      md: "1.4rem",
+                      sm: "1.2rem",
+                      xs: "1rem",
+                    }}
                   >
-                    <Typography
-                      fontWeight={"bold"}
-                      fontSize={{
-                        xl: "1.4rem",
-                        lg: "1.4rem",
-                        md: "1.4rem",
-                        sm: "1.2rem",
-                        xs: "1rem",
-                      }}
-                    >
-                      {accordion.question}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography
-                      color="#666"
-                      fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
-                    >
-                      {accordion.answer}
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </>
+                    {accordion.question}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography
+                    color="#666"
+                    fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+                  >
+                    {accordion.answer}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
             ))}
           </Box>
         </Box>
