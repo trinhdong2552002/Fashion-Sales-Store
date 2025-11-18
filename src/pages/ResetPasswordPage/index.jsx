@@ -1,13 +1,11 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,19 +14,16 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import background_form from "@/assets/images/form/background-form.jpg";
 import { useResetPasswordMutation } from "@/services/api/auth";
+import { useSnackbar } from "@/components/Snackbar";
 
 const ResetPassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-
   const location = useLocation();
+  const { showSnackbar } = useSnackbar();
+
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
 
   const {
     register,
@@ -44,22 +39,6 @@ const ResetPassword = () => {
 
   const email = location.state?.email || "Không có email";
   console.log("email", email);
-
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message ||
-        (success
-          ? "Đặt lại mật khẩu thành công !"
-          : "Đặt lại mật khẩu thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
 
@@ -93,18 +72,19 @@ const ResetPassword = () => {
 
       if (response) {
         localStorage.removeItem("forgotPasswordToken");
-        handleShowSnackbar(true);
+        showSnackbar(
+          "Đặt lại mật khẩu thành công ! Vui lòng đăng nhập lại.",
+          "success"
+        );
         setTimeout(() => {
           navigate("/login");
         }, 1000);
       }
     } catch (error) {
-      setSnackbar({
-        open: true,
-        message: "Đặt lại mật khẩu thất bại !",
-        severity: "error",
-      });
-      console.log("Reset password failed:", error);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -310,22 +290,6 @@ const ResetPassword = () => {
           </Grid>
         </Grid>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

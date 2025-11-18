@@ -4,8 +4,6 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-  Snackbar,
-  Alert,
   CircularProgress,
   Box,
   Grid,
@@ -16,15 +14,12 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation, useLazyGetMyInfoQuery } from "@/services/api/auth";
 import background_form from "@/assets/images/form/background-form.jpg";
+import { useSnackbar } from "@/components/Snackbar";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
 
   const [login, { isLoading }] = useLoginMutation();
   const [triggerMyInfo] = useLazyGetMyInfoQuery();
@@ -39,19 +34,6 @@ const Login = () => {
   const handleMouseDownPassword = (event) => event.preventDefault();
   const handleMouseUpPassword = (event) => event.preventDefault();
 
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message || (success ? "Đăng nhập thành công" : "Đăng nhập thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   const handleLogin = async (data) => {
     try {
       const response = await login({
@@ -65,7 +47,7 @@ const Login = () => {
         if (role === "ADMIN")
           throw new Error("Tài khoản ADMIN không thể đăng nhập.");
         if (role === "USER") {
-          handleShowSnackbar(true);
+          showSnackbar("Đăng nhập thành công!", "success");
           setTimeout(() => navigate("/"), 1000);
         }
 
@@ -75,10 +57,10 @@ const Login = () => {
         await triggerMyInfo();
       }
     } catch (error) {
-      const messageError =
-        error?.message || error?.data?.message || "Đăng nhập thất bại !";
-      handleShowSnackbar(false, messageError);
-      console.error("Login failed:", error);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -339,22 +321,6 @@ const Login = () => {
           </Grid>
         </Grid>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

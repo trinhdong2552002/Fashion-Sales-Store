@@ -1,47 +1,27 @@
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
   Grid,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useForgotPasswordMutation } from "@/services/api/auth";
 import background_form from "@/assets/images/form/background-form.jpg";
+import { useSnackbar } from "@/components/Snackbar";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const handleShowSnackbar = (success, message) => {
-    setSnackbar({
-      open: true,
-      message:
-        message ||
-        (success ? "Xác nhận email thành công !" : "Xác nhận email thất bại !"),
-      severity: success ? "success" : "error",
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const handleForgotPassword = async (data) => {
     try {
@@ -51,7 +31,10 @@ const ForgotPassword = () => {
       console.log("response", response);
 
       if (response) {
-        handleShowSnackbar(true);
+        showSnackbar(
+          "Đã gửi mã xác nhận đến email của bạn. Vui lòng kiểm tra hộp thư!",
+          "success"
+        );
         setTimeout(() => {
           navigate("/forgot-password/forgot-password-verify", {
             state: { email: data.email },
@@ -59,10 +42,10 @@ const ForgotPassword = () => {
         }, 1000);
       }
     } catch (error) {
-      const messageError =
-        error?.message || error?.data?.message || "Xác nhận email thất bại !";
-      handleShowSnackbar(false, messageError);
-      console.log("Verify account failed:", error);
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
   };
 
@@ -240,22 +223,6 @@ const ForgotPassword = () => {
             />
           </Grid>
         </Grid>
-
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "right", horizontal: "right" }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbar.severity}
-            variant="filled"
-            sx={{ width: "100%", p: "10px 20px" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Box>
     </Box>
   );

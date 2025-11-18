@@ -13,16 +13,6 @@ import PropTypes from "prop-types";
 import { Fragment, useState } from "react";
 
 const ProductActions = () => {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "error",
-  });
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   return (
     <Fragment>
       <Box display={"flex"} alignItems={"center"} sx={{ m: "30px 0" }}>
@@ -52,32 +42,8 @@ const ProductActions = () => {
           Mua ngay
         </Button>
       </Box>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "right", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: "100%", p: "10px 20px" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Fragment>
   );
-};
-
-ProductActions.propTypes = {
-  products: PropTypes.object,
-  loading: PropTypes.bool,
-  selectedQuantity: PropTypes.number,
-  selectedColor: PropTypes.string,
-  selectedSize: PropTypes.string,
 };
 
 export default ProductActions;
