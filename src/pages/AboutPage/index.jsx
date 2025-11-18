@@ -58,6 +58,8 @@ const About = () => {
           <Grid size={{ lg: 8, md: 8, sm: 8, xs: 12 }}>
             <Box mr={{ xl: 8, lg: 8, md: 4, sm: 4, xs: 0 }}>
               <Typography
+                component="span"
+                display="block"
                 my={2}
                 fontWeight={"bold"}
                 variant="h4"
@@ -79,6 +81,8 @@ const About = () => {
                 {storyContent.titleAboutUs}
               </Typography>
               <Typography
+                component="span"
+                display="block"
                 mb={3}
                 variant="body1"
                 fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.1rem" }}
@@ -122,6 +126,8 @@ const About = () => {
           >
             <Box ml={{ xl: 8, lg: 8, md: 4, sm: 4, xs: 0 }}>
               <Typography
+                component="span"
+                display="block"
                 my={2}
                 fontWeight={"bold"}
                 variant="h4"
@@ -143,6 +149,8 @@ const About = () => {
                 {missionContent.titleMissionUs}
               </Typography>
               <Typography
+                component="span"
+                display="block"
                 mb={3}
                 variant="body1"
                 fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.1rem" }}

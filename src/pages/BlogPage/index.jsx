@@ -23,7 +23,7 @@ const Blog = () => {
 
   return (
     <Box component={"section"}>
-      <WallpaperRepresentative titleHeader="Blog" />
+      <WallpaperRepresentative titleHeader="Bài viết" />
 
       <Container maxWidth="lg">
         {blogData?.slice(0, 1).map((blog) => (

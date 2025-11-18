@@ -5,7 +5,6 @@ import {
   AccordionSummary,
   Box,
   Button,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { Fragment } from "react";
@@ -76,11 +75,8 @@ const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
               fontSize: "1rem",
             }}
           >
-            <IconButton color="inherit" aria-label="logout">
-              <Logout />
-            </IconButton>
-
-            <Typography variant="body1" onClick={handleLogout}>
+            <Logout />
+            <Typography variant="body1" onClick={handleLogout} ml={1}>
               Đăng xuất
             </Typography>
           </Button>
