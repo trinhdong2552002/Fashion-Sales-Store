@@ -1,5 +1,5 @@
 {
-  "name": "fashion-sales-chatbot",
+  "name": "fashion-sales-store",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -23,7 +23,6 @@
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "mui-one-time-password-input": "^5.0.0",
-    "normalize.css": "^8.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
@@ -43,6 +42,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
-    "vite": "^6.1.0"
+    "vite": "^7.2.2"
   }
 }
