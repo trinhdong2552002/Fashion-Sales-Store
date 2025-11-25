@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import { useSnackbar } from "@/components/Snackbar";
 import {
   Box,
   TextField,
@@ -9,8 +9,6 @@ import {
   Select,
   MenuItem,
   Button,
-  Snackbar,
-  Alert,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
@@ -19,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const AddressInformation = () => {
+  const { showSnackbar } = useSnackbar();
   const { id } = useParams();
   const navigate = useNavigate();
   const [city, setCity] = useState([]);
@@ -30,11 +29,7 @@ const AddressInformation = () => {
   const [streetDetail, setStreetDetail] = useState("");
   const [phone, setPhone] = useState("");
   const [isDefault, setIsDefault] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
@@ -97,11 +92,7 @@ const AddressInformation = () => {
       !streetDetail ||
       !phone
     ) {
-      setSnackbar({
-        open: true,
-        message: "Vui lòng điền đầy đủ thông tin địa chỉ!",
-        severity: "error",
-      });
+      showSnackbar("Vui lòng điền đầy đủ thông tin!", "warning");
       return;
     }
 
@@ -118,24 +109,14 @@ const AddressInformation = () => {
       await axios.post(`${import.meta.env.VITE_API_URL}/v1/addresses`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSnackbar({
-        open: true,
-        message: "Thêm địa chỉ thành công!",
-        severity: "success",
-      });
+      showSnackbar("Thêm địa chỉ thành công!", "success");
       setTimeout(() => navigate(`/account-information/address/${id}`), 1500);
-    } catch (err) {
-      console.error("Lỗi khi thêm địa chỉ:", err);
-      setSnackbar({
-        open: true,
-        message: "Thêm địa chỉ thất bại!",
-        severity: "error",
-      });
+    } catch (error) {
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -285,21 +266,6 @@ const AddressInformation = () => {
             </Button>
           </Box>
         </Box>
-
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "right", horizontal: "right" }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </Box>
     </Stack>
   );

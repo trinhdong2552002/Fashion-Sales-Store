@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 
 import AccountSideBar from "@/components/AccountSideBar";
 import ChangePasswordInform from "./shared/ChangePasswordInform";
@@ -8,20 +8,53 @@ const ChangePassword = () => {
   const { id } = useParams();
 
   return (
-    <section>
-      <Grid container p={10} spacing={6}>
-        <Grid size={{ xl: 3, lg: 3 }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        my: {
+          xs: 4,
+          sm: 4,
+          md: 8,
+          lg: 8,
+          xl: 8,
+        },
+      }}
+    >
+      <Grid container spacing={6}>
+        <Grid
+          size={{ xl: 3, lg: 3, md: 4 }}
+          sx={{
+            display: {
+              xs: "none",
+              sm: "none",
+              md: "block",
+              lg: "block",
+              xl: "block",
+            },
+          }}
+        >
           <AccountSideBar id={id} />
         </Grid>
 
-        <Grid size={{ xl: 9, lg: 9 }}>
-          <Typography variant="h4" fontWeight={"bold"} mb={2}>
+        <Grid size={{ xl: 9, lg: 9, md: 8, sm: 12, xs: 12 }}>
+          <Typography
+            variant="h4"
+            fontWeight={"bold"}
+            fontSize={{
+              xl: "1.6rem",
+              lg: "1.6rem",
+              md: "1.4rem",
+              sm: "1.2rem",
+              xs: "1.2rem",
+            }}
+            mb={2}
+          >
             Đổi mật khẩu
           </Typography>
           <ChangePasswordInform />
         </Grid>
       </Grid>
-    </section>
+    </Container>
   );
 };
 
