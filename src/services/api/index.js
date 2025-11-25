@@ -70,10 +70,19 @@ export const axiosBaseQuery =
 
       console.error("Axios error:", error);
 
+      // HANDLE 401 / EXPIRED TOKEN HERE
       if (error.status === 401) {
-        console.log("Handling 401 error:", error.data?.message);
+        console.log("Token expired. Redirecting to login...");
+
+        // 1. Clear data
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+
+        // 2. Force redirect (This works outside components)
+        // Note: This causes a full page reload, which is actually good
+        // for logout to ensure all memory states are cleared.
+        window.location.href = "/login";
+
         return { error };
       }
 

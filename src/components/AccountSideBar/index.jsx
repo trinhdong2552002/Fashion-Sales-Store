@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Box, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 
@@ -6,7 +5,10 @@ const AccountSideBar = ({ id }) => {
   const location = useLocation();
   const menuItems = [
     { path: `/account-information/profile/${id}`, label: "Hồ sơ cá nhân" },
-    { path: `/account-information/change-password/${id}`, label: "Đổi mật khẩu" },
+    {
+      path: `/account-information/change-password/${id}`,
+      label: "Đổi mật khẩu",
+    },
     { path: `/account-information/address/${id}`, label: "Địa chỉ" },
   ];
   return (
@@ -20,7 +22,18 @@ const AccountSideBar = ({ id }) => {
         boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
       }}
     >
-      <Typography variant="h5" mb={2}>
+      <Typography
+        variant="h4"
+        fontWeight={"bold"}
+        fontSize={{
+          xl: "1.6rem",
+          lg: "1.4rem",
+          md: "1.2rem",
+          sm: "1.2rem",
+          xs: "1.2rem",
+        }}
+        mb={2}
+      >
         Thông tin tài khoản
       </Typography>
 

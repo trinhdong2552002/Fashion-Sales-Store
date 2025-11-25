@@ -1,12 +1,7 @@
-/* eslint-disable react/prop-types */
 import {
   Box,
   Typography,
-  Stack,
   Button,
-  IconButton,
-  Snackbar,
-  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -16,24 +11,29 @@ import {
   InputLabel,
   Select as DialogSelect,
   MenuItem,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
+  Paper,
+  Checkbox,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
-import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "@/components/Snackbar";
+import {
+  useGetAllAddressByUserQuery,
+  useHideAddressMutation,
+  useUpdateAddressMutation,
+} from "@/services/api/address";
 
-const AddressList = ({ id }) => {
-  const [addresses, setAddresses] = useState([]);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
+const AddressList = () => {
+  const { showSnackbar } = useSnackbar();
+  const [openModalHideAddress, setOpenModalHideAddress] = useState(false);
+  const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
   const [editAddress, setEditAddress] = useState(null);
+
+  const [addressId, setAddressId] = useState(null);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(null);
+  const [selectedDistrictId, setSelectedDistrictId] = useState(null);
+  const [selectedWardCode, setSelectedWardCode] = useState(null);
+  const [checkedDefaultAddress, setCheckedDefaultAddress] = useState(false);
+
   const [city, setCity] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -42,311 +42,250 @@ const AddressList = ({ id }) => {
   const [ward, setWard] = useState("");
   const [streetDetail, setStreetDetail] = useState("");
   const [phone, setPhone] = useState("");
-  const [isDefault, setIsDefault] = useState(false);
-  const token = localStorage.getItem("accessToken");
-  const navigate = useNavigate();
 
-  const fetchAddresses = async () => {
-    try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/v1/users/addresses?pageNo=1&pageSize=10`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const addressList = res.data.result.items || [];
-      const detailedAddresses = addressList.map((addr) => ({
-        ...addr,
-        fullAddress: `${addr.streetDetail}, ${
-          addr.ward?.name || "Không xác định"
-        }, ${addr.district?.name || "Không xác định"}, ${
-          addr.province?.name || "Không xác định"
-        }`,
-      }));
-      setAddresses(detailedAddresses);
-    } catch (err) {
-      console.error("Error fetching addresses:", err);
-      setSnackbar({
-        open: true,
-        message: "Lỗi khi lấy danh sách địa chỉ!",
-        severity: "error",
-      });
-    }
-  };
+  const {
+    data: dataGetAllAddress,
+    isLoading: isLoadingGetAllAddress,
+    isError: isErrorGetAllAddress,
+    error: errorGetAllAddress,
+    refetch: refetchGetAllAddress,
+  } = useGetAllAddressByUserQuery({
+    pageNo: 1,
+    pageSize: 100,
+  });
 
-  const handleDelete = async (addressId) => {
-    try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/v1/addresses/${addressId}/hide`,
-        { invisible: true },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setSnackbar({
-        open: true,
-        message: "Xóa địa chỉ thành công!",
-        severity: "success",
-      });
-      fetchAddresses();
-    } catch (err) {
-      console.error("Lỗi khi xóa địa chỉ:", err);
-      setSnackbar({
-        open: true,
-        message: "Xóa địa chỉ thất bại!",
-        severity: "error",
-      });
-    }
-  };
-
-  const handleEdit = (address) => {
-    setEditAddress(address);
-    setSelectedCity(address.province.id ? address.province.id.toString() : "");
-    setSelectedDistrict(
-      address.district.id ? address.district.id.toString() : ""
-    );
-    setWard(address.ward.code || "");
-    setStreetDetail(address.streetDetail || "");
-    setPhone(address.phone || "");
-    setIsDefault(address.isDefault || false);
-    setEditDialogOpen(true);
-
-    // Fetch updated city, district, and ward lists
-    axios
-      .get(
-        `${import.meta.env.VITE_API_URL}/v1/provinces?pageNo=1&pageSize=63`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        const cities = res.data.result.items || [];
-        setCity(cities);
-        if (
-          address.province.id &&
-          !cities.some((c) => c.id === address.province.id)
-        ) {
-          console.warn(
-            "Province ID not found in fetched data:",
-            address.province.id
-          );
-        }
-      })
-      .catch((err) => console.error("Lỗi khi lấy danh sách tỉnh/thành:", err));
-
-    if (address.province.id) {
-      axios
-        .get(
-          `${import.meta.env.VITE_API_URL}/v1/provinces/${
-            address.province.id
-          }/districts?pageNo=1&pageSize=30`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .then((res) => {
-          const districtsList = res.data.result.items || [];
-          setDistricts(districtsList);
-          if (
-            address.district.id &&
-            !districtsList.some((d) => d.id === address.district.id)
-          ) {
-            console.warn(
-              "District ID not found in fetched data:",
-              address.district.id
-            );
-          }
-        })
-        .catch((err) =>
-          console.error("Lỗi khi lấy danh sách quận/huyện:", err)
-        );
-    }
-
-    if (address.district.id) {
-      axios
-        .get(
-          `${import.meta.env.VITE_API_URL}/v1/districts/${
-            address.district.id
-          }/wards?pageNo=1&pageSize=100`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .then((res) => {
-          const wardsList = res.data.result.items || [];
-          setWards(wardsList);
-          if (
-            address.ward.code &&
-            !wardsList.some((w) => w.code === address.ward.code)
-          ) {
-            console.warn(
-              "Ward code not found in fetched data:",
-              address.ward.code
-            );
-          }
-        })
-        .catch((err) => console.error("Lỗi khi lấy danh sách phường/xã:", err));
-    }
-  };
-
-  const handleUpdate = async () => {
-    if (
-      !selectedCity ||
-      !selectedDistrict ||
-      !ward ||
-      !streetDetail ||
-      !phone
-    ) {
-      setSnackbar({
-        open: true,
-        message: "Vui lòng điền đầy đủ thông tin địa chỉ!",
-        severity: "error",
-      });
-      return;
-    }
-
-    const data = {
-      streetDetail,
-      wardCode: ward,
-      districtId: selectedDistrict,
-      provinceId: selectedCity,
-      phone,
-      isDefault: !!isDefault, // Ensure isDefault is explicitly boolean
-    };
-
-    try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/v1/addresses/${editAddress.id}`,
-        data,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setSnackbar({
-        open: true,
-        message: "Cập nhật địa chỉ thành công!",
-        severity: "success",
-      });
-      setEditDialogOpen(false);
-      fetchAddresses();
-    } catch (err) {
-      console.error(
-        "Lỗi khi cập nhật địa chỉ:",
-        err.response?.data || err.message
-      );
-      setSnackbar({
-        open: true,
-        message:
-          "Cập nhật địa chỉ thất bại! Kiểm tra console để biết chi tiết.",
-        severity: "error",
-      });
-    }
-  };
+  const [hideAddress] = useHideAddressMutation();
+  const [updateAddress] = useUpdateAddressMutation();
 
   useEffect(() => {
-    if (!token || !id) return;
-    fetchAddresses();
-  }, [token, id]);
+    refetchGetAllAddress();
+  }, []);
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
+  const handleCheckboxDefaultAddress = (e) => {
+    setCheckedDefaultAddress(e.target.checked);
   };
 
-  const handleCloseDialog = () => {
-    setEditDialogOpen(false);
+  const handleOpenModalHideAddress = (id) => {
+    setAddressId(id);
+    setOpenModalHideAddress(true);
+  };
+
+  const handleCloseModalHideAddress = () => {
+    setOpenModalHideAddress(false);
+    setAddressId(null);
+  };
+
+  const handleOpenModalUpdateAddress = () => {
+    setOpenModalUpdateAddress(true);
+  };
+
+  const handleCloseModalUpdateAddress = () => {
+    setOpenModalUpdateAddress(false);
     setEditAddress(null);
     setSelectedCity("");
     setSelectedDistrict("");
     setWard("");
     setStreetDetail("");
     setPhone("");
-    setIsDefault(false);
+    setCheckedDefaultAddress(false);
+  };
+
+  const handleHideAddress = async () => {
+    if (!addressId) return;
+
+    try {
+      await hideAddress({ id: addressId }).unwrap();
+      setOpenModalHideAddress(false);
+      setAddressId(null);
+      refetchGetAllAddress();
+      showSnackbar("Xoá địa chỉ thành công!", "success");
+    } catch (error) {
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+        return;
+      }
+    }
+  };
+
+  const handleUpdateAddress = async (data) => {
+    if (!selectedProvinceId || !selectedDistrictId || !selectedWardCode) {
+      showSnackbar("Vui lòng chọn đầy đủ Tỉnh/Huyện/Xã", "warning");
+      return;
+    }
+
+    try {
+      await updateAddress({
+        id: data.id,
+        phone: data.phone,
+        streetDetail: data.streetDetail,
+        provinceId: selectedProvinceId,
+        districtId: selectedDistrictId,
+        wardCode: selectedWardCode,
+        isDefault: checkedDefaultAddress,
+      }).unwrap();
+      setOpenModalUpdateAddress(false);
+      refetchGetAllAddress();
+      showSnackbar("Cập nhật địa chỉ thành công!", "success");
+    } catch (error) {
+      if (error && error.data && error.data.message) {
+        showSnackbar(
+          `Cập nhật địa chỉ thất bại! ${error.data.message}`,
+          "error"
+        );
+        return;
+      }
+    }
   };
 
   return (
     <Fragment>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
-        <Typography variant="h4" fontWeight={"bold"}>
-          Địa chỉ
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight={"bold"}
+          fontSize={{
+            xl: "1.6rem",
+            lg: "1.6rem",
+            md: "1.4rem",
+            sm: "1.2rem",
+            xs: "1.2rem",
+          }}
+        >
+          Danh sách địa chỉ
         </Typography>
 
         <Button
           variant="contained"
-          sx={{
-            backgroundColor: "black",
-          }}
-          onClick={() => navigate(`/account-information/new-address/${id}`)}
+          // onClick={() => navigate(`/account-information/new-address/${id}`)}
         >
           Thêm địa chỉ mới
         </Button>
       </Box>
-      {addresses.length === 0 ? (
-        <Typography>Chưa có địa chỉ nào.</Typography>
+      {dataGetAllAddress?.result?.items.length === 0 ? (
+        <Typography
+          variant="body1"
+          fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+          color="#666"
+          textAlign={"center"}
+        >
+          Chưa có địa chỉ nào.
+        </Typography>
       ) : (
-        <Stack spacing={2}>
-          {addresses.map((addr) => (
-            <Box
-              key={addr.id}
+        <Fragment>
+          {dataGetAllAddress?.result?.items.map((address) => (
+            <Paper
+              key={address.id}
+              elevation={2}
               sx={{
-                border: "1px solid #ccc",
-                p: 2,
-                borderRadius: 2,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                p: 4,
+                mb: 3,
               }}
             >
               <Box>
-                <Typography>{addr.fullAddress}</Typography>
-                <Typography>Số điện thoại: {addr.phone}</Typography>
-                {addr.isDefault && (
-                  <Typography color="primary">[Địa chỉ mặc định]</Typography>
-                )}
-                {addr.status === "ACTIVE" ? (
-                  <Typography color="success">Hoạt động</Typography>
-                ) : (
-                  <Typography color="error">Không hoạt động</Typography>
+                <Typography
+                  variant="body1"
+                  fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                >
+                  {address.phone}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                >
+                  {address.streetDetail}, {address.ward.name},{" "}
+                  {address.district.name}, {address.province.name}
+                </Typography>
+                {address.isDefault && (
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                  >
+                    Địa chỉ mặc định
+                  </Typography>
                 )}
               </Box>
-              <Box>
-                <IconButton
-                  onClick={() => handleEdit(addr)}
-                  disabled={addr.invisible}
+              <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                <Button
+                  variant="outlined"
+                  onClick={handleOpenModalUpdateAddress}
+                  disabled={address.invisible}
                 >
-                  <Edit color="primary" />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleDelete(addr.id)}
-                  disabled={addr.invisible}
+                  Sửa
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleOpenModalHideAddress(address.id)}
+                  disabled={address.invisible}
                 >
-                  <Delete color="error" />
-                </IconButton>
+                  Xoá
+                </Button>
               </Box>
-            </Box>
+            </Paper>
           ))}
-        </Stack>
+        </Fragment>
       )}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
+
+      {/* TODO: Dialog confirm delete */}
+      <Dialog open={openModalHideAddress} onClose={handleCloseModalHideAddress}>
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1rem",
+
+              md: "1.2rem",
+            },
+          }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+          Xác nhận xoá địa chỉ ?
+        </DialogTitle>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            onClick={handleCloseModalHideAddress}
+            sx={{
+              fontSize: {
+                xs: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleHideAddress()}
+            sx={{
+              fontSize: {
+                xs: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
+            Xoá
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* TODO: Dialog update address */}
       <Dialog
-        open={editDialogOpen}
-        onClose={handleCloseDialog}
+        open={openModalUpdateAddress}
+        onClose={handleCloseModalUpdateAddress}
         maxWidth="md"
         fullWidth
       >
         <DialogTitle>Cập nhật địa chỉ</DialogTitle>
         <DialogContent>
-          <Stack spacing={4} sx={{ mt: 2 }}>
+          <Box spacing={4} sx={{ mt: 2 }}>
             <FormControl size="small" sx={{ width: "100%" }}>
               <InputLabel>Tỉnh/Thành phố</InputLabel>
               <DialogSelect
@@ -415,35 +354,34 @@ const AddressList = ({ id }) => {
               onChange={(e) => setPhone(e.target.value)}
               fullWidth
             />
-            <Box>
-              <Typography variant="h6">Đặt làm địa chỉ mặc định:</Typography>
-              <RadioGroup
-                row
-                value={isDefault.toString()}
-                onChange={(e) => setIsDefault(e.target.value === "true")}
+
+            {/* Default address checkbox */}
+            <Box display="flex" alignItems="center" my={2}>
+              <Checkbox
+                color="default"
+                checked={checkedDefaultAddress}
+                onChange={handleCheckboxDefaultAddress}
+                slotProps={{
+                  input: { "aria-label": "controlled" },
+                }}
+              />
+              <Typography
+                variant="body1"
+                fontSize={{ xs: "0.8rem", sm: "0.9rem", md: "1rem" }}
               >
-                <FormControlLabel
-                  value="true"
-                  control={<Radio color="default" />}
-                  label="Có"
-                />
-                <FormControlLabel
-                  value="false"
-                  control={<Radio color="default" />}
-                  label="Không"
-                />
-              </RadioGroup>
+                Đặt làm địa chỉ mặc định
+              </Typography>
             </Box>
-          </Stack>
+          </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button color="default" onClick={handleCloseDialog}>
+          <Button variant="outlined" color="default" onClick={handleCloseModalUpdateAddress}>
             Hủy
           </Button>
           <Button
             sx={{ color: "white", backgroundColor: "black" }}
             variant="contained"
-            onClick={handleUpdate}
+            // onClick={handleUpdate}
           >
             Cập nhật
           </Button>

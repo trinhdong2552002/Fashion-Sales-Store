@@ -166,7 +166,7 @@ const VerifyAccount = () => {
               )}
             />
 
-            <Button fullWidth type="submit">
+            <Button variant="contained" fullWidth type="submit">
               {isLoading ? (
                 <Box
                   sx={{

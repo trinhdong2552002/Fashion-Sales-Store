@@ -26,9 +26,6 @@ export const authApi = baseApi.injectEndpoints({
         };
 
         dispatch(setAuth(authData));
-        console.log("authData", authData);
-
-        console.log("queryFulfilled", data);
       },
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
