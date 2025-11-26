@@ -1,7 +1,7 @@
 import { Container, Grid } from "@mui/material";
 import AccountSideBar from "@/components/AccountSideBar";
 import { useParams } from "react-router-dom";
-import AddressList from "./shared/AddressList";
+import AddressInformation from "./AddressInformation";
 
 const Address = () => {
   const { id } = useParams();
@@ -36,7 +36,7 @@ const Address = () => {
         </Grid>
 
         <Grid size={{ xl: 9, lg: 9, md: 8, sm: 12, xs: 12 }}>
-          <AddressList />
+          <AddressInformation />
         </Grid>
       </Grid>
     </Container>

@@ -14,10 +14,10 @@ export const provinceApi = baseApi.injectEndpoints({
     }),
 
     listDistrictsByProvince: builder.query({
-      query: ({ id, pageBo, pageSize }) => ({
+      query: ({ id, pageNo, pageSize }) => ({
         url: `/v1/provinces/${id}/districts`,
         method: "GET",
-        params: { pageBo, pageSize },
+        params: { pageNo, pageSize },
       }),
       providesTags: [TAG_KEYS.PROVINCE],
     }),

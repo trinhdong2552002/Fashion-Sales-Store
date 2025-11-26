@@ -1,3 +1,6 @@
+import { AddAddressModal } from "@/components/Address/AddAddressModal";
+import { HideAddressModal } from "@/components/Address/HideAddressModal";
+import { UpdateAddressModal } from "@/components/Address/UpdateAddressModal";
 import { useGetAllAddressByUserQuery } from "@/services/api/address";
 import { Book, Close } from "@mui/icons-material";
 import {
@@ -13,6 +16,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  Paper,
   Radio,
   RadioGroup,
   Select,
@@ -22,9 +26,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { ChildModalHideAddress } from "./ChildModalHideAddress";
-import { ChildModalUpdateAddress } from "./ChildModalUpdateAddress";
-import { ChildModalAddAddress } from "./ChileModalAddAddress";
 
 const ShippingInformation = () => {
   const theme = useTheme();
@@ -489,14 +490,13 @@ const ShippingInformation = () => {
               <Typography>Chưa có địa chỉ nào trong danh sách.</Typography>
             ) : (
               addressItems.map((address) => (
-                <Box
+                <Paper
                   key={address.id}
-                  mb={2}
-                  p={2}
-                  border={"1px solid #ccc"}
-                  borderRadius="8px"
-                  onClick={() => handleChooseAddress(address)}
+                  elevation={2}
                   sx={{
+                    p: 3,
+                    mt: 1,
+                    mb: 3,
                     cursor: "pointer",
                     backgroundColor:
                       chooseAddressFromBook &&
@@ -504,6 +504,7 @@ const ShippingInformation = () => {
                         ? "#f0f0f0"
                         : "transparent",
                   }}
+                  onClick={() => handleChooseAddress(address)}
                 >
                   <Typography
                     variant="body1"
@@ -522,25 +523,23 @@ const ShippingInformation = () => {
                   )}
 
                   <Box display="flex" justifyContent="flex-end" gap={2}>
-                    <ChildModalUpdateAddress
+                    <UpdateAddressModal
                       address={address}
                       refetchGetAllAddress={refetchGetAllAddress}
                     />
-                    <ChildModalHideAddress
+                    <HideAddressModal
                       addressId={address.id}
                       refetchGetAllAddress={refetchGetAllAddress}
                     />
                   </Box>
-                </Box>
+                </Paper>
               ))
             )}
           </DialogContent>
 
           <DialogActions>
             <Box mx={2} my={1}>
-              <ChildModalAddAddress
-                refetchGetAllAddress={refetchGetAllAddress}
-              />
+              <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
             </Box>
           </DialogActions>
         </Dialog>

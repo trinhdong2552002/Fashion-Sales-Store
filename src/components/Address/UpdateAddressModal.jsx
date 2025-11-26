@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -15,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useCreateAddressMutation } from "@/services/api/address";
+import { useUpdateAddressMutation } from "@/services/api/address";
 import { useListWardsByDistrictQuery } from "@/services/api/district";
 import {
   useListDistrictsByProvinceQuery,
@@ -23,25 +22,21 @@ import {
 } from "@/services/api/province";
 import { useSnackbar } from "@/components/Snackbar";
 import { Controller, useForm } from "react-hook-form";
-import { Add } from "@mui/icons-material";
 
-export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
-  const [openModalAddAddress, setOpenModalAddAddress] = useState(false);
+export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
+  const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
 
-  // Separate state for selected id to know which one is selected
+  // Separate state for selected IDs
   const [selectedProvinceId, setSelectedProvinceId] = useState(null);
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedWardCode, setSelectedWardCode] = useState(null);
   const [checkedDefaultAddress, setCheckedDefaultAddress] = useState(false);
 
-  const [createAddress] = useCreateAddressMutation();
+  const [updateAddress] = useUpdateAddressMutation();
   const { showSnackbar } = useSnackbar();
   const {
-    // Use control: Controlled Component instead of register: Uncontrolled Component
     control,
-    // Use reset function to set default values when editing no need create state react manual for each phone, streetDetail
     reset,
-    // The function will receive the form data when form is submitted
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -69,8 +64,6 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
   const { data: dataDistrictsByProvince } = useListDistrictsByProvinceQuery(
     { id: selectedProvinceId, pageNo: 1, pageSize: 100 },
     {
-      // If skip: true not call api when selectedProvinceId is null/undefined
-      // after select province then call api to get districts
       skip: !selectedProvinceId,
       refetchOnMountOrArgChange: true,
     }
@@ -93,14 +86,14 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
     setCheckedDefaultAddress(e.target.checked);
   };
 
-  const handleOpenModalAddAddress = (e) => {
+  const handleOpenModalUpdateAddress = (e) => {
     e.stopPropagation();
-    setOpenModalAddAddress(true);
+    setOpenModalUpdateAddress(true);
   };
 
-  const handleCloseModalAddAddress = (e) => {
+  const handleCloseModalUpdateAddress = (e) => {
     e.stopPropagation();
-    setOpenModalAddAddress(false);
+    setOpenModalUpdateAddress(false);
   };
 
   const handleProvinceChange = (provinceId) => {
@@ -118,14 +111,29 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
     setSelectedWardCode(wardCode);
   };
 
-  const handleAddAddress = async (data) => {
+  // Initialize form with existing address data
+  useEffect(() => {
+    if (address) {
+      reset({
+        phone: address.phone || "",
+        streetDetail: address.streetDetail || "",
+      });
+      setSelectedProvinceId(address.province?.id || null);
+      setSelectedDistrictId(address.district?.id || null);
+      setSelectedWardCode(address.ward?.code || null);
+      setCheckedDefaultAddress(address.isDefault || false);
+    }
+  }, [address, reset]);
+
+  const handleUpdateAddress = async (data) => {
     if (!selectedProvinceId || !selectedDistrictId || !selectedWardCode) {
       showSnackbar("Vui lòng chọn đầy đủ Tỉnh/Huyện/Xã", "warning");
       return;
     }
 
     try {
-      await createAddress({
+      await updateAddress({
+        id: address.id,
         phone: data.phone,
         streetDetail: data.streetDetail,
         provinceId: selectedProvinceId,
@@ -133,12 +141,15 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
         wardCode: selectedWardCode,
         isDefault: checkedDefaultAddress,
       }).unwrap();
-      setOpenModalAddAddress(false);
+      setOpenModalUpdateAddress(false);
       refetchGetAllAddress();
-      showSnackbar("Thêm địa chỉ thành công!", "success");
+      showSnackbar("Cập nhật địa chỉ thành công!", "success");
     } catch (error) {
       if (error && error.data && error.data.message) {
-        showSnackbar(`Thêm địa chỉ thất bại! ${error.data.message}`, "error");
+        showSnackbar(
+          `Cập nhật địa chỉ thất bại! ${error.data.message}`,
+          "error"
+        );
         return;
       }
     }
@@ -158,22 +169,21 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={handleOpenModalAddAddress}
+          variant="outlined"
+          color="error"
+          onClick={handleOpenModalUpdateAddress}
         >
-          Thêm địa chỉ
+          Sửa
         </Button>
       </Box>
 
-      {/* Nested modal add address */}
+      {/* Nested modal update address */}
       <Dialog
         fullWidth
-        open={openModalAddAddress}
-        onClose={handleCloseModalAddAddress}
-        aria-labelledby="add-address-dialog-title"
-        aria-describedby="add-address-dialog-description"
-        aria-hidden={!openModalAddAddress}
+        open={openModalUpdateAddress}
+        onClose={handleCloseModalUpdateAddress}
+        aria-labelledby="update-address-dialog-title"
+        aria-describedby="update-address-dialog-description"
         onClick={(e) => e.stopPropagation()}
       >
         <DialogTitle
@@ -187,13 +197,11 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
             xs: "1.1rem",
           }}
         >
-          Thêm địa chỉ
+          Cập nhật địa chỉ
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit(handleAddAddress)}>
+          <form onSubmit={handleSubmit(handleUpdateAddress)}>
             {/* Phone number */}
-            {/* TODO: This component to check validation controlled component */}
-            {/* https://react-hook-form.com/docs/usecontroller/controller */}
             <Controller
               name="phone"
               control={control}
@@ -204,13 +212,10 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
                   message: "Số điện thoại phải có ít nhất 10 chữ số",
                 },
                 pattern: {
-                  // TODO: Validate phone number Vietnamese
-                  // https://gist.github.com/tungvn/2460c5ba947e5cbe6606c5e85249cf04
                   value: /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/,
                   message: "Số điện thoại không hợp lệ",
                 },
               }}
-              // TODO: View doc how to use object field effect
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -236,9 +241,9 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
                 <TextField
                   {...field}
                   value={field.value}
-                  type="text"
                   fullWidth
                   label="Địa chỉ cụ thể"
+                  type="text"
                   error={!!errors.streetDetail}
                   helperText={
                     errors.streetDetail ? errors.streetDetail.message : ""
@@ -248,103 +253,58 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
             />
 
             {/* Province */}
-            {/* MUI just wrap one input component if than or more will show message: There are multiple InputBase components inside a FormControl. */}
-            <Controller
-              name="province"
-              control={control}
-              rules={{ required: "Bạn chưa chọn tỉnh/thành phố" }}
-              render={({ field }) => (
-                <FormControl fullWidth sx={{ my: 2 }} error={!!errors.province}>
-                  <InputLabel id="select-province-label">
-                    Tỉnh/thành phố
-                  </InputLabel>
-                  <Select
-                    {...field}
-                    labelId="select-province-label"
-                    id="select-province"
-                    value={field.value || ""}
-                    label="Chọn tỉnh/thành phố"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleProvinceChange(e.target.value);
-                    }}
-                  >
-                    {provinces.map((province) => (
-                      <MenuItem key={province.id} value={province.id}>
-                        {province.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>
-                    {errors.province ? errors.province.message : ""}
-                  </FormHelperText>
-                </FormControl>
-              )}
-            />
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel id="select-province-label">Tỉnh/thành phố</InputLabel>
+              <Select
+                labelId="select-province-label"
+                id="select-province"
+                value={selectedProvinceId || ""}
+                label="Chọn tỉnh/thành phố"
+                onChange={(e) => handleProvinceChange(e.target.value)}
+              >
+                {provinces.map((province) => (
+                  <MenuItem key={province.id} value={province.id}>
+                    {province.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             {/* District  */}
-            <Controller
-              name="district"
-              control={control}
-              rules={{ required: "Bạn chưa chọn quận/huyện" }}
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.district}>
-                  <InputLabel id="select-district-label">Quận/huyện</InputLabel>
-                  <Select
-                    {...field}
-                    labelId="select-district-label"
-                    id="select-district"
-                    value={field.value || ""}
-                    label="Chọn quận/huyện"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleDistrictChange(e.target.value);
-                    }}
-                  >
-                    {districts.map((district) => (
-                      <MenuItem key={district.id} value={district.id}>
-                        {district.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>
-                    {errors.district ? errors.district.message : ""}
-                  </FormHelperText>
-                </FormControl>
-              )}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="select-district-label">Quận/huyện</InputLabel>
+              <Select
+                labelId="select-district-label"
+                id="select-district"
+                value={selectedDistrictId || ""}
+                label="Chọn quận/huyện"
+                onChange={(e) => handleDistrictChange(e.target.value)}
+              >
+                {districts.map((district) => (
+                  <MenuItem key={district.id} value={district.id}>
+                    {district.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             {/* Ward */}
-            <Controller
-              name="ward"
-              control={control}
-              rules={{ required: "Bạn chưa chọn phường/xã" }}
-              render={({ field }) => (
-                <FormControl fullWidth sx={{ mt: 2 }} error={!!errors.ward}>
-                  <InputLabel id="select-ward-label">Phường/xã</InputLabel>
-                  <Select
-                    {...field}
-                    labelId="select-ward-label"
-                    id="select-ward"
-                    value={field.value || ""}
-                    label="Chọn phường/xã"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleWardChange(e.target.value);
-                    }}
-                  >
-                    {wards.map((ward) => (
-                      <MenuItem key={ward.code} value={ward.code}>
-                        {ward.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>
-                    {errors.ward ? errors.ward.message : ""}
-                  </FormHelperText>
-                </FormControl>
-              )}
-            />
+            <FormControl fullWidth sx={{ my: 2 }}>
+              <InputLabel id="select-ward-label">Phường/xã</InputLabel>
+              <Select
+                labelId="select-ward-label"
+                id="select-ward"
+                value={selectedWardCode || ""}
+                label="Chọn phường/xã"
+                onChange={(e) => handleWardChange(e.target.value)}
+              >
+                {wards.map((ward) => (
+                  <MenuItem key={ward.code} value={ward.code}>
+                    {ward.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             {/* Default address checkbox */}
             <Box display="flex" alignItems="center" my={2}>
@@ -366,15 +326,16 @@ export const ChildModalAddAddress = ({ address, refetchGetAllAddress }) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseModalAddAddress}>
+          <Button variant="outlined" onClick={handleCloseModalUpdateAddress}>
             Hủy
           </Button>
           <Button
             variant="contained"
+            color="error"
             type="submit"
-            onClick={handleSubmit(handleAddAddress)}
+            onClick={handleSubmit(handleUpdateAddress)}
           >
-            Thêm
+            Cập nhật
           </Button>
         </DialogActions>
       </Dialog>

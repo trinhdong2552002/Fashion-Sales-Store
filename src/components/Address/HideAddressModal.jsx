@@ -3,7 +3,7 @@ import { useHideAddressMutation } from "@/services/api/address";
 import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { Fragment, useState } from "react";
 
-export const ChildModalHideAddress = ({ addressId, refetchGetAllAddress }) => {
+export const HideAddressModal = ({ addressId, refetchGetAllAddress }) => {
   const [openModalHideAddress, setOpenModalHideAddress] = useState(false);
 
   const [hideAddress] = useHideAddressMutation();
@@ -23,7 +23,7 @@ export const ChildModalHideAddress = ({ addressId, refetchGetAllAddress }) => {
 
   const handleHideAddress = async () => {
     try {
-      await hideAddress({ id: addressId }).unwrap();
+      await hideAddress(addressId).unwrap();
       setOpenModalHideAddress(false);
       refetchGetAllAddress();
       showSnackbar("Xoá địa chỉ thành công!", "success");

@@ -32,7 +32,7 @@ export const addressApi = baseApi.injectEndpoints({
     }),
     // Hide address from user (not delete)
     hideAddress: builder.mutation({
-      query: ({ id }) => ({
+      query: (id) => ({
         url: `/v1/addresses/${id}/hide`,
         method: "PATCH",
       }),
