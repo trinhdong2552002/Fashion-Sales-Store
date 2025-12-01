@@ -10,7 +10,12 @@ import {
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
-const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
+const MobileAuthButton = ({
+  handleLogout,
+  myInfo,
+  navigate,
+  onCloseDrawer,
+}) => {
   console.log("myInfo in MobileAuthButton:", myInfo);
 
   return (
@@ -36,29 +41,67 @@ const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
               </Typography>
             </AccordionSummary>
 
-            <AccordionDetails sx={{ padding: 0, mt: 1 }}>
-              <Box display={"flex"} flexDirection={"column"}>
-                <Typography
-                  onClick={() =>
-                    navigate(`/account-information/profile/${myInfo.id}`)
-                  }
-                  variant="body1"
-                  ml={4}
-                  p={1.5}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Thông tin tài khoản
-                </Typography>
-                <Typography
-                  onClick={() => navigate("/my-order")}
-                  variant="body1"
-                  ml={4}
-                  p={1.5}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Đơn hàng của tôi
-                </Typography>
-              </Box>
+            <AccordionDetails sx={{ p: 0, m: 0 }}>
+              <AccordionSummary
+                sx={{
+                  "& .MuiAccordionSummary-content": {
+                    mt: 0,
+                  },
+                }}
+              >
+                <Box display={"flex"} flexDirection={"column"} width={"100%"}>
+                  <Typography
+                    onClick={() => {
+                      navigate(`/account-information/profile/${myInfo.id}`);
+                      onCloseDrawer?.();
+                    }}
+                    variant="body1"
+                    ml={2}
+                    p={1.5}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Hồ sơ người dùng
+                  </Typography>
+                  <Typography
+                    onClick={() => {
+                      navigate(
+                        `/account-information/change-password/${myInfo.id}`
+                      );
+                      onCloseDrawer?.();
+                    }}
+                    variant="body1"
+                    ml={2}
+                    p={1.5}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Đổi mật khẩu
+                  </Typography>
+                  <Typography
+                    onClick={() => {
+                      navigate(`/account-information/address/${myInfo.id}`);
+                      onCloseDrawer?.();
+                    }}
+                    variant="body1"
+                    ml={2}
+                    p={1.5}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Địa chỉ
+                  </Typography>
+                  <Typography
+                    onClick={() => {
+                      navigate("/my-order");
+                      onCloseDrawer?.();
+                    }}
+                    variant="body1"
+                    ml={2}
+                    p={1.5}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Đơn hàng của tôi
+                  </Typography>
+                </Box>
+              </AccordionSummary>
             </AccordionDetails>
           </Accordion>
 
@@ -66,7 +109,6 @@ const MobileAuthButton = ({ handleLogout, myInfo, navigate }) => {
             variant="outlined"
             fullWidth
             sx={{
-              my: 4,
               p: 0,
               color: "black",
               bgcolor: "white",

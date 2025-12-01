@@ -8,7 +8,7 @@ import { clearAuth, selectAuth } from "@/store/redux/auth/reducer";
 import DesktopAuthButton from "./DesktopAuthButton";
 import MobileAuthButton from "./MobileAuthButton";
 
-const AuthButton = () => {
+const AuthButton = ({ onCloseDrawer }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
@@ -52,6 +52,7 @@ const AuthButton = () => {
       handleLogout={handleLogout}
       myInfo={myInfo}
       navigate={navigate}
+      onCloseDrawer={onCloseDrawer}
     />
   ) : (
     <DesktopAuthButton

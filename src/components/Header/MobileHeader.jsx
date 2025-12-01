@@ -24,15 +24,19 @@ const mapListMenuLinkMobile = [
 ];
 
 const MobileHeader = ({ activeCategories }) => {
-  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+  const toggleDrawer = (newOpenModal) => () => {
+    setOpenModal(newOpenModal);
+  };
+
+  const closeDrawer = () => {
+    setOpenModal(false);
   };
 
   const handleCategoryClick = (category) => {
-    setOpen(false);
+    setOpenModal(false);
     navigate(`/all-products?category=${slugify(category.name)}`);
   };
 
@@ -123,7 +127,7 @@ const MobileHeader = ({ activeCategories }) => {
         </Link>
       ))}
 
-      <AuthButton />
+      <AuthButton onCloseDrawer={closeDrawer} />
     </Box>
   );
 
@@ -151,7 +155,7 @@ const MobileHeader = ({ activeCategories }) => {
               <IconButton>
                 <Menu onClick={toggleDrawer(true)} />
               </IconButton>
-              <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
+              <Drawer anchor="left" open={openModal} onClose={toggleDrawer(false)}>
                 <DrawContent />
               </Drawer>
 

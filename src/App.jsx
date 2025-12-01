@@ -13,8 +13,6 @@ import Help from "./pages/HelpPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
 import ProductListsLayout from "./layouts/ProductListsLayout";
-import AddressInformation from "./pages/AddressPage/shared/AddressInformation";
-import AddressList from "./pages/AddressPage/shared/AddressList";
 import ProductDetailsLayout from "./layouts/ProductDetailsLayout";
 import Blog from "./pages/BlogPage";
 import BlogDetail from "./pages/BlogPage/shared/BlogDetail";
@@ -38,7 +36,7 @@ const App = () => {
         <Route path="about" element={<About />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-success" element={<OrderSuccess />} />
-        <Route path="my-order" element={<MyOrders />} />  
+        <Route path="my-order" element={<MyOrders />} />
       </Route>
 
       {/* Login */}
@@ -73,8 +71,6 @@ const App = () => {
         <Route path="profile/:id" element={<Profile />} />
         <Route path="change-password/:id" element={<ChangePassword />} />
         <Route path="address/:id" element={<Address />} />
-        <Route path="address-list/:id" element={<AddressList />} />
-        <Route path="new-address/:id" element={<AddressInformation />} />
       </Route>
     </Routes>
   );
