@@ -39,6 +39,8 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
   const {
     // Use control: Controlled Component instead of register: Uncontrolled Component
     control,
+    // Use reset function to set default values when editing no need create state react manual for each phone, streetDetail
+    reset,
     // The function will receive the form data when form is submitted
     handleSubmit,
     formState: { errors },
@@ -132,6 +134,14 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
         isDefault: checkedDefaultAddress,
       }).unwrap();
       setOpenModalAddAddress(false);
+      // Reset form after add address successfully
+      reset({
+        phone: "",
+        streetDetail: "",
+        province: "",
+        district: "",
+        ward: "",
+      });
       refetchGetAllAddress();
       showSnackbar("Thêm địa chỉ thành công!", "success");
     } catch (error) {

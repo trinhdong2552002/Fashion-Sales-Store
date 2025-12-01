@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const AccountSideBar = ({ id }) => {
   const location = useLocation();
   const menuItems = [
-    { path: `/account-information/profile/${id}`, label: "Hồ sơ cá nhân" },
+    { path: `/account-information/profile/${id}`, label: "Hồ sơ người dùng" },
     {
       path: `/account-information/change-password/${id}`,
       label: "Đổi mật khẩu",
