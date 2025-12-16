@@ -25,12 +25,11 @@ const ProductLists = () => {
   } = useListCategoriesForUserQuery({
     pageNo: 1,
     pageSize: 10,
-    refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
     refetchCategory();
-  }, [refetchCategory]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({
@@ -86,12 +85,12 @@ const ProductLists = () => {
                       lg: "1.4rem",
                     },
                   }}
-                  width={"100%"}
                   fontWeight={"bold"}
                 >
                   Danh mục
                 </Typography>
-                {dataCategories.map((category, id) => {
+                {dataCategories?.result?.items.map((category, id) => {
+                  console.log("category", category);
                   const categorySlug = slugify(category.name);
                   return (
                     <Box sx={{ mt: "38px" }} key={id}>

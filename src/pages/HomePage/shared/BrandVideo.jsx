@@ -50,6 +50,7 @@ const BrandVideo = () => {
           autoPlay
           muted
           loop
+          loading="lazy"
         />
       </Container>
     </Box>

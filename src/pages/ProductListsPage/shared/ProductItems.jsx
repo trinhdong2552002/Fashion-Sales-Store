@@ -16,7 +16,6 @@ import { useState, useEffect, useMemo, Fragment } from "react";
 import { useListProductsForUserQuery } from "@/services/api/product";
 import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
-import { useGetAllAddressByUserQuery } from "@/services/api/address";
 
 const ProductItems = ({ selectedCategory }) => {
   const [clientPageNo, setClientPageNo] = useState(1);
@@ -36,12 +35,11 @@ const ProductItems = ({ selectedCategory }) => {
   } = useListProductsForUserQuery({
     pageNo: 1,
     pageSize: 100,
-    refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
     refetchProduct();
-  }, [refetchProduct]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({

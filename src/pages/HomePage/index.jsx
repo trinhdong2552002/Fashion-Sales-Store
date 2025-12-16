@@ -81,6 +81,7 @@ const Home = () => {
               className={styles.banner}
               src={slide}
               alt={`Slide ${index + 1}`}
+              loading="lazy"
             />
           </SwiperSlide>
         ))}

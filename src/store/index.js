@@ -8,7 +8,6 @@ import { baseApi } from "@/services/api";
 import authReducer from "@/store/redux/auth/reducer";
 import userReducer from "@/store/redux/user/reducer";
 import cartReducer from "@/store/redux/cart/reducer";
-import orderReducer from "@/store/redux/order/reducer";
 
 export const RESET_STATE = "RESET_STATE";
 
@@ -21,7 +20,6 @@ const appReducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authReducer,
   user: userReducer,
-  order: orderReducer,
   cart: cartReducer,
 });
 
