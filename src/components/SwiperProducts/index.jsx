@@ -29,7 +29,6 @@ const SwiperProducts = ({ title, type }) => {
   } = useListProductsForUserQuery({
     refetchOnMountOrArgChange: true,
   });
-  console.log(dataProducts);
 
   useEffect(() => {
     refetchProduct();
