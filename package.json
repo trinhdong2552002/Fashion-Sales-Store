@@ -43,5 +43,11 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "vite": "^7.2.2"
+  },
+  "overrides": {
+    "mui-one-time-password-input": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
