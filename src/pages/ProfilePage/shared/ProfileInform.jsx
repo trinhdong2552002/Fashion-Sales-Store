@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
-  FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -10,59 +8,62 @@ import {
   Typography,
   Avatar,
   Grid,
+  ButtonBase,
 } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Fragment, useEffect, useState } from "react";
 import {
-  useGetUserByIdQuery,
   useUpdateUserMutation,
   useUploadAvatarMutation,
 } from "@/services/api/user";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { selectUser } from "@/store/redux/user/reducer";
-import { useParams } from "react-router-dom";
+import { selectUser, setUserInfo } from "@/store/redux/user/reducer";
 import dayjs from "dayjs";
+import { useSnackbar } from "@/components/Snackbar";
+import { Controller, useForm } from "react-hook-form";
 
 const ProfileInform = () => {
-  const [formValues, setFormValues] = useState({
-    name: "",
-    email: "",
-    dob: null,
-    gender: null,
-    avatarUrl: "",
-  });
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { showSnackbar } = useSnackbar();
+  const getMyInfo = useSelector(selectUser);
+  const dispatch = useDispatch();
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
-  const { id } = useParams();
-  // const getMyInfo = useSelector(selectUser);
 
-  const { data: dataGetUserById } = useGetUserByIdQuery();
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      dob: null,
+      gender: null,
+      avatarUrl: "",
+    },
+  });
+
   const [updateUser, { isLoading: isLoadingUpdateUser }] =
     useUpdateUserMutation();
-  const [uploadAvatar] = useUploadAvatarMutation();
+  const [uploadAvatar, { isLoading: isLoadingUploadAvatar }] =
+    useUploadAvatarMutation();
 
-  // Load thông tin user hiện tại
   useEffect(() => {
-    if (dataGetUserById) {
-      setFormValues({
-        name: dataGetUserById.name || "",
-        email: dataGetUserById.email || "",
-        dob: dataGetUserById.dob ? dayjs(dataGetUserById.dob) : null,
-        gender: dataGetUserById.gender || null,
-        avatarUrl: dataGetUserById.avatarUrl || "",
+    if (getMyInfo) {
+      reset({
+        name: getMyInfo.name || "",
+        email: getMyInfo.email || "",
+        dob: getMyInfo.dob ? dayjs(getMyInfo.dob) : null,
+        gender: getMyInfo.gender || null,
+        avatarUrl: getMyInfo.avatarUrl || "",
       });
-      setAvatarPreview(dataGetUserById.avatarUrl || null);
+      setAvatar(getMyInfo.avatarUrl || null);
+      setAvatarPreview(getMyInfo.avatarUrl || null);
     }
-  }, [dataGetUserById]);
+  }, [getMyInfo]);
 
   const handleUploadImage = async (e) => {
     const file = e.target.files[0]; // Single file only
@@ -70,61 +71,56 @@ const ProfileInform = () => {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setSnackbar({
-        open: true,
-        message: "Vui lòng chọn một file hình ảnh!",
-        severity: "error",
-      });
+      showSnackbar("Vui lòng chọn một hình ảnh.", "warning");
       return;
     }
 
-    setIsUploadingImage(true);
     try {
-      // Pass single file, not array
-      await uploadAvatar(file).unwrap();
-      setSnackbar({
-        open: true,
-        message: "Upload hình ảnh thành công!",
-        severity: "success",
-      });
-      // refetch();
+      const response = await uploadAvatar(file).unwrap();
+
+      const newAvatarUrl = response.result.imageUrl;
+      setAvatar(newAvatarUrl);
+      setAvatarPreview(newAvatarUrl);
+      // Update avatar in redux store
+      dispatch(
+        setUserInfo({
+          ...getMyInfo,
+          avatarUrl: newAvatarUrl,
+        })
+      );
+      showSnackbar("Upload hình ảnh thành công.", "success");
       e.target.value = ""; // Clear input
     } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error?.data?.message || "Upload hình ảnh thất bại!",
-        severity: "error",
-      });
-      console.error("Lỗi upload:", error);
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
-  const handleUpdateUser = async () => {
-    try {
-      await updateUser({
-        name: formValues.name.trim(),
-        avatarUrl: avatar,
-        dob: formValues.dob, // dayjs object sẽ được convert trong API
-        gender: formValues.gender,
-        roleIds: [], // Set rỗng như backend yêu cầu
-      }).unwrap();
-    } catch (error) {
-      console.error("Update user error:", error);
-
-      // Xử lý lỗi cụ thể
-      if (error.status === 400) {
-        alert("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.");
-      } else if (error.status === 404) {
-        alert("Không tìm thấy người dùng.");
-      } else {
-        alert("Có lỗi xảy ra khi cập nhật. Vui lòng thử lại.");
+      console.error(error);
+      if (error & error.data && error.data.message) {
+        showSnackbar(
+          `Upload hình ảnh thất bại: ${error.data.message}`,
+          "error"
+        );
       }
     }
   };
 
-  const isLoading = isLoadingUpdateUser || isUploadingImage;
+  const handleUpdateUser = async (data) => {
+    try {
+      await updateUser({
+        id: getMyInfo.id,
+        name: data.name,
+        avatarUrl: avatar,
+        dob: data.dob ? dayjs(data.dob).format("YYYY-MM-DD") : null,
+        gender: data.gender,
+        roleIds: [], // Set empty array request backend requirement
+      }).unwrap();
+      showSnackbar("Cập nhật thông tin thành công.", "success");
+    } catch (error) {
+      if (error && error.data && error.data.message) {
+        showSnackbar(
+          `Cập nhật thông tin thất bại: ${error.data.message}`,
+          "error"
+        );
+      }
+    }
+  };
 
   return (
     <Fragment>
@@ -138,56 +134,51 @@ const ProfileInform = () => {
           boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
         }}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleUpdateUser();
-          }}
-        >
+        <form onSubmit={handleSubmit(handleUpdateUser)}>
           <Grid container>
             <Grid
-              size={{ xl: 3, lg: 3 }}
+              size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }}
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              {/* Avatar với nút upload */}
-              <Box sx={{ position: "relative", mb: 2 }}>
-                <Avatar src={avatarPreview} sx={{ width: 100, height: 100 }} />
-                <Button
+              {/* TODO: Upload avatar */}
+              <Box sx={{ mb: 2 }}>
+                <ButtonBase
                   component="label"
-                  disabled={isLoading}
+                  role="undefined"
+                  tabIndex={-1}
+                  disabled={isLoadingUploadAvatar}
+                  aria-label="Avatar image"
                   sx={{
-                    position: "absolute",
-                    bottom: -10,
-                    right: -10,
-                    minWidth: "auto",
-                    width: 30,
-                    height: 30,
-                    borderRadius: "50%",
-                    backgroundColor: "primary.main",
-                    "&:hover": {
-                      backgroundColor: "primary.dark",
+                    borderRadius: "40px",
+                    "&:has(:focus-visible)": {
+                      outline: "2px solid",
+                      outlineOffset: "2px",
                     },
                   }}
                 >
-                  <PhotoCamera sx={{ fontSize: 16, color: "white" }} />
+                  <Avatar
+                    alt="Avatar Preview"
+                    sx={{ width: 80, height: 80, bgcolor: "#ccc" }}
+                    src={avatarPreview}
+                  />
                   <input
                     type="file"
-                    hidden
                     accept="image/*"
+                    hidden
                     onChange={handleUploadImage}
                   />
-                </Button>
+                </ButtonBase>
               </Box>
 
-              <Typography variant="h6" mt={2}>
+              <Typography variant="h6" fontWeight={"bold"} mt={2}>
                 Thông tin chung
               </Typography>
               <Typography
+                color="#666"
                 variant="subtitle2"
                 mt={2}
                 mx={3}
@@ -197,34 +188,33 @@ const ProfileInform = () => {
               </Typography>
             </Grid>
 
-            <Grid size={{ xl: 9, lg: 9 }}>
-              <Box sx={{ mr: 4, my: 4 }}>
-                <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
-                  Tên người dùng *
-                </Typography>
-                <TextField
+            {/* TODO: Update user information */}
+            <Grid size={{ xl: 9, lg: 9, md: 12, sm: 12, xs: 12 }} px={4}>
+              <Box mt={4}>
+                <Controller
                   name="name"
-                  value={formValues.name}
-                  onChange={(e) =>
-                    setFormValues({ ...formValues, name: e.target.value })
-                  }
-                  size="small"
-                  fullWidth
-                  required
-                  error={!formValues.name.trim()}
-                  helperText={
-                    !formValues.name.trim() ? "Tên không được để trống" : ""
-                  }
+                  control={control}
+                  rules={{ required: "Tên không được để trống" }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Họ và tên"
+                      size="small"
+                      fullWidth
+                      required
+                      error={!!errors.name}
+                      helperText={errors.name ? errors.name.message : ""}
+                    />
+                  )}
                 />
               </Box>
 
-              <Box sx={{ mr: 4, my: 4 }}>
-                <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
-                  Địa chỉ email
-                </Typography>
+              <Box mt={4}>
                 <TextField
+                  label="Email"
+                  name="email"
                   type="email"
-                  value={formValues.email}
+                  value={getMyInfo.email}
                   size="small"
                   fullWidth
                   slotProps={{
@@ -233,68 +223,73 @@ const ProfileInform = () => {
                 />
               </Box>
 
-              <Box display={"flex"} alignItems={"flex-start"} gap={4}>
-                <Box sx={{ my: 4, flex: 1 }}>
-                  <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
-                    Ngày sinh *
+              <Box
+                display={{
+                  xl: "flex",
+                  lg: "flex",
+                  md: "block",
+                  sm: "block",
+                  xs: "block",
+                }}
+                alignItems={"center"}
+                justifyContent={"flex-start"}
+                gap={4}
+                mt={3}
+              >
+                <Box>
+                  <Typography variant="body1" mb={0.5}>
+                    Ngày sinh
                   </Typography>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
-                      <DatePicker
-                        value={formValues.dob}
-                        onChange={(newValue) =>
-                          setFormValues({ ...formValues, dob: newValue })
-                        }
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                            required: true,
-                            error: !formValues.dob,
-                            helperText: !formValues.dob
-                              ? "Ngày sinh không được để trống"
-                              : "",
-                          },
-                        }}
+                      <Controller
+                        name="dob"
+                        control={control}
+                        render={({ field }) => (
+                          <DatePicker
+                            {...field}
+                            value={field.value}
+                            onChange={(newValue) => field.onChange(newValue)}
+                          />
+                        )}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
                 </Box>
 
-                <Box sx={{ my: 4, flex: 1 }}>
-                  <Typography variant="subtitle1" fontWeight={500} mb={0.5}>
-                    Giới tính *
+                <Box mt={{ xl: 0, lg: 0, md: 3, sm: 3, xs: 3 }}>
+                  <Typography variant="body1" mb={0.5}>
+                    Giới tính
                   </Typography>
-                  <RadioGroup
-                    row
+                  <Controller
                     name="gender"
-                    value={formValues.gender || ""}
-                    onChange={(e) =>
-                      setFormValues({ ...formValues, gender: e.target.value })
-                    }
-                    sx={{ mt: 1 }}
-                  >
-                    <FormControlLabel
-                      value="MALE"
-                      control={<Radio />}
-                      label="Nam"
-                    />
-                    <FormControlLabel
-                      value="FEMALE"
-                      control={<Radio />}
-                      label="Nữ"
-                    />
-                    <FormControlLabel
-                      value="OTHER"
-                      control={<Radio />}
-                      label="Khác"
-                    />
-                  </RadioGroup>
-                  {!formValues.gender && (
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup {...field} row name="gender" sx={{ mt: 1 }}>
+                        <FormControlLabel
+                          value="MALE"
+                          control={<Radio color="default" required />}
+                          label="Nam"
+                        />
+                        <FormControlLabel
+                          value="FEMALE"
+                          control={<Radio color="default" required />}
+                          label="Nữ"
+                        />
+                        <FormControlLabel
+                          value="OTHER"
+                          control={<Radio color="default" required />}
+                          label="Khác"
+                        />
+                      </RadioGroup>
+                    )}
+                  />
+
+                  {/* {!genderValue && (
                     <Typography color="error" variant="caption" sx={{ ml: 2 }}>
                       Giới tính không được để trống
                     </Typography>
-                  )}
+                  )} */}
                 </Box>
               </Box>
 
@@ -308,17 +303,13 @@ const ProfileInform = () => {
               >
                 <Button
                   variant="contained"
-                  sx={{
-                    backgroundColor: "black",
-                    mr: 4,
-                  }}
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoadingUpdateUser}
                 >
-                  {isLoading ? (
-                    <CircularProgress size={24} color="inherit" />
+                  {isLoadingUpdateUser ? (
+                    <Typography variant="body1">Đang lưu...</Typography>
                   ) : (
-                    "Lưu thay đổi"
+                    <Typography variant="body1">Lưu thay đổi</Typography>
                   )}
                 </Button>
               </Box>

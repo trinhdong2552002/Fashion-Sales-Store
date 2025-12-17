@@ -14,7 +14,7 @@ const authSlice = createSlice({
       state.authenticated = true;
       state.email = action.payload.email;
       state.roles = action.payload.roles;
-      console.log("setAuth", action.payload);
+      console.log("setAuth action payload", action.payload);
     },
     clearAuth: (state) => {
       state.accessToken = null;
