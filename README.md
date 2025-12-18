@@ -1,84 +1,83 @@
-# Fashion-Sales-Store
+# 🛍️ Fashion Sales Store Ecosystem
 
-A Vite-powered web application for a fashion sales store.
+> A comprehensive E-commerce solution including a Customer Storefront and an Admin CMS, built with a Microservices-ready architecture.
 
-## Getting Started
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-brightgreen?style=for-the-badge&logo=vercel)](https://fashion-sales-store.site.name.vn)
+[![Backend API](https://img.shields.io/badge/API_Swagger-Available-orange?style=for-the-badge&logo=swagger)](https://springadamstore-production.up.railway.app/adamstore/swagger-ui/index.html)
 
-### Prerequisites
+## 📸 Screenshots
 
-- Node.js (v14.x or later)
-- npm
+![Home Page](./public/screenshot-home.png)
 
-### Installation
+## 🚀 Tech Stack
 
-1. Clone the repository:
+**Frontend:**
+* ![React](https://img.shields.io/badge/React-18-blue) **ReactJS (Vite)**
+* ![Redux](https://img.shields.io/badge/Redux-Toolkit-purple) **Redux Toolkit & RTK Query**
+* ![MUI](https://img.shields.io/badge/MUI-Material_UI-blue) **Material UI**
+* **Authentication:** JWT, React Router DOM (Protected Routes)
 
-   ```bash
-   git clone https://github.com/trinhdong255/Fashion-Sales-Store.git
-   ```
+**Backend & DevOps:**
+* ![Spring](https://img.shields.io/badge/Spring_Boot-3.x-green) **Java Spring Boot**
+* ![MySQL](https://img.shields.io/badge/MySQL-Database-orange) **MySQL & Redis**
+* ![Docker](https://img.shields.io/badge/Docker-Container-blue) **Docker & Docker Compose**
+* **Deployment:** Railway (Backend), Vercel (Frontend)
 
-2. Navigate to the project directory:
+---
 
-   ```bash
-   cd Fashion-Sales-Store
-   ```
+## 🛠️ Installation & Setup (Local Development)
 
-3. Install dependencies:
+### 1. Frontend Setup (Client)
 
-   ```bash
-   npm install
-   ```
-
-### Development
-
-Run the Vite development server:
+Prerequisites: Node.js (v18+) and npm.
 
 ```bash
-npm run dev
-```
+# 1. Clone the repository
+git clone [https://github.com/trinhdong2552002/Fashion-Sales-Store.git](https://github.com/trinhdong2552002/Fashion-Sales-Store.git)
+cd Fashion-Sales-Store
 
+# 2. Install dependencies
+npm install
+
+# 3. Create .env file (if needed) and run development server
+npm run dev
+
+```
 Open http://localhost:5173 to view it in the browser.
 
-### Build
+To build for production:
+   npm run build
 
-To build the project for production:
-
+### 2. Backend Setup (Docker)
+You can run the full backend stack (Spring Boot + MySQL + Redis) instantly using Docker.
 ```bash
-npm run dev
-```
+# 1. Clone the Backend repository
+git clone [https://github.com/trinhdong2552002/Spring_AdamStore.git](https://github.com/trinhdong2552002/Spring_AdamStore.git)
+cd Spring_AdamStore
 
-# Terminal docker
-
-1. Clone Repository:
-  ```bash
-   git clone https://github.com/trinhdong25052002dz/Spring_AdamStore.git
-   cd Spring_AdamStore
-   ```
-
-2. Docker Guideline
-**Stop and Remove Old Containers:**
-```java
+# 2. Stop any running containers (optional)
 docker-compose down
-```
-**Run Your Application**
-```java
+
+# 3. Start the application
 docker-compose up -d
 ```
+Note: The backend service requires environment variables (.env). Please contact the author if you need the env file for local development, or use the Docker image provided.
 
-3. Swagger Documentation Guide (API Document):
-- **After running the application, you can access Swagger UI at:**
-```java
-http://localhost:8080/adamstore/swagger-ui/index.html
-```
-- The default URL to retrieve the API documentation in JSON format **(Explore section)**:
-```java
-http://localhost:8080/adamstore/v3/api-docs/backend-service
-```
+📖 API Documentation & Testing
+Once the backend is running (locally or live), you can explore the API endpoints via Swagger UI:
 
-**4. Sample VNPAY Payment Information (Test):**
-| Bank                  | NCB                      |
-|-----------------------|--------------------------|
-| Card Number           | 9704198526191432198      |
-| Cardholder Name       | NGUYEN VAN A             |
-| Issue Date            | 07/15                    |
-| OTP Password          | 123456                   |
+Live Swagger: Click here
+
+Local Swagger: http://localhost:8080/adamstore/swagger-ui/index.html
+
+JSON Docs: http://localhost:8080/adamstore/v3/api-docs/backend-service
+
+💳 Test Payment Credentials (VNPAY)
+Use these credentials to test the payment flow in Sandbox mode:
+
+Field	            Value
+Bank	            NCB
+Card Number	      9704198526191432198
+Cardholder Name	NGUYEN VAN A
+Issue Date	      07/15
+OTP	            123456
