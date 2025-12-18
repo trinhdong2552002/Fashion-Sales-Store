@@ -1,7 +1,7 @@
 # 🛍️ Fashion Sales Store
 
-[![Live Demo](https://fashion-sales-store.site.name.vn)
-[![Backend API](https://springadamstore-production.up.railway.app/adamstore/swagger-ui/index.html)
+* Live App: https://fashion-sales-store.site.name.vn
+* Backend API: https://springadamstore-production.up.railway.app/adamstore/swagger-ui/index.html
 
 ## 📸 Screenshots
 
@@ -59,8 +59,6 @@ Note: The backend service requires environment variables (.env). Please contact 
 Once the backend is running (locally or live), you can explore the API endpoints via Swagger UI:
 
 ``` bash
-Live Swagger: https://springadamstore-production.up.railway.app/adamstore/swagger-ui/index.html
-
 Local Swagger: http://localhost:8080/adamstore/swagger-ui/index.html
 
 JSON Docs: http://localhost:8080/adamstore/v3/api-docs/backend-service
@@ -69,9 +67,9 @@ JSON Docs: http://localhost:8080/adamstore/v3/api-docs/backend-service
 ## 💳 Test Payment Credentials (VNPAY)
 Use these credentials to test the payment flow in Sandbox mode:
 
-Field	            Value
-Bank	          | NCB
-Card Number	    | 9704198526191432198
-Cardholder Name | NGUYEN VAN A
-Issue Date	    | 07/15
-OTP	          | 123456
+| Bank                  | NCB                      |
+|-----------------------|--------------------------|
+| Card Number           | 9704198526191432198      |
+| Cardholder Name       | NGUYEN VAN A             |
+| Issue Date            | 07/15                    |
+| OTP Password          | 123456                   |
