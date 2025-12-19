@@ -27,6 +27,10 @@ const ProductLists = () => {
     pageSize: 10,
   });
 
+  // Normalize categories shape: support both {result.items} and direct array
+  const categories =
+    dataCategories?.result?.items ?? dataCategories ?? [];
+
   useEffect(() => {
     refetchCategory();
   }, []);
@@ -89,8 +93,7 @@ const ProductLists = () => {
                 >
                   Danh mục
                 </Typography>
-                {dataCategories?.result?.items.map((category, id) => {
-                  console.log("category", category);
+                {categories?.map((category, id) => {
                   const categorySlug = slugify(category.name);
                   return (
                     <Box sx={{ mt: "38px" }} key={id}>
