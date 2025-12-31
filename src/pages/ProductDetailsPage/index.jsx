@@ -9,7 +9,7 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Navigation, Thumbs, FreeMode } from "swiper/modules";
+import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -31,6 +31,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [mainSwiper, setMainSwiper] = useState(null);
 
   // Fetch products details by ID
   const {
@@ -166,66 +167,19 @@ const ProductDetails = () => {
             <Fragment>
               <Grid container spacing={4}>
                 {/* Left panel - product images */}
-                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-                  <Box display="flex" alignItems="flex-start" gap={2}>
-                    {/* Thumbnails vertical swiper */}
-                    <Box sx={{ width: 96 }}>
-                      {images.length ? (
-                        <Swiper
-                          onSwiper={setThumbsSwiper}
-                          direction="vertical"
-                          spaceBetween={12}
-                          slidesPerView={Math.min(images.length, 5)}
-                          freeMode
-                          watchSlidesProgress
-                          modules={[FreeMode, Thumbs]}
-                          style={{ height: Math.min(images.length, 5) * 92 }}
-                        >
-                          {images.map((image) => (
-                            <SwiperSlide key={image.id}>
-                              <Box
-                                sx={{
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  width: 80,
-                                  height: 80,
-                                  border:
-                                    selectedImage?.id === image.id
-                                      ? "2px solid #1976d2"
-                                      : "1px solid #e0e0e0",
-                                  borderRadius: "6px",
-                                  overflow: "hidden",
-                                }}
-                              >
-                                <img
-                                  src={image.imageUrl}
-                                  alt={image.fileName}
-                                  style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              </Box>
-                            </SwiperSlide>
-                          ))}
-                        </Swiper>
-                      ) : null}
-                    </Box>
-
+                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 6, xs: 12 }}>
+                  <>
                     {/* Main image */}
                     <Box
                       sx={{
-                        flex: 1,
                         display: "flex",
                         justifyContent: "center",
                       }}
                     >
                       {images.length ? (
                         <Swiper
-                          modules={[Navigation, Thumbs, FreeMode]}
+                          modules={[Navigation, Thumbs]}
+                          onSwiper={setMainSwiper}
                           navigation
                           thumbs={{
                             swiper:
@@ -246,7 +200,7 @@ const ProductDetails = () => {
                                 img.id === (selectedImage?.id ?? mainImage?.id)
                             )
                           )}
-                          style={{ width: "100%", maxWidth: 520 }}
+                          style={{ width: "100%" }}
                         >
                           {images.map((image) => (
                             <SwiperSlide key={image.id}>
@@ -255,7 +209,7 @@ const ProductDetails = () => {
                                 alt={image.fileName}
                                 style={{
                                   width: "100%",
-                                  borderRadius: "8px",
+                                  borderRadius: "5px",
                                   objectFit: "cover",
                                 }}
                               />
@@ -264,13 +218,78 @@ const ProductDetails = () => {
                         </Swiper>
                       ) : null}
                     </Box>
-                  </Box>
+
+                    {/* Thumbnails horizontal swiper */}
+                    <Box
+                      sx={{
+                        marginTop: 2,
+                        width: "100%",
+                      }}
+                    >
+                      {images.length ? (
+                        <Swiper
+                          onSwiper={setThumbsSwiper}
+                          direction="horizontal"
+                          spaceBetween={12}
+                          slidesPerView={4}
+                          watchSlidesProgress
+                          modules={[Thumbs]}
+                          breakpoints={{
+                            320: { slidesPerView: 3, spaceBetween: 8 },
+                            480: { slidesPerView: 4, spaceBetween: 12 },
+                            640: { slidesPerView: 5, spaceBetween: 12 },
+                          }}
+                        >
+                          {images.map((image, index) => (
+                            <SwiperSlide key={image.id}>
+                              <Box
+                                onClick={() =>
+                                  mainSwiper && mainSwiper.slideTo(index)
+                                }
+                                sx={{
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  border:
+                                    selectedImage?.id === image.id
+                                      ? "2px solid black"
+                                      : "1px solid #e0e0e0",
+                                  borderRadius: "5px",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                <img
+                                  src={image.imageUrl}
+                                  alt={image.fileName}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    backgroundPosition: "center",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              </Box>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      ) : null}
+                    </Box>
+                  </>
                 </Grid>
 
                 {/* Right panel - product details */}
-                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                <Grid size={{ xl: 6, lg: 6, md: 6, sm: 6, xs: 12 }}>
                   {/* Product Title */}
-                  <Typography variant="h5">
+                  <Typography
+                    sx={{
+                      fontSize: {
+                        xs: "1.4rem",
+                        md: "1.6rem"
+                      },
+                    }}
+                    fontWeight={"600"}
+                  >
                     {dataProductById?.result?.name}
                   </Typography>
 
@@ -316,13 +335,9 @@ const ProductDetails = () => {
                       sx={{
                         fontSize: "1rem",
                         mr: 1,
+                        mt: 1,
                         borderColor:
-                          selectedColor?.id === color.id ? "white" : "black",
-                        borderWidth: selectedColor?.id === color.id ? 2 : 1,
-                        color:
-                          selectedColor?.id === color.id ? "white" : "black",
-                        bgcolor:
-                          selectedColor?.id === color.id ? "black" : "white",
+                          selectedColor?.id === color.id ? "black" : "#ccc",
                       }}
                     >
                       {color.name}
@@ -343,12 +358,9 @@ const ProductDetails = () => {
                       sx={{
                         fontSize: "1rem",
                         mr: 1,
+                        mt: 1,
                         borderColor:
-                          selectedSize?.id === size.id ? "white" : "black",
-                        borderWidth: selectedSize?.id === size.id ? 2 : 1,
-                        color: selectedSize?.id === size.id ? "white" : "black",
-                        bgcolor:
-                          selectedSize?.id === size.id ? "black" : "white",
+                          selectedSize?.id === size.id ? "black" : "#ccc",
                       }}
                     >
                       {size.name}

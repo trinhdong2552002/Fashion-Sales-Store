@@ -124,17 +124,7 @@ const ShippingInformation = () => {
           justifyContent="space-between"
           mb={2}
         >
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            fontSize={{
-              xl: "1.5rem",
-              lg: "1.5rem",
-              md: "1.3rem",
-              sm: "1rem",
-              xs: "1rem",
-            }}
-          >
+          <Typography variant="h6" fontWeight="bold">
             1. Địa chỉ giao hàng
           </Typography>
 
@@ -153,11 +143,7 @@ const ShippingInformation = () => {
                 fontSize: { md: "1.2rem", sm: "1.1rem", xs: "1rem" },
               }}
             />
-            <Typography
-              variant="body1"
-              fontSize={{ xs: "0.8rem", sm: "0.9rem", md: "1rem" }}
-              ml={1}
-            >
+            <Typography variant="body1" ml={1}>
               Chọn từ sổ địa chỉ
             </Typography>
           </Button>
@@ -397,17 +383,7 @@ const ShippingInformation = () => {
         </Box>
 
         {/* Payment Method */}
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          fontSize={{
-            xl: "1.5rem",
-            lg: "1.5rem",
-            md: "1.3rem",
-            sm: "1rem",
-            xs: "1rem",
-          }}
-        >
+        <Typography variant="h6" fontWeight="bold">
           2. Hình thức thanh toán
         </Typography>
         <Card variant="outlined" sx={{ padding: "16px" }}>

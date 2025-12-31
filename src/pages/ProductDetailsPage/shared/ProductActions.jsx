@@ -1,21 +1,27 @@
-import {
-  Alert,
-  alpha,
-  Box,
-  Button,
-  Skeleton,
-  Snackbar,
-  Stack,
-} from "@mui/material";
-import PropTypes from "prop-types";
-
-// import { selectUserId } from "@/store/redux/user/reducer";
-import { Fragment, useState } from "react";
+import { AddShoppingCart } from "@mui/icons-material";
+import { Box, Button } from "@mui/material";
+import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductActions = () => {
+  const navigate = useNavigate();
+
   return (
     <Fragment>
-      <Box display={"flex"} alignItems={"center"} sx={{ m: "30px 0" }}>
+      <Box
+        display={"flex"}
+        flexDirection={{
+          xs: "column",
+          sm: "row",
+        }}
+        gap={2}
+        justifyContent={{
+          xs: "center",
+          sm: "flex-start",
+        }}
+        alignItems={"center"}
+        my={3}
+      >
         <Button
           variant="outlined"
           sx={{
@@ -23,21 +29,20 @@ const ProductActions = () => {
             borderColor: "black",
             color: "black",
             bgcolor: "white",
+
+            width: { xs: "100%", sm: "auto" },
           }}
-          // onClick={handleAddToCart}
+          startIcon={<AddShoppingCart />}
         >
-          Thêm vào giỏ hàng
+          Thêm giỏ hàng
         </Button>
 
         <Button
           variant="contained"
           sx={{
-            fontSize: "1rem",
-            ml: 4,
-            backgroundColor: "black",
-            color: "white",
+            width: { xs: "100%", sm: "auto" },
           }}
-          // onClick={handleBuyNow}
+          onClick={() => navigate("/checkout")}
         >
           Mua ngay
         </Button>
