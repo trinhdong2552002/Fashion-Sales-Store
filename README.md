@@ -94,6 +94,15 @@ Local Swagger: http://localhost:8080/adamstore/swagger-ui/index.html
 JSON Docs: http://localhost:8080/adamstore/v3/api-docs/backend-service
 ```
 
+
+## 📅 Project Roadmap & Management
+
+I used ![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white) to manage the development process.
+
+* **View my Development Plan:** [Click here to view Notion Board](https://www.notion.so/2657cf962e9c80a9bcdbe4599c4a05ca?v=2657cf962e9c8109a5f8000c4ae3ebea)
+* 
+  
+
 ## 💳 Test Payment Credentials (VNPAY)
 Use these credentials to test the payment flow in Sandbox mode:
 
