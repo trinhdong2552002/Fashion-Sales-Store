@@ -18,16 +18,17 @@ const Footer = () => {
   const {
     data: dataBranches,
     isLoading: isLoadingBranch,
-    isError: isErrorBranch,
     error: errorBranch,
+    isError: isErrorBranch,
     refetch: refetchBranch,
   } = useGetListBranchesQuery({
-    refetchOnMountOrArgChange: true,
+    pageNo: 1,
+    pageSize: 10,
   });
 
   useEffect(() => {
     refetchBranch();
-  }, [refetchBranch]);
+  }, []);
 
   const footerData = [
     {
@@ -105,7 +106,7 @@ const Footer = () => {
             <Typography
               variant="h6"
               color="#E0E0E0"
-              sx={{fontWeight: 600, fontSize: "1.1rem" }}
+              sx={{ fontWeight: 600, fontSize: "1.1rem" }}
             >
               Hệ thống cửa hàng
             </Typography>
@@ -114,7 +115,7 @@ const Footer = () => {
               <Typography color="#E0E0E0">Đang tải chi nhánh...</Typography>
             ) : isErrorBranch ? (
               <Typography color="#E0E0E0">
-                Không thể tải danh sách chi nhánh.
+                Lỗi tải chi nhánh: {errorBranch?.data?.message}
               </Typography>
             ) : (
               dataBranches?.items?.map((branch) => (
