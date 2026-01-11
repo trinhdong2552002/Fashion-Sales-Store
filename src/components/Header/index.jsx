@@ -10,14 +10,13 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { data: dataCategories, refetch: refetchCategories } =
     useListCategoriesForUserQuery({
-      page: 0,
-      size: 10,
-      refetchOnMountOrArgChange: true,
+      pageNo: 1,
+      pageSize: 10,
     });
 
   useEffect(() => {
     refetchCategories();
-  }, [refetchCategories]);
+  }, []);
 
   const activeCategories = Array.isArray(dataCategories)
     ? dataCategories.filter((item) => item.status === "ACTIVE")

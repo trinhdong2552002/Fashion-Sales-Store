@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Box,
-  Container,
-  Grid,
-  Snackbar,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
@@ -42,11 +35,15 @@ const categoryImageMap = {
 const Home = () => {
   const location = useLocation();
   const { showSnackbar } = useSnackbar();
-  const { data: dataCategories } = useListCategoriesForUserQuery({
-    page: 0,
-    size: 10,
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: dataCategories, refetch: refetchCategories } =
+    useListCategoriesForUserQuery({
+      pageNo: 1,
+      pageSize: 10,
+    });
+
+  useEffect(() => {
+    refetchCategories();
+  }, []);
 
   useEffect(() => {
     if (location.state?.message) {

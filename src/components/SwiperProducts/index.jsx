@@ -27,12 +27,13 @@ const SwiperProducts = ({ title, type }) => {
     error,
     refetch: refetchProduct,
   } = useListProductsForUserQuery({
-    refetchOnMountOrArgChange: true,
+    pageNo: 1,
+    pageSize: 20,
   });
 
   useEffect(() => {
     refetchProduct();
-  }, [refetchProduct]);
+  }, []);
 
   let products =
     dataProducts?.items.filter((item) => item.status === "ACTIVE") || [];
