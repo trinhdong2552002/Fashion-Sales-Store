@@ -19,10 +19,7 @@ import "swiper/css/free-mode";
 import ProductActions from "./shared/ProductActions";
 
 import { useGetProductByIdQuery } from "@/services/api/product";
-import {
-  useGetProductVariantByProductQuery,
-  // useListAllProductVariantsByProductQuery,
-} from "@/services/api/productVariant";
+import { useGetProductVariantByProductQuery } from "@/services/api/productVariant";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -33,7 +30,6 @@ const ProductDetails = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [mainSwiper, setMainSwiper] = useState(null);
 
-  // Fetch products details by ID
   const {
     data: dataProductById,
     isLoading: isLoadingProductById,
@@ -42,23 +38,18 @@ const ProductDetails = () => {
     refetch: refetchProductById,
   } = useGetProductByIdQuery(id);
 
-  // const { data: dataProductVariantsByProduct } =
-  //   useListAllProductVariantsByProductQuery(
-  //     id ? { id, pageNo: 1, pageSize: 50 } : skipToken
-  //   );
-
   // Fetch variant details when color and size are selected
   const { data: dataProductVariantByProduct, isLoading: isLoadingVariant } =
     useGetProductVariantByProductQuery(
-      //  Check if both color and size are selected (is true) then call api else skip the query API not called
+      // TODO: Check if both color and size are selected (is true) then call api else skip the query API not called
       selectedColor && selectedSize
         ? {
             productId: id,
             colorId: selectedColor.id,
             sizeId: selectedSize.id,
           }
-        : // If color or size not selected, skip the query API not called
-          skipToken
+        : // TODO: If color or size not selected, skip the query API not called
+          skipToken,
     );
 
   useEffect(() => {
@@ -93,12 +84,12 @@ const ProductDetails = () => {
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
-    setQuantity(1); // Reset quantity when changing color
+    setQuantity(1);
   };
 
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
-    setQuantity(1); // Reset quantity when changing size
+    setQuantity(1);
   };
 
   const handleIncreaseQuantity = () => {
@@ -120,7 +111,7 @@ const ProductDetails = () => {
   useEffect(() => {
     if (dataProductById?.result?.images?.length) {
       const first = [...dataProductById.result.images].sort(
-        (a, b) => a.id - b.id
+        (a, b) => a.id - b.id,
       )[0];
       setSelectedImage(first);
     } else {
@@ -197,8 +188,8 @@ const ProductDetails = () => {
                             0,
                             images.findIndex(
                               (img) =>
-                                img.id === (selectedImage?.id ?? mainImage?.id)
-                            )
+                                img.id === (selectedImage?.id ?? mainImage?.id),
+                            ),
                           )}
                           style={{ width: "100%" }}
                         >
@@ -285,7 +276,7 @@ const ProductDetails = () => {
                     sx={{
                       fontSize: {
                         xs: "1.4rem",
-                        md: "1.6rem"
+                        md: "1.6rem",
                       },
                     }}
                     fontWeight={"600"}

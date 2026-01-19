@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useListCategoriesForUserQuery } from "@/services/api/categories";
 import BrandVideo from "./shared/BrandVideo";
 import styles from "./index.module.css";
@@ -19,7 +19,6 @@ import Jacket from "@/assets/images/categories/Jacket.jpg";
 import Trouser from "@/assets/images/categories/Trouser.jpg";
 import Shorts from "@/assets/images/categories/Shorts.jpg";
 import Accessories from "@/assets/images/categories/Accessories.jpg";
-import { useSnackbar } from "@/components/Snackbar";
 
 const slides = [banner_1, banner_2, banner_3, banner_4];
 
@@ -33,8 +32,6 @@ const categoryImageMap = {
 };
 
 const Home = () => {
-  const location = useLocation();
-  const { showSnackbar } = useSnackbar();
   const { data: dataCategories, refetch: refetchCategories } =
     useListCategoriesForUserQuery({
       pageNo: 1,
@@ -44,13 +41,6 @@ const Home = () => {
   useEffect(() => {
     refetchCategories();
   }, []);
-
-  useEffect(() => {
-    if (location.state?.message) {
-      showSnackbar(location.state.message, "success");
-    }
-    window.history.replaceState({}, document.title);
-  }, [location]);
 
   const activeCategories = Array.isArray(dataCategories)
     ? dataCategories.filter((item) => item.status === "ACTIVE")
