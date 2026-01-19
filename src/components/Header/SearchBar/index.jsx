@@ -1,31 +1,26 @@
-// SearchBar.js
 import { Fragment, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchProductChange = (event) => {
+    setSearchValue(event.target.value);
   };
 
-  const debouncedSearch = debounce(() => {
-    if (searchTerm.trim()) {
-      navigate(`/all-products?search=${encodeURIComponent(searchTerm)}`);
+  const handleSearchProduct = () => {
+    if (searchValue.trim()) {
+      navigate(`/all-products?search=${encodeURIComponent(searchValue)}`);
+    } else {
+      navigate(`/all-products`);
     }
-  }, 300);
-
-  const handleSearch = () => {
-    debouncedSearch();
   };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      handleSearch();
+      handleSearchProduct();
     }
   };
 
@@ -33,23 +28,23 @@ const SearchBar = () => {
     <Fragment>
       <TextField
         id="outlined-basic"
-        label="Tìm kiếm sản phẩm..."
+        label="Tìm kiếm sản phẩm"
         size="small"
         variant="outlined"
-        value={searchTerm}
-        onChange={handleSearchChange}
+        value={searchValue}
+        onChange={handleSearchProductChange}
         onKeyDown={handleKeyDown}
         sx={{
           width: 400,
           "& .MuiOutlinedInput-root": {
-            borderRadius: 100,
+            borderRadius: 5,
           },
         }}
         slotProps={{
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton edge="end" onClick={handleSearch}>
+                <IconButton edge="end" onClick={handleSearchProduct}>
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>

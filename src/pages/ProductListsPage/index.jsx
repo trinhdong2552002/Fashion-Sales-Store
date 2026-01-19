@@ -14,9 +14,9 @@ import ProductItems from "./shared/ProductItems";
 
 const ProductLists = () => {
   const [searchParams] = useSearchParams();
-  const [searchTerm] = useState("");
 
   const selectedCategory = searchParams.get("category") || "";
+  const searchQuery = searchParams.get("search") || "";
 
   const {
     data: dataCategories,
@@ -28,8 +28,7 @@ const ProductLists = () => {
   });
 
   // Normalize categories shape: support both {result.items} and direct array
-  const categories =
-    dataCategories?.result?.items ?? dataCategories ?? [];
+  const categories = dataCategories?.result?.items ?? dataCategories ?? [];
 
   useEffect(() => {
     refetchCategory();
@@ -117,8 +116,8 @@ const ProductLists = () => {
 
               <Grid size={{ xl: 10, lg: 10, md: 12, xs: 12, sm: 12 }}>
                 <ProductItems
-                  searchTerm={searchTerm}
                   selectedCategory={selectedCategory}
+                  searchQuery={searchQuery}
                 />
               </Grid>
             </Grid>

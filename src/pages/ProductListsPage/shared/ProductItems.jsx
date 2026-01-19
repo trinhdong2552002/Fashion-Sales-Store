@@ -17,14 +17,24 @@ import { useListProductsForUserQuery } from "@/services/api/product";
 import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
 
-const ProductItems = ({ selectedCategory }) => {
+// Vietnamese character encoding normalization for search
+const normalizeString = (str) => {
+  return str
+    .toLowerCase()
+    .normalize("NFD") // Split accents from letters
+    .replace(/[\u0300-\u036f]/g, "") // Remove accents
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
+};
+
+const ProductItems = ({ selectedCategory, searchQuery }) => {
   const [clientPageNo, setClientPageNo] = useState(1);
   const [pageSize] = useState(18);
   const [sortType, setSortType] = useState("");
 
   useEffect(() => {
     setClientPageNo(1);
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   const {
     data: dataProducts,
@@ -49,20 +59,27 @@ const ProductItems = ({ selectedCategory }) => {
     });
   }, [clientPageNo]);
 
-  // Filter products by category
   const filteredProducts = useMemo(() => {
-    return (
-      dataProducts?.items?.filter((item) => {
-        if (selectedCategory) {
-          return (
-            item.category?.name &&
-            slugify(item.category.name) === selectedCategory
-          );
-        }
-        return true;
-      }) || []
-    );
-  }, [dataProducts, selectedCategory]);
+    // Handle data structure safety
+    const items = dataProducts?.result?.items || dataProducts?.items || [];
+
+    return items.filter((item) => {
+      // A. Check Category
+      const matchesCategory = selectedCategory
+        ? item.category?.name &&
+          slugify(item.category.name) === selectedCategory
+        : true;
+
+      // B. Check Search (Client Side)
+      const matchesSearch = searchQuery
+        ? normalizeString(item.name || "").includes(
+            normalizeString(searchQuery),
+          )
+        : true;
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [dataProducts, selectedCategory, searchQuery]);
 
   // Sort products based on selected sort type
   const sortedProducts = useMemo(() => {
