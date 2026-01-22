@@ -194,7 +194,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
           justifyContent={"center"}
           sx={{ py: 8 }}
         >
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="h6">
             Không có sản phẩm nào để hiển thị.
           </Typography>
         </Box>

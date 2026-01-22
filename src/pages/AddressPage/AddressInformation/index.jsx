@@ -49,32 +49,35 @@ const AddressInformation = () => {
       </Box>
 
       {dataGetAllAddress?.result?.items.length === 0 ? (
-        <Typography
-          variant="body1"
-          fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
-          color="#666"
-          textAlign={"center"}
-        >
-          Chưa có địa chỉ nào.
-        </Typography>
+        <Box textAlign="center" mt={5}>
+          <Typography
+            variant="body1"
+            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
+            color="#666"
+          >
+            Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
+          </Typography>
+        </Box>
       ) : isLoadingGetAllAddress ? (
-        <Typography
-          variant="body1"
-          fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
-          color="#666"
-          textAlign={"center"}
-        >
-          Đang tải địa chỉ...
-        </Typography>
+        <Box textAlign="center" mt={5}>
+          <Typography
+            variant="body1"
+            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
+            color="#666"
+          >
+            Đang tải địa chỉ...
+          </Typography>
+        </Box>
       ) : isErrorGetAllAddress ? (
-        <Typography
-          variant="body1"
-          fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
-          color="error"
-          textAlign={"center"}
-        >
-          Lỗi tải địa chỉ: {errorGetAllAddress?.data?.message}
-        </Typography>
+        <Box textAlign="center" mt={5}>
+          <Typography
+            variant="body1"
+            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
+            color="error"
+          >
+            Lỗi tải địa chỉ: {errorGetAllAddress?.data?.message}
+          </Typography>
+        </Box>
       ) : (
         dataGetAllAddress?.result?.items.map((address) => (
           <Paper
@@ -88,13 +91,13 @@ const AddressInformation = () => {
             <Box>
               <Typography
                 variant="body1"
-                fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
               >
                 {address.phone}
               </Typography>
               <Typography
                 variant="body1"
-                fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
               >
                 {address.streetDetail}, {address.ward.name},{" "}
                 {address.district.name}, {address.province.name}
@@ -103,7 +106,7 @@ const AddressInformation = () => {
                 <Typography
                   variant="body1"
                   fontWeight="bold"
-                  fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                  fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
                 >
                   Địa chỉ mặc định
                 </Typography>

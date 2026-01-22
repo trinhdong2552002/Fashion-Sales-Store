@@ -97,7 +97,7 @@ const Help = () => {
                 <AccordionDetails>
                   <Typography
                     color="#666"
-                    fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+                    fontSize={{ xs: "1rem", sm: "1rem", md: "1.2rem" }}
                   >
                     {accordion.answer}
                   </Typography>

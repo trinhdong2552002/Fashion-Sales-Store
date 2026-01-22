@@ -26,6 +26,8 @@ import {
   useTheme,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
+import cash_on_delivery from "@/assets/images/order/cash-on-delivery.png";
+import vnpay_logo from "@/assets/images/order/vnpay-logo.jpg";
 
 const ShippingInformation = () => {
   const theme = useTheme();
@@ -92,7 +94,7 @@ const ShippingInformation = () => {
   const addressItems = dataGetAllAddress?.result?.items || [];
 
   const defaultAddress = addressItems.find(
-    (address) => address.isDefault === true || address.isDefault === false
+    (address) => address.isDefault === true || address.isDefault === false,
   );
 
   useEffect(() => {
@@ -122,7 +124,6 @@ const ShippingInformation = () => {
             md: "center",
           }}
           justifyContent="space-between"
-          mb={2}
         >
           <Typography variant="h6" fontWeight="bold">
             1. Địa chỉ giao hàng
@@ -158,7 +159,15 @@ const ShippingInformation = () => {
             </Typography>
           ) : dataGetAllAddress && addressItems.length === 0 ? (
             <Box>
-              <Typography>Chưa có địa chỉ nào.</Typography>
+              <Typography
+                variant="body1"
+                fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
+                color="#666"
+                textAlign={"center"}
+                my={4}
+              >
+                Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
+              </Typography>
             </Box>
           ) : (
             defaultAddress && (
@@ -171,7 +180,7 @@ const ShippingInformation = () => {
                       variant="body1"
                       mb={1}
                       fontSize={{
-                        xs: "0.9rem",
+                        xs: "1rem",
                         sm: "1rem",
                         md: "1.2rem",
                       }}
@@ -191,7 +200,7 @@ const ShippingInformation = () => {
                       variant="body1"
                       mb={1}
                       fontSize={{
-                        xs: "0.9rem",
+                        xs: "1rem",
                         sm: "1rem",
                         md: "1.2rem",
                       }}
@@ -206,7 +215,7 @@ const ShippingInformation = () => {
                       onChange={(e) =>
                         handleAddressInformationChange(
                           "phoneNumber",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -217,7 +226,7 @@ const ShippingInformation = () => {
                       variant="body1"
                       mb={1}
                       fontSize={{
-                        xs: "0.9rem",
+                        xs: "1rem",
                         sm: "1rem",
                         md: "1.2rem",
                       }}
@@ -232,7 +241,7 @@ const ShippingInformation = () => {
                       onChange={(e) =>
                         handleAddressInformationChange(
                           "addressStreet",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -252,7 +261,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "ward",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -275,7 +284,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "district",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -297,7 +306,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "province",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -321,7 +330,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "ward",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -343,7 +352,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "district",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -365,7 +374,7 @@ const ShippingInformation = () => {
                           onChange={(e) =>
                             handleAddressInformationChange(
                               "province",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         >
@@ -401,7 +410,7 @@ const ShippingInformation = () => {
                   label="Thanh toán khi nhận hàng"
                   sx={{
                     fontSize: {
-                      xs: "0.9rem",
+                      xs: "1rem",
                       sm: "1rem",
                       md: "1.2rem",
                     },
@@ -409,7 +418,7 @@ const ShippingInformation = () => {
                 />
 
                 <img
-                  src="/src/assets/images/order/cash-on-delivery.png"
+                  src={cash_on_delivery}
                   alt="Cash-delivery"
                   style={{ width: 30, height: 30, marginLeft: 34 }}
                 />
@@ -423,7 +432,7 @@ const ShippingInformation = () => {
                 />
 
                 <img
-                  src="/src/assets/images/order/vnpay-logo.jpg"
+                  src={vnpay_logo}
                   alt="VNPAY"
                   style={{ width: 30, height: 30, marginLeft: 34 }}
                 />

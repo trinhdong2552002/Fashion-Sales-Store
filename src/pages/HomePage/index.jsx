@@ -101,7 +101,7 @@ const Home = () => {
         <Typography
           variant="body1"
           fontSize={{
-            xs: "0.9rem",
+            xs: "1rem",
             sm: "1rem",
             md: "1.2rem",
           }}

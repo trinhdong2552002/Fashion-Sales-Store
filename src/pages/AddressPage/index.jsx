@@ -35,7 +35,13 @@ const Address = () => {
           <AccountSideBar id={id} />
         </Grid>
 
-        <Grid size={{ xl: 9, lg: 9, md: 8, sm: 12, xs: 12 }}>
+        <Grid
+          size={{ xl: 9, lg: 9, md: 8, sm: 12, xs: 12 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <AddressInformation />
         </Grid>
       </Grid>

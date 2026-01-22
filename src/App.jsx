@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AccountInformation from "./layouts/AccountInformation";
+import { Routes, Route } from "react-router-dom";
+import AccountInformation from "./layouts/AccountInformationLayout";
 import Address from "./pages/AddressPage";
 import Profile from "./pages/ProfilePage";
 import MainLayout from "@/layouts/MainLayout";
