@@ -33,7 +33,7 @@ const BrandVideo = () => {
             color="#666"
             sx={{
               fontSize: {
-                xs: "0.9rem",
+                xs: "1rem",
                 sm: "1rem",
                 md: "1.2rem",
               },

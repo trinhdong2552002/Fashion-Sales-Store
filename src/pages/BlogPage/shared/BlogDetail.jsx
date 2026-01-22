@@ -87,7 +87,7 @@ const BlogDetail = () => {
             variant="body1"
             my={4}
             color="#666"
-            fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+            fontSize={{ xs: "1rem", sm: "1rem", md: "1.2rem" }}
             lineHeight={1.8}
           >
             {blog.body}
@@ -118,7 +118,7 @@ const BlogDetail = () => {
                     <Typography
                       variant="body1"
                       color="#666"
-                      fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.2rem" }}
+                      fontSize={{ xs: "1rem", sm: "1rem", md: "1.2rem" }}
                       lineHeight={1.8}
                       mb={3}
                     >

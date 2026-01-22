@@ -1,8 +1,7 @@
 import { Container, Grid } from "@mui/material";
 import { Fragment } from "react";
-import ShippingInformation from "./ShippingInformation";
-import OrderInformation from "./OrderConformation";
-
+import ShippingInformation from "./ShippingInformationPage";
+import OrderInformation from "./OrderConformationPage";
 
 const Checkout = () => {
   return (

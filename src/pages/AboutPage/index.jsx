@@ -85,7 +85,7 @@ const About = () => {
                 display="block"
                 mb={3}
                 variant="body1"
-                fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.1rem" }}
+                fontSize={{ xs: "1rem", sm: "1rem", md: "1.1rem" }}
                 textAlign={{
                   xs: "center",
                   sm: "center",
@@ -153,7 +153,7 @@ const About = () => {
                 display="block"
                 mb={3}
                 variant="body1"
-                fontSize={{ xs: "0.9rem", sm: "1rem", md: "1.1rem" }}
+                fontSize={{ xs: "1rem", sm: "1rem", md: "1.1rem" }}
                 textAlign={{
                   xs: "center",
                   sm: "center",

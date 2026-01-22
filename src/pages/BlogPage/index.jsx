@@ -79,7 +79,7 @@ const Blog = () => {
                   <Typography
                     variant="body1"
                     mb={4}
-                    fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                    fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
                     color="#666"
                   >
                     {blog.body.slice(0, 200)}...
@@ -172,7 +172,7 @@ const Blog = () => {
                     <Typography
                       component="p"
                       mb={2}
-                      fontSize={{ xs: "0.9rem", sm: "1rem", md: "1rem" }}
+                      fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
                       color="#666"
                     >
                       {blog.body.slice(0, 100)}...

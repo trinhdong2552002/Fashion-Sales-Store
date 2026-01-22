@@ -75,7 +75,7 @@ export const HideAddressModal = ({ addressId, refetchGetAllAddress }) => {
             onClick={handleCloseModalDeleteAddress}
             sx={{
               fontSize: {
-                xs: "0.9rem",
+                xs: "1rem",
                 md: "1rem",
               },
             }}
@@ -88,7 +88,7 @@ export const HideAddressModal = ({ addressId, refetchGetAllAddress }) => {
             onClick={() => handleHideAddress(addressId)}
             sx={{
               fontSize: {
-                xs: "0.9rem",
+                xs: "1rem",
                 md: "1rem",
               },
             }}

@@ -41,7 +41,7 @@ const SwiperProducts = ({ title, type }) => {
   // Filter theo type
   if (type === "newest") {
     products = [...products].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
   } else if (type === "bestSeller") {
     products = [...products].sort((a, b) => b.soldQuantity - a.soldQuantity);
@@ -65,7 +65,6 @@ const SwiperProducts = ({ title, type }) => {
       >
         <Box
           display={"flex"}
-          direction="row"
           alignItems="center"
           justifyContent="space-between"
         >
@@ -78,6 +77,13 @@ const SwiperProducts = ({ title, type }) => {
                 md: "1.4rem",
                 sm: "1.2rem",
                 xs: "1.2rem",
+              },
+              textAlign: {
+                xs: "center",
+                sm: "center",
+                md: "center",
+                lg: "left",
+                xl: "left",
               },
             }}
             fontWeight={"bold"}
@@ -95,7 +101,7 @@ const SwiperProducts = ({ title, type }) => {
                 lg: "1.1rem",
                 md: "1.1rem",
                 sm: "1rem",
-                xs: "0.9rem",
+                xs: "1rem",
               },
               display: {
                 xs: "none",
@@ -122,9 +128,22 @@ const SwiperProducts = ({ title, type }) => {
             flexDirection={"column"}
             justifyContent={"center"}
             alignItems={"center"}
+            my={6}
           >
-            <CircularProgress />
-            <Typography mt={2} textAlign="center" variant="h6">
+            <CircularProgress color="inherit" />
+            <Typography
+              mt={3}
+              textAlign="center"
+              variant="h6"
+              color="#666"
+              fontSize={{
+                xl: "1.1rem",
+                lg: "1.1rem",
+                md: "1.1rem",
+                sm: "1rem",
+                xs: "1rem",
+              }}
+            >
               Đang tải sản phẩm...
             </Typography>
           </Box>
@@ -253,7 +272,7 @@ const SwiperProducts = ({ title, type }) => {
                 lg: "1.1rem",
                 md: "1.1rem",
                 sm: "1rem",
-                xs: "0.9rem",
+                xs: "1rem",
               },
               display: {
                 xs: "inline-flex",
