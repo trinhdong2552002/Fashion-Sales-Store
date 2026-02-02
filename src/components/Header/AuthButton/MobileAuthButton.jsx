@@ -16,8 +16,6 @@ const MobileAuthButton = ({
   navigate,
   onCloseDrawer,
 }) => {
-  console.log("myInfo in MobileAuthButton:", myInfo);
-
   return (
     <Fragment>
       {myInfo?.id ? (
@@ -65,7 +63,7 @@ const MobileAuthButton = ({
                   <Typography
                     onClick={() => {
                       navigate(
-                        `/account-information/change-password/${myInfo.id}`
+                        `/account-information/change-password/${myInfo.id}`,
                       );
                       onCloseDrawer?.();
                     }}

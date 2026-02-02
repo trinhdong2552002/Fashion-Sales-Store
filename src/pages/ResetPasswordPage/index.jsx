@@ -74,11 +74,9 @@ const ResetPassword = () => {
         localStorage.removeItem("forgotPasswordToken");
         showSnackbar(
           "Đặt lại mật khẩu thành công ! Vui lòng đăng nhập lại.",
-          "success"
+          "success",
         );
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
+        navigate("/login");
       }
     } catch (error) {
       if (error && error.data && error.data.message) {

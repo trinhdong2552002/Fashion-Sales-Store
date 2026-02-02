@@ -7,8 +7,11 @@ import { useLogoutMutation } from "@/services/api/auth";
 import { clearAuth, selectAuth } from "@/store/redux/auth/reducer";
 import DesktopAuthButton from "./DesktopAuthButton";
 import MobileAuthButton from "./MobileAuthButton";
+import { useSnackbar } from "@/components/Snackbar";
 
 const AuthButton = ({ onCloseDrawer }) => {
+  const { showSnackbar } = useSnackbar();
+  const auth = useSelector(selectAuth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
@@ -27,7 +30,8 @@ const AuthButton = ({ onCloseDrawer }) => {
 
   const handleLogout = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = auth.accessToken;
+      // TODO: Call logout API if accessToken exists
       if (accessToken) {
         try {
           await logout({ accessToken }).unwrap();
@@ -36,6 +40,7 @@ const AuthButton = ({ onCloseDrawer }) => {
         }
       }
 
+      // TODO: Clear token local storage and Redux store
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       dispatch(clearAuth());
@@ -43,7 +48,11 @@ const AuthButton = ({ onCloseDrawer }) => {
       handleMenuClose();
       navigate("/");
     } catch (error) {
-      console.error("Logout error:", error);
+      if (error?.data?.message) {
+        showSnackbar(error.data.message, "error");
+      } else {
+        showSnackbar("Đã có lỗi xảy ra trong quá trình đăng xuất.", "error");
+      }
     }
   };
 

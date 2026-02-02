@@ -30,6 +30,7 @@ const ProfileInform = () => {
   const dispatch = useDispatch();
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const myInfo = useSelector(selectUser);
 
   const {
     control,
@@ -86,7 +87,7 @@ const ProfileInform = () => {
         setUserInfo({
           ...getMyInfo,
           avatarUrl: newAvatarUrl,
-        })
+        }),
       );
       showSnackbar("Upload hình ảnh thành công.", "success");
       e.target.value = ""; // Clear input
@@ -95,7 +96,7 @@ const ProfileInform = () => {
       if (error & error.data && error.data.message) {
         showSnackbar(
           `Upload hình ảnh thất bại: ${error.data.message}`,
-          "error"
+          "error",
         );
       }
     }
@@ -116,7 +117,7 @@ const ProfileInform = () => {
       if (error && error.data && error.data.message) {
         showSnackbar(
           `Cập nhật thông tin thất bại: ${error.data.message}`,
-          "error"
+          "error",
         );
       }
     }
@@ -161,7 +162,7 @@ const ProfileInform = () => {
                   }}
                 >
                   <Avatar
-                    alt="Avatar Preview"
+                    alt={myInfo.name}
                     sx={{ width: 80, height: 80, bgcolor: "#ccc" }}
                     src={avatarPreview}
                   />
