@@ -37,11 +37,9 @@ const ForgotPasswordVerify = () => {
 
       if (response) {
         showSnackbar("Xác thực OTP thành công!", "success");
-        setTimeout(() => {
-          navigate("/forgot-password/reset-password", {
-            state: { email, forgotPasswordToken: token },
-          });
-        }, 1000);
+        navigate("/forgot-password/reset-password", {
+          state: { email, forgotPasswordToken: token },
+        });
       }
     } catch (error) {
       if (error && error.data && error.data.message) {

@@ -15,11 +15,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation, useLazyGetMyInfoQuery } from "@/services/api/auth";
 import background_form from "@/assets/images/form/background-form.jpg";
 import { useSnackbar } from "@/components/Snackbar";
+import { setAuth } from "@/store/redux/auth/reducer";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
 
   const [login, { isLoading }] = useLoginMutation();
   const [triggerMyInfo] = useLazyGetMyInfoQuery();
@@ -43,23 +46,34 @@ const Login = () => {
 
       if (response) {
         const role = response?.result?.roles?.[0]?.name;
-        if (!role) throw new Error("Không thể xác định vai trò người dùng.");
-        if (role === "ADMIN")
-          throw new Error("Tài khoản ADMIN không thể đăng nhập.");
-        if (role === "USER") {
-          showSnackbar("Đăng nhập thành công!", "success");
-          setTimeout(() => navigate("/"), 1000);
+
+        if (role === "ADMIN") {
+          showSnackbar(
+            "Đăng nhập với tư cách Admin không được phép trên cổng User.",
+            "error",
+          );
+          return;
         }
 
-        localStorage.setItem("accessToken", response?.result?.accessToken);
-        localStorage.setItem("refreshToken", response?.result?.refreshToken);
+        if (role === "USER") {
+          dispatch(
+            setAuth({
+              accessToken: response?.result?.accessToken,
+              email: data?.email,
+              roles: response?.result?.roles,
+            }),
+          );
+          localStorage.setItem("accessToken", response?.result?.accessToken);
+          localStorage.setItem("refreshToken", response?.result?.refreshToken);
 
-        await triggerMyInfo();
+          await triggerMyInfo();
+          showSnackbar("Đăng nhập thành công!", "success");
+          navigate("/");
+        }
       }
     } catch (error) {
       if (error && error.data && error.data.message) {
         showSnackbar(`${error.data.message}`, "error");
-        return;
       }
     }
   };

@@ -35,9 +35,9 @@ const SearchBar = () => {
         onChange={handleSearchProductChange}
         onKeyDown={handleKeyDown}
         sx={{
-          width: 400,
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 5,
+          width: {
+            lg: 400,
+            xl: 500,
           },
         }}
         slotProps={{

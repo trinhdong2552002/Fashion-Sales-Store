@@ -1,7 +1,6 @@
 import { setUserInfo } from "@/store/redux/user/reducer";
 import { baseApi } from "./index";
 import { TAG_KEYS } from "@/constants/tagKeys";
-import { setAuth } from "@/store/redux/auth/reducer";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,36 +13,18 @@ export const authApi = baseApi.injectEndpoints({
           password: credentials.password,
         },
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
 
-        const authData = {
-          accessToken: data?.result?.accessToken,
-          refreshToken: data.result?.refreshToken,
-          authenticated: data?.result?.authenticated,
-          email: data?.result?.email,
-          roles: data?.result?.roles,
-        };
-
-        dispatch(setAuth(authData));
-      },
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
 
     logout: builder.mutation({
-      query: (credentials) => {
-        if (!credentials.accessToken) {
-          throw new Error("accessToken is required for logout");
-        }
-
-        return {
-          url: "/v1/auth/logout",
-          method: "POST",
-          data: {
-            accessToken: credentials.accessToken,
-          },
-        };
-      },
+      query: (credentials) => ({
+        url: "/v1/auth/logout",
+        method: "POST",
+        data: {
+          accessToken: credentials.accessToken,
+        },
+      }),
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
 
@@ -129,7 +110,6 @@ export const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("getMyInfo data:", data);
 
           dispatch(
             setUserInfo({
@@ -139,9 +119,8 @@ export const authApi = baseApi.injectEndpoints({
               avatarUrl: data?.result?.avatarUrl || null,
               dob: data?.result?.dob || null,
               gender: data?.result?.gender || null,
-            })
+            }),
           );
-          console.log("getMyInfo queryFulfilled", data);
         } catch (error) {
           console.error("getMyInfo failed:", error);
         }

@@ -53,6 +53,16 @@ export const customTheme = createTheme({
             backgroundColor: "#f9f9f9",
           },
         },
+        // Style for the 'outlined' variant
+        text: {
+          textTransform: "none",
+          backgroundColor: "white",
+          fontSize: "1rem",
+          color: "#121212",
+          "&:hover": {
+            backgroundColor: "#f9f9f9",
+          },
+        },
       },
     },
   },

@@ -18,7 +18,6 @@ const userSlice = createSlice({
       state.avatarUrl = action.payload.avatarUrl;
       state.dob = action.payload.dob;
       state.gender = action.payload.gender;
-      console.log("setUser action payload:", action.payload);
     },
     clearUser: (state) => {
       state.id = null;

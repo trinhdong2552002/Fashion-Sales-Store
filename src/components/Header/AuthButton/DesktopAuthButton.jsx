@@ -1,15 +1,12 @@
 import {
-  Stack,
   Typography,
   Menu,
   MenuItem,
-  alpha,
   Button,
   Avatar,
-  Divider,
   Box,
+  Divider,
 } from "@mui/material";
-import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 const DesktopAuthButton = ({
@@ -20,26 +17,30 @@ const DesktopAuthButton = ({
   handleMenuClose,
   navigate,
 }) => {
-  console.log("myInfo in DesktopAuthButton:", myInfo);
-
   return (
-    <Stack direction="row" alignItems="center">
+    <Box>
       {myInfo?.id ? (
-        <Fragment>
-          <Stack
-            direction="row"
-            alignItems="center"
+        <Box>
+          <Avatar
             onClick={handleMenuOpen}
+            src={myInfo.avatarUrl}
+            alt={myInfo.name}
             sx={{ cursor: "pointer" }}
-          >
-            <Avatar src={myInfo.avatarUrl} alt={myInfo.name} />
-            <Typography ml={1}>{myInfo.name}</Typography>
-          </Stack>
+          />
+
           <Menu
+            aria-hidden={!anchorEl}
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
+            <Box py={1} px={2}>
+              <Typography fontWeight={"bold"}>{myInfo.name}</Typography>
+              <Typography color="#666">{myInfo.email}</Typography>
+            </Box>
+
+            <Divider />
+
             <MenuItem
               onClick={() =>
                 navigate(`/account-information/profile/${myInfo.id}`)
@@ -50,45 +51,27 @@ const DesktopAuthButton = ({
             <MenuItem onClick={() => navigate("/my-order")}>
               Đơn hàng của tôi
             </MenuItem>
-            <Divider />
             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
           </Menu>
-        </Fragment>
+        </Box>
       ) : (
-        <Box display={"flex"} alignItems={"center"}>
-          <Button
-            variant="outlined"
-            sx={{
-              borderRadius: 5,
-              minWidth: 120,
-              height: 40,
-              mr: 1,
-              "&:hover": {
-                backgroundColor: alpha("#d9d9d9", 0.5),
-              },
-            }}
-            component={Link}
-            to="/login"
-          >
+        <Box display={"flex"} alignItems={"center"} gap={2}>
+          <Button variant="text" component={Link} to="/login" sx={{}}>
             Đăng nhập
           </Button>
           <Button
             variant="contained"
-            sx={{
-              color: "white",
-              backgroundColor: "#121212",
-              borderRadius: 5,
-              minWidth: 120,
-              height: 40,
-            }}
             component={Link}
             to="/register"
+            sx={{
+              backgroundColor: "#121212",
+            }}
           >
             Đăng ký
           </Button>
         </Box>
       )}
-    </Stack>
+    </Box>
   );
 };
 export default DesktopAuthButton;
