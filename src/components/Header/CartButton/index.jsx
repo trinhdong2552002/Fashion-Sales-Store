@@ -1,79 +1,85 @@
 import {
   Close,
+  Delete,
   LocalMall,
-  SentimentDissatisfiedOutlined,
+  RemoveShoppingCart,
+  ShoppingCartOutlined,
 } from "@mui/icons-material";
-
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Badge,
-  badgeClasses,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Divider,
   Drawer,
   IconButton,
-  Stack,
   Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { Fragment, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// import { useGetCartByUserQuery } from "@/services/api/cart";
-
-import { removeFromCart } from "@/store/redux/cart/reducer";
-import { selectUser } from "@/store/redux/user/reducer";
+import { Fragment, useEffect, useState } from "react";
+import { useSnackbar } from "@/components/Snackbar";
+import {
+  useDeleteCartItemMutation,
+  useGetCartByUserQuery,
+} from "@/services/api/cart";
 
 const CartButton = () => {
-  const [open, setOpen] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [itemToRemove, setItemToRemove] = useState(null);
-  const dispatch = useDispatch();
-  const checkUser = useSelector(selectUser);
-  // const { isLoading } = useGetCartByUserQuery(checkUser, {
-  //   skip: !checkUser,
-  // });
-  // console.log("Cart data from API:", cartData);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const cartItems = useSelector((state) => state.cart?.cartItems || []);
-  const totalItems = useSelector((state) => state.cart?.cartTotalQuantity || 0);
+  const { showSnackbar } = useSnackbar();
+  const [openModalConfirm, setOpenModalConfirm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const {
+    data: dataCartByUser,
+    isLoading,
+    isError,
+    error,
+    refetch: refetchCartByUser,
+  } = useGetCartByUserQuery({
+    pageNo: 1,
+    pageSize: 10,
+  });
+  const [deleteCartItem] = useDeleteCartItemMutation();
+
+  useEffect(() => {
+    refetchCartByUser();
+  }, [refetchCartByUser]);
+
+  const cartItems = dataCartByUser?.result?.items || [];
 
   const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+    setOpenDrawer(newOpen);
   };
 
-  const handleOpenDialog = (item) => {
-    setItemToRemove(item);
-    setOpenDialog(true);
+  const handleOpenModalConfirm = (id) => {
+    setSelectedItem(id);
+    setOpenModalConfirm(true);
   };
 
-  // Đóng Dialog
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setItemToRemove(null);
+  const handleCloseModalConfirm = () => {
+    setOpenModalConfirm(false);
+    setSelectedItem(null);
   };
 
-  // Xác nhận xóa sản phẩm
-  const handleConfirmRemove = () => {
-    if (itemToRemove) {
-      dispatch(
-        removeFromCart({
-          productId: itemToRemove.productId,
-          color: itemToRemove.color,
-          size: itemToRemove.size,
-        })
-      );
+  const handleDeleteCartItem = async (id) => {
+    try {
+      await deleteCartItem(id).unwrap();
+      handleCloseModalConfirm();
+      refetchCartByUser();
+      showSnackbar(" Xoá sản phẩm trong giỏ hàng thành công.", "success");
+    } catch (error) {
+      if (error?.data?.message) {
+        showSnackbar(
+          "Xoá sản phẩm trong giỏ hàng thất bại. Vui lòng thử lại sau.",
+          "error",
+        );
+      }
     }
-    handleCloseDialog();
   };
 
-  const DrawerList = () => {
+  const CartDrawer = () => {
     return (
       <Box
         sx={{
@@ -82,8 +88,9 @@ const CartButton = () => {
             sm: 400,
             md: 400,
           },
-          height: "100%",
-          p: 2,
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {/* Header */}
@@ -91,6 +98,8 @@ const CartButton = () => {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"space-between"}
+          py={2}
+          px={1}
         >
           <Box display={"flex"} alignItems={"center"}>
             <LocalMall />
@@ -114,118 +123,130 @@ const CartButton = () => {
 
         <Divider />
 
-        {/* Danh sách sản phẩm với thanh cuộn */}
-        {/* {isLoading ? (
-          <Typography sx={{ p: 2, textAlign: "center" }}>
-            Đang tải giỏ hàng...
-          </Typography>
-        ) : !checkUser ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              flexGrow: 1,
-            }}
-          >
-            <Typography variant="h6">Vui lòng đăng nhập!</Typography>
-            <SentimentDissatisfiedIcon fontSize="large" />
-          </Box>
-        ) : cartItems.length === 0 ? (
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            mt={4}
-            gap={1}
-          >
-            <SentimentDissatisfiedOutlined fontSize="large" />
-            <Typography
-              variant="h6"
-              fontSize={{
-                xs: "1rem",
-                sm: "1rem",
-                md: "1.2rem",
+        {/* Main content */}
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          {isLoading ? (
+            <>
+              <Typography sx={{ p: 2, textAlign: "center" }}>
+                Đang tải giỏ hàng...
+              </Typography>
+            </>
+          ) : isError ? (
+            <>
+              <Typography sx={{ p: 2, textAlign: "center", color: "red" }}>
+                Đã có lỗi xảy ra: {error?.data?.message || "Vui lòng thử lại."}
+              </Typography>
+            </>
+          ) : cartItems.length === 0 ? (
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              textAlign={"center"}
             >
-              Chưa có sản phẩm nào trong giỏ hàng.
-            </Typography>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              maxHeight: "calc(100vh - 200px)",
-              p: 2,
-            }}
-          >
-            <Box spacing={2}>
-              {cartItems.map((item, index) => (
-                <Box
-                  key={index}
-                  display={"flex"}
-                  spacing={2}
-                  alignItems="center"
-                  sx={{ borderBottom: "1px solid #ddd", pb: 1 }}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ width: 60, height: 60, objectFit: "cover" }}
-                  />
-                  <Stack spacing={1} sx={{ flex: 1 }}>
-                    <Typography variant="body1">{item.name}</Typography>
-                    <Typography variant="body2">
-                      {new Intl.NumberFormat("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      }).format(item.price)}
-                    </Typography>
-                  </Stack>
-
-                  <IconButton
-                    onClick={() => handleOpenDialog(item)}
-                    sx={{ color: "black" }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              ))}
+              <RemoveShoppingCart sx={{ fontSize: 60, color: "#ccc" }} />
+              <Typography
+                textAlign={"center"}
+                mt={1}
+                variant="h6"
+                color="#666"
+                fontSize={{
+                  xs: "1rem",
+                  sm: "1rem",
+                  md: "1.2rem",
+                }}
+              >
+                Giỏ hàng của bạn đang trống.
+              </Typography>
             </Box>
-          </Box>
-        )} */}
-
-        {cartItems.length > 0 && (
-          <Box sx={{ flexShrink: 0, p: 2 }}>
-            <Button
-              variant="contained"
-              sx={{ width: "100%", backgroundColor: "black", color: "white" }}
-              onClick={() => {
-                toggleDrawer(false)();
+          ) : (
+            <Box
+              sx={{
+                flexGrow: 1,
+                overflowY: "auto",
+                maxHeight: "calc(100vh - 150px)",
               }}
             >
-              Xem giỏ hàng
-            </Button>
-          </Box>
-        )}
+              <Box spacing={2}>
+                {cartItems?.map((cartItem, id) => (
+                  <Box
+                    key={id}
+                    display={"flex"}
+                    spacing={2}
+                    alignItems="center"
+                    sx={{ borderBottom: "1px solid #ddd", p: 2 }}
+                  >
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight="bold">
+                        {cartItem.productVariantBasic.product.name}
+                      </Typography>
+                      <Typography variant="subtitle2" color="#666" my={1}>
+                        {cartItem.productVariantBasic.color.name} | Size{" "}
+                        {cartItem.productVariantBasic.size.name}
+                      </Typography>
+                      <Typography variant="subtitle2" color="#666" mb={1}>
+                        Số lượng: {cartItem.quantity}
+                      </Typography>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(cartItem.price)}
+                      </Typography>
+                    </Box>
 
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Xác nhận xóa sản phẩm</DialogTitle>
+                    <IconButton
+                      onClick={() => handleOpenModalConfirm(cartItem)}
+                      sx={{ color: "black" }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+        </Box>
+
+        {/* Button for footer cart items if cart item than bigger 0 will appear button else will hide it */}
+        <Box sx={{ m: 2 }}>
+          <Button
+            variant="contained"
+            sx={{
+              display: cartItems.length > 0 ? "block" : "none",
+              width: "100%",
+            }}
+            onClick={() => toggleDrawer(false)()}
+          >
+            Xem chi tiết giỏ hàng
+          </Button>
+        </Box>
+
+        <Dialog
+          open={openModalConfirm}
+          onClose={handleCloseModalConfirm}
+          aria-label="confirm-remove-dialog"
+        >
           <DialogContent>
-            <Typography>
-              Bạn có chắc chắn muốn xóa sản phẩm{" "}
-              <strong>{itemToRemove?.name}</strong> khỏi giỏ hàng?
+            <Typography
+              align="center"
+              fontWeight={"bold"}
+              fontSize={{ xs: "1.1rem", md: "1.2rem" }}
+            >
+              Xác nhận xoá sản phẩm khỏi giỏ hàng?
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
+            <Button variant="outlined" onClick={handleCloseModalConfirm}>
               Hủy
             </Button>
-            <Button onClick={handleConfirmRemove} color="error" autoFocus>
+            <Button
+              variant="contained"
+              onClick={() => handleDeleteCartItem(selectedItem.id)}
+            >
               Xác nhận
             </Button>
           </DialogActions>
@@ -237,28 +258,15 @@ const CartButton = () => {
   return (
     <Fragment>
       <IconButton aria-label="shopping-cart" onClick={toggleDrawer(true)}>
-        <ShoppingCartOutlinedIcon />
-        <CartBadge
-          badgeContent={totalItems}
-          color="primary"
-          overlap="circular"
-        />
+        <ShoppingCartOutlined />
+        <Badge color="primary" overlap="circular" />
       </IconButton>
 
-      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        {DrawerList()}
+      <Drawer anchor="right" open={openDrawer} onClose={toggleDrawer(false)}>
+        {CartDrawer()}
       </Drawer>
     </Fragment>
   );
 };
-
-const CartBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -12px;
-    right: -6px;
-    background-color: black;
-    color: white;
-  }
-`;
 
 export default CartButton;
