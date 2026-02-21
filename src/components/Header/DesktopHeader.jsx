@@ -74,12 +74,11 @@ const DesktopHeader = ({ activeCategories }) => {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ py: 2 }}>
           <Box
             display={"flex"}
             alignItems="center"
             justifyContent="space-between"
-            py={2}
           >
             <Link
               to="/"

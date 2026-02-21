@@ -67,13 +67,11 @@ const ChangePasswordInform = () => {
     if (isErrorUser) {
       showSnackbar(
         "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!",
-        "error"
+        "error",
       );
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      navigate("/login");
     }
   }, [isErrorUser, navigate]);
 

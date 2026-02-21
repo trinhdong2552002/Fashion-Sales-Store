@@ -33,9 +33,7 @@ const VerifyAccount = () => {
 
       if (response) {
         showSnackbar("Xác thực tài khoản thành công!", "success");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+        navigate("/login");
       }
     } catch (error) {
       if (error && error.data && error.data.message) {

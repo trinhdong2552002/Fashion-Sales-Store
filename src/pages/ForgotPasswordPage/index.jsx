@@ -33,13 +33,11 @@ const ForgotPassword = () => {
       if (response) {
         showSnackbar(
           "Đã gửi mã xác nhận đến email của bạn. Vui lòng kiểm tra hộp thư!",
-          "success"
+          "success",
         );
-        setTimeout(() => {
-          navigate("/forgot-password/forgot-password-verify", {
-            state: { email: data.email },
-          });
-        }, 1000);
+        navigate("/forgot-password/forgot-password-verify", {
+          state: { email: data.email },
+        });
       }
     } catch (error) {
       if (error && error.data && error.data.message) {
