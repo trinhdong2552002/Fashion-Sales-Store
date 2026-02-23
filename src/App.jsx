@@ -23,10 +23,14 @@ import ForgotPasswordVerify from "./pages/ForgotPasswordPage/shared/ForgotPasswo
 import MyOrders from "./pages/MyOrderPage";
 import Checkout from "./pages/CheckoutPage";
 import OrderSuccess from "./pages/OrderSuccess";
+import NotFound from "./pages/NotFoundPage";
 
 const App = () => {
   return (
     <Routes>
+      {/* Check route not found */}
+      <Route path="*" element={<NotFound />} />
+
       {/* Dependencies component Header and Footer */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
