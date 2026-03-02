@@ -8,6 +8,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  InputBase,
+  Backdrop,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +27,35 @@ const mapListMenuLinkMobile = [
 
 const MobileHeader = ({ activeCategories }) => {
   const [openModal, setOpenModal] = useState(false);
+  const [openSearchbar, setOpenSearchbar] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
+  const handleSearchProductChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleSearchProduct = () => {
+    if (searchValue.trim()) {
+      navigate(`/all-products?search=${encodeURIComponent(searchValue)}`);
+    } else {
+      navigate(`/all-products`);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearchProduct();
+    }
+  };
 
   const toggleDrawer = (newOpenModal) => () => {
     setOpenModal(newOpenModal);
@@ -39,14 +69,7 @@ const MobileHeader = ({ activeCategories }) => {
     setOpenModal(false);
     navigate(`/all-products?category=${slugify(category.name)}`);
   };
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }, []);
+  
 
   const DrawContent = () => (
     <Box width={300} height={"100%"} p={2}>
@@ -155,7 +178,11 @@ const MobileHeader = ({ activeCategories }) => {
               <IconButton>
                 <Menu onClick={toggleDrawer(true)} />
               </IconButton>
-              <Drawer anchor="left" open={openModal} onClose={toggleDrawer(false)}>
+              <Drawer
+                anchor="left"
+                open={openModal}
+                onClose={toggleDrawer(false)}
+              >
                 <DrawContent />
               </Drawer>
 
@@ -176,9 +203,52 @@ const MobileHeader = ({ activeCategories }) => {
             </Box>
 
             <Box display={"flex"} alignItems={"center"}>
-              <IconButton sx={{ mr: 1 }}>
-                <Search />
-              </IconButton>
+              <>
+                <IconButton onClick={() => setOpenSearchbar(true)}>
+                  <Search />
+                </IconButton>
+
+                <Backdrop
+                  open={openSearchbar}
+                  onClick={() => setOpenSearchbar(false)}
+                />
+
+                {openSearchbar && (
+                  <Box
+                    sx={{
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      zIndex: 10,
+                      backgroundColor: "white",
+                      padding: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      transform: "translateY(-100%)",
+                      animation: "slideDown 0.3s forwards",
+                      "@keyframes slideDown": {
+                        "0%": { transform: "translateY(-100%)" },
+                        "100%": { transform: "translateY(0)" },
+                      },
+                    }}
+                  >
+                    <Search />
+                    <InputBase
+                      autoFocus
+                      fullWidth
+                      placeholder="Tìm kiếm sản phẩm..."
+                      value={searchValue}
+                      onChange={handleSearchProductChange}
+                      onKeyDown={handleKeyDown}
+                    />
+                    <IconButton onClick={() => setOpenSearchbar(false)}>
+                      <Close />
+                    </IconButton>
+                  </Box>
+                )}
+              </>
               <CartButton />
             </Box>
           </Box>

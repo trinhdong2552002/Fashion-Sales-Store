@@ -192,9 +192,17 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          sx={{ py: 8 }}
+          sx={{ py: 8, width: "100%", textAlign: "center" }}
         >
-          <Typography variant="h6">
+          <Typography
+            variant="h6"
+            color="#666"
+            fontSize={{
+              xs: "1rem",
+              sm: "1rem",
+              md: "1.2rem",
+            }}
+          >
             Không có sản phẩm nào để hiển thị.
           </Typography>
         </Box>
@@ -212,7 +220,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
               display={"flex"}
               alignItems={"center"}
               justifyContent={"center"}
-              sx={{ width: "100%", m: 10 }}
+              sx={{ width: "100%", mt: 10 }}
             >
               <Pagination
                 count={totalClientPages}
