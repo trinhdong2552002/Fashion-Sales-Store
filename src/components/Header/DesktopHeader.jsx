@@ -128,7 +128,7 @@ const DesktopHeader = ({ activeCategories }) => {
               </Box>
             </Link>
 
-            {isDesktop && <SearchBar />}
+            <SearchBar />
 
             <Link to={"/help"} style={linkStyle}>
               <Box display={"flex"} alignItems={"center"}>
@@ -148,29 +148,12 @@ const DesktopHeader = ({ activeCategories }) => {
               </Box>
             </Link>
 
-            {isTablet && (
-              <IconButton>
-                <Search />
-              </IconButton>
-            )}
-
             {/* Cart button and Auth button */}
             <CartButton />
             <AuthButton />
           </Box>
         </Container>
       </Box>
-
-      {/* TABLET: Search Dialog/Modal */}
-      {isTablet && searchOpen && (
-        <Drawer
-          anchor="top"
-          open={searchOpen}
-          onClick={() => setSearchOpen(false)}
-        >
-          <SearchBar autoFocus onClose={() => setSearchOpen(false)} />
-        </Drawer>
-      )}
     </Fragment>
   );
 };

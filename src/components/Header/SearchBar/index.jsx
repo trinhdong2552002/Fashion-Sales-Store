@@ -1,11 +1,12 @@
 import { Fragment, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Search } from "@mui/icons-material";
 
 const SearchBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  
   const handleSearchProductChange = (event) => {
     setSearchValue(event.target.value);
   };
@@ -28,7 +29,7 @@ const SearchBar = () => {
     <Fragment>
       <TextField
         id="outlined-basic"
-        label="Tìm kiếm sản phẩm"
+        label="Tìm kiếm sản phẩm..."
         size="small"
         variant="outlined"
         value={searchValue}
@@ -36,7 +37,7 @@ const SearchBar = () => {
         onKeyDown={handleKeyDown}
         sx={{
           width: {
-            lg: 400,
+            lg: 500,
             xl: 500,
           },
         }}
@@ -45,7 +46,7 @@ const SearchBar = () => {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton edge="end" onClick={handleSearchProduct}>
-                  <SearchIcon />
+                  <Search />
                 </IconButton>
               </InputAdornment>
             ),
