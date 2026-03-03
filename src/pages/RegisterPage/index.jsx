@@ -22,11 +22,6 @@ const Register = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [registerAccount, { isLoading }] = useRegisterMutation();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
 
   const {
     register,
@@ -52,7 +47,7 @@ const Register = () => {
       if (response) {
         showSnackbar(
           "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
-          "success"
+          "success",
         );
         navigate("/register/verify-account", { state: { email: data.email } });
       }
@@ -66,13 +61,10 @@ const Register = () => {
 
   return (
     <Box
-      component={"section"}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f0f0f0",
-      }}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      backgroundColor={"#f0f0f0"}
     >
       <Box display="flex" alignItems="center" minHeight="100vh">
         <Grid
@@ -99,7 +91,13 @@ const Register = () => {
           }}
         >
           <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-            <Box sx={{ m: "0 50px" }}>
+            <Box mx={{
+              xl: 6,
+              lg: 6,
+              md: 6,
+              sm: 3,
+              xs: 3,
+            }}>
               <Typography
                 fontWeight={"bold"}
                 sx={{

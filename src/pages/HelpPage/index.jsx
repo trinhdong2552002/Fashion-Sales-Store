@@ -53,7 +53,7 @@ const Help = () => {
     });
   }, []);
   return (
-    <Box component={"section"}>
+    <Box >
       <WallpaperRepresentative titleHeader="Trợ giúp" />
 
       <Container maxWidth="xl">

@@ -4,7 +4,7 @@ import introducingVideo from "@/assets/videos/introducing-fashion.mp4";
 const BrandVideo = () => {
   return (
     <Box
-      component={"section"}
+      
       py={10}
       sx={{
         backgroundColor: "#f9f9f9",

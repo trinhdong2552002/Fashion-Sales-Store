@@ -1,25 +1,24 @@
 import { Routes, Route } from "react-router-dom";
-import AccountInformation from "./layouts/AccountInformationLayout";
-import Address from "./pages/AddressPage";
-import Profile from "./pages/ProfilePage";
-import MainLayout from "@/layouts/MainLayout";
-import About from "@/pages/AboutPage";
-import Home from "@/pages/HomePage";
 import Login from "@/pages/LoginPage";
-import ProductDetails from "@/pages/ProductDetailsPage";
-import ProductLists from "@/pages/ProductListsPage";
 import Register from "@/pages/RegisterPage";
-import Help from "./pages/HelpPage";
 import VerifyAccount from "@/pages/VerifyAccountPage";
 import ResetPassword from "./pages/ResetPasswordPage";
+import ForgotPassword from "./pages/ForgotPasswordPage";
+import ForgotPasswordVerify from "./pages/ForgotPasswordPage/shared/ForgotPasswordVerify";
+import AccountInformation from "./layouts/AccountInformationLayout";
+import Profile from "./pages/ProfilePage";
+import Address from "./pages/AddressPage";
+import ProductDetails from "@/pages/ProductDetailsPage";
+import ProductLists from "@/pages/ProductListsPage";
+import MainLayout from "@/layouts/MainLayout";
 import ProductListsLayout from "./layouts/ProductListsLayout";
+import About from "@/pages/AboutPage";
+import Home from "@/pages/HomePage";
+import Help from "./pages/HelpPage";
 import ProductDetailsLayout from "./layouts/ProductDetailsLayout";
 import Blog from "./pages/BlogPage";
 import BlogDetail from "./pages/BlogPage/shared/BlogDetail";
-import ForgotPassword from "./pages/ForgotPasswordPage";
 import ChangePassword from "./pages/ChangePasswordPage";
-import ForgotPasswordLayout from "./layouts/ForgotPasswordLayout";
-import ForgotPasswordVerify from "./pages/ForgotPasswordPage/shared/ForgotPasswordVerify";
 import MyOrders from "./pages/MyOrderPage";
 import Checkout from "./pages/CheckoutPage";
 import OrderSuccess from "./pages/OrderSuccess";
@@ -47,18 +46,13 @@ const App = () => {
       <Route path="/login" element={<Login />} />
 
       {/* Forgot Password */}
-      <Route path="/forgot-password" element={<ForgotPasswordLayout />}>
-        <Route index element={<ForgotPassword />} />
-        <Route
-          path="forgot-password-verify"
-          element={<ForgotPasswordVerify />}
-        />
-        <Route path="reset-password" element={<ResetPassword />} />
-      </Route>
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="forgot-password-verify" element={<ForgotPasswordVerify />} />
+      <Route path="reset-password" element={<ResetPassword />} />
 
       {/* Register */}
       <Route path="/register" element={<Register />} />
-      <Route path="/register/verify-account" element={<VerifyAccount />} />
+      <Route path="/verify-account" element={<VerifyAccount />} />
 
       {/* Product Lists */}
       <Route path="/all-products" element={<ProductListsLayout />}>

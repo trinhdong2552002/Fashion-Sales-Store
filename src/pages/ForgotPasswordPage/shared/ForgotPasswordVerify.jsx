@@ -50,7 +50,6 @@ const ForgotPasswordVerify = () => {
   };
 
   const email = location.state?.email || "Không có email";
-  console.log("Email received in VerifyAccount:", email);
 
   return (
     <Box
