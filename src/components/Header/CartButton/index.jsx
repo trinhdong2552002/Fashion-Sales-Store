@@ -79,6 +79,8 @@ const CartButton = () => {
     }
   };
 
+  const calculateItemCount = dataCartByUser?.result?.items?.length || 0;
+
   const CartDrawer = () => {
     return (
       <Box
@@ -259,7 +261,20 @@ const CartButton = () => {
     <Fragment>
       <IconButton aria-label="shopping-cart" onClick={toggleDrawer(true)}>
         <ShoppingCartOutlined />
-        <Badge color="primary" overlap="circular" />
+        <Badge
+          badgeContent={calculateItemCount}
+          overlap="circular"
+          invisible={calculateItemCount === 0}
+          sx={{
+            "& .MuiBadge-badge": {
+              color: "white",
+              backgroundColor: "black",
+              fontSize: "0.9rem",
+              borderRadius: "100%",
+              top: "-8px",
+            },
+          }}
+        />
       </IconButton>
 
       <Drawer anchor="right" open={openDrawer} onClose={toggleDrawer(false)}>
