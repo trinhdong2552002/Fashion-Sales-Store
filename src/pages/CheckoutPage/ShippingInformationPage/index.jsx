@@ -523,7 +523,13 @@ const ShippingInformation = () => {
           </DialogContent>
 
           <DialogActions>
-            <Box mx={2} my={1}>
+            <Box  mx={{
+                xl: 6,
+                lg: 6,
+                md: 6,
+                sm: 3,
+                xs: 3,
+              }} my={1}>
               <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
             </Box>
           </DialogActions>

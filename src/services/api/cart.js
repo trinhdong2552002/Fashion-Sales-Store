@@ -5,7 +5,7 @@ export const cartApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCartByUser: builder.query({
       query: () => ({
-        url: "/v1/carts/cart-items",
+        url: "/v1/cart-items",
         method: "GET",
       }),
       providesTags: [TAG_KEYS.CART],

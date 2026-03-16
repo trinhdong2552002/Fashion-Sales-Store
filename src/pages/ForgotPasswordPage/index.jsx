@@ -87,7 +87,15 @@ const ForgotPassword = () => {
           }}
         >
           <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-            <Box sx={{ m: "0 50px" }}>
+            <Box
+              mx={{
+                xl: 6,
+                lg: 6,
+                md: 6,
+                sm: 3,
+                xs: 3,
+              }}
+            >
               <Typography
                 fontWeight={"bold"}
                 sx={{

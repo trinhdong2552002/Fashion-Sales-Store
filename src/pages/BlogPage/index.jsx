@@ -22,7 +22,7 @@ const Blog = () => {
   }, []);
 
   return (
-    <Box component={"section"}>
+    <Box >
       <WallpaperRepresentative titleHeader="Bài viết" />
 
       <Container maxWidth="lg">

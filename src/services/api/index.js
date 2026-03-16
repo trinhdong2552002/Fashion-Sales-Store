@@ -1,6 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
 
+let isRedirectingToLogin = false;
+
 export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params, headers }) => {
@@ -49,7 +51,6 @@ export const axiosBaseQuery =
         },
         baseURL: import.meta.env.VITE_API_URL,
       });
-      // console.log("Axios response received:", result);
 
       if (result.status >= 400) {
         console.log("Server error response:", result.data);
@@ -60,7 +61,7 @@ export const axiosBaseQuery =
           },
         };
       }
-      // console.log("Axios response success:", result.data);
+
       return { data: result.data };
     } catch (axiosError) {
       const error = {
@@ -71,9 +72,32 @@ export const axiosBaseQuery =
       console.error("Axios error:", error);
 
       // HANDLE 401 / EXPIRED TOKEN HERE
-      if (error.status === 401) {
+      if (error.status === 401 && url !== "/v1/auth/logout") {
+        const expiredToken = localStorage.getItem("accessToken");
+
+        // Call logout API if token exists
+        if (expiredToken) {
+          try {
+            await axios.post(
+              "/v1/auth/logout",
+              { accessToken: expiredToken },
+              { baseURL: import.meta.env.VITE_API_URL },
+            );
+          } catch (logoutError) {
+            console.error("Logout API call failed:", logoutError);
+          }
+        }
+
+        // Clear all auth data
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("persist:root");
+
+        // Redirect to login (prevent multiple redirects from concurrent requests)
+        // if (!isRedirectingToLogin) {
+        //   isRedirectingToLogin = true;
+        //   window.location.href = "/login";
+        // }
 
         return { error };
       }

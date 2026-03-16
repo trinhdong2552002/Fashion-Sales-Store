@@ -43,7 +43,7 @@ const ProductLists = () => {
   });
 
   return (
-    <Box component={"section"}>
+    <Box >
       <Box m={2}>
         {isLoading ? (
           <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>

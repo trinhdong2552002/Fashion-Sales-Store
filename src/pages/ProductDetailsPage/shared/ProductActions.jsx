@@ -1,10 +1,31 @@
+import { useSnackbar } from "@/components/Snackbar";
+import { useAddToCartItemMutation } from "@/services/api/cart";
 import { AddShoppingCart } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProductActions = () => {
+const ProductActions = ({ variantId, quantity }) => {
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
+
+  const [addToCartItem, { isLoading: isAddingToCart }] =
+    useAddToCartItemMutation();
+
+  const handleAddToCart = async () => {
+    try {
+      await addToCartItem({
+        productVariantId: variantId,
+        quantity: quantity,
+      }).unwrap();
+      showSnackbar("Thêm vào giỏ hàng thành công!", "success");
+    } catch (error) {
+      showSnackbar(
+        error?.data?.message || "Thêm vào giỏ hàng thất bại!",
+        "error",
+      );
+    }
+  };
 
   return (
     <Fragment>
@@ -24,15 +45,18 @@ const ProductActions = () => {
       >
         <Button
           variant="outlined"
+          disabled={isAddingToCart}
+          loading={isAddingToCart}
+          loadingPosition="start"
           sx={{
             fontSize: "1rem",
             borderColor: "black",
             color: "black",
             bgcolor: "white",
-
             width: { xs: "100%", sm: "auto" },
           }}
           startIcon={<AddShoppingCart />}
+          onClick={handleAddToCart}
         >
           Thêm giỏ hàng
         </Button>

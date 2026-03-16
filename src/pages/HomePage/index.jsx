@@ -47,7 +47,7 @@ const Home = () => {
     : [];
 
   return (
-    <Box component={"section"}>
+    <Box >
       <Swiper
         slidesPerView={1}
         spaceBetween={30}

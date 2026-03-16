@@ -38,7 +38,6 @@ const ResetPassword = () => {
   console.log("forgotPasswordToken", forgotPasswordToken);
 
   const email = location.state?.email || "Không có email";
-  console.log("email", email);
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
 
@@ -121,7 +120,15 @@ const ResetPassword = () => {
           }}
         >
           <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
-            <Box sx={{ m: "0 50px" }}>
+            <Box
+              mx={{
+                xl: 6,
+                lg: 6,
+                md: 6,
+                sm: 3,
+                xs: 3,
+              }}
+            >
               <Typography
                 fontWeight={"bold"}
                 sx={{
