@@ -23,6 +23,7 @@ import {
   useDeleteCartItemMutation,
   useGetCartByUserQuery,
 } from "@/services/api/cart";
+import { useSelector } from "react-redux";
 
 const CartButton = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -31,21 +32,21 @@ const CartButton = () => {
   const [openModalConfirm, setOpenModalConfirm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const { authenticated } = useSelector((state) => state.auth);
+
   const {
     data: dataCartByUser,
     isLoading,
     isError,
     error,
-    refetch: refetchCartByUser,
-  } = useGetCartByUserQuery({
-    pageNo: 1,
-    pageSize: 10,
-  });
+  } = useGetCartByUserQuery(
+    {
+      pageNo: 1,
+      pageSize: 10,
+    },
+    { skip: !authenticated },
+  );
   const [deleteCartItem] = useDeleteCartItemMutation();
-
-  useEffect(() => {
-    refetchCartByUser();
-  }, [refetchCartByUser]);
 
   const cartItems = dataCartByUser?.result?.items || [];
 
@@ -67,7 +68,6 @@ const CartButton = () => {
     try {
       await deleteCartItem(id).unwrap();
       handleCloseModalConfirm();
-      refetchCartByUser();
       showSnackbar(" Xoá sản phẩm trong giỏ hàng thành công.", "success");
     } catch (error) {
       if (error?.data?.message) {
@@ -79,7 +79,10 @@ const CartButton = () => {
     }
   };
 
-  const calculateItemCount = dataCartByUser?.result?.items?.length || 0;
+  const calculateItemCount =
+    authenticated && dataCartByUser?.result
+      ? dataCartByUser.result.totalItems || 0
+      : 0;
 
   const CartDrawer = () => {
     return (

@@ -141,8 +141,8 @@ const ProductDetails = () => {
               justifyContent="center"
               alignItems="center"
             >
-              <Typography mb={2}>Đang tải chi tiết sản phẩm...</Typography>
               <CircularProgress />
+              <Typography mt={2}>Đang tải chi tiết sản phẩm...</Typography>
             </Box>
           ) : isErrorProductById ? (
             <Box

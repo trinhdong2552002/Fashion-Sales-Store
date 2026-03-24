@@ -8,6 +8,7 @@ import { clearAuth, selectAuth } from "@/store/redux/auth/reducer";
 import DesktopAuthButton from "./DesktopAuthButton";
 import MobileAuthButton from "./MobileAuthButton";
 import { useSnackbar } from "@/components/Snackbar";
+import { resetStore } from "@/store";
 
 const AuthButton = ({ onCloseDrawer }) => {
   const { showSnackbar } = useSnackbar();
@@ -31,22 +32,17 @@ const AuthButton = ({ onCloseDrawer }) => {
   const handleLogout = async () => {
     try {
       const accessToken = auth.accessToken;
-      // TODO: Call logout API if accessToken exists
+
       if (accessToken) {
-        try {
-          await logout({ accessToken }).unwrap();
-        } catch (err) {
-          console.log("Logout failed", err);
-        }
+        await logout({ accessToken }).unwrap();
       }
 
-      // TODO: Clear token local storage and Redux store
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      dispatch(clearAuth());
-      dispatch(clearUser());
+
+      dispatch(resetStore());
+
       handleMenuClose();
-      navigate("/");
     } catch (error) {
       if (error?.data?.message) {
         showSnackbar(error.data.message, "error");
