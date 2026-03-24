@@ -7,7 +7,6 @@ import storage from "redux-persist/lib/storage";
 import { baseApi } from "@/services/api";
 import authReducer from "@/store/redux/auth/reducer";
 import userReducer from "@/store/redux/user/reducer";
-import cartReducer from "@/store/redux/cart/reducer";
 
 export const RESET_STATE = "RESET_STATE";
 
@@ -20,13 +19,12 @@ const appReducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authReducer,
   user: userReducer,
-  cart: cartReducer,
 });
 
 const rootReducer = (state, action) => {
   if (action.type === RESET_STATE) {
     storage.removeItem("persist:root");
-    return appReducer(undefined, action);
+    state = undefined;
   }
   return appReducer(state, action);
 };
