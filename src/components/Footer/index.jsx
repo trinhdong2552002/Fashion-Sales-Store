@@ -1,7 +1,6 @@
 import { Container, Grid, Typography, Box, IconButton } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
-  Circle,
   Email,
   Facebook,
   Instagram,
@@ -10,18 +9,19 @@ import {
   Phone,
   Twitter,
 } from "@mui/icons-material";
-import { useGetListBranchesQuery } from "@/services/api/branches";
+
 import { useEffect } from "react";
 import styles from "./index.module.css";
+import { useGetAllBranchesByUserQuery } from "@/services/api/branch";
 
 const Footer = () => {
   const {
     data: dataBranches,
-    isLoading: isLoadingBranch,
-    error: errorBranch,
+    isLoading: isLoadingBranches,
+    error: errorBranches,
     isError: isErrorBranch,
     refetch: refetchBranch,
-  } = useGetListBranchesQuery({
+  } = useGetAllBranchesByUserQuery({
     pageNo: 1,
     pageSize: 10,
   });
@@ -111,11 +111,11 @@ const Footer = () => {
               Hệ thống cửa hàng
             </Typography>
 
-            {isLoadingBranch ? (
+            {isLoadingBranches ? (
               <Typography color="#E0E0E0">Đang tải chi nhánh...</Typography>
             ) : isErrorBranch ? (
               <Typography color="#E0E0E0">
-                Lỗi tải chi nhánh: {errorBranch?.data?.message}
+                Lỗi tải chi nhánh: {errorBranches?.data?.message}
               </Typography>
             ) : (
               dataBranches?.items?.map((branch) => (

@@ -3,22 +3,33 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const districtApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listDistricts: builder.query({
-      query: ({ pageNo, pageSize }) => ({
+    getAllDistricts: builder.query({
+      query: ({ page, size, sort }) => ({
         url: `/v1/districts`,
-        params: { pageNo, pageSize },
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.DISTRICT],
     }),
-    listWardsByDistrict: builder.query({
-      query: ({ id, pageNo, pageSize }) => ({
-        url: `/v1/districts/${id}/wards`,
-        params: { pageNo, pageSize },
+
+    getDistrictById: builder.query({
+      query: ({ districtId }) => ({
+        url: `/v1/private/districts/${districtId}`,
+      }),
+      providesTags: [TAG_KEYS.DISTRICT],
+    }),
+
+    getAllWardsByDistrict: builder.query({
+      query: ({ districtId, page, size, sort }) => ({
+        url: `/v1/private/districts/${districtId}/wards`,
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.DISTRICT],
     }),
   }),
 });
 
-export const { useListDistrictsQuery, useListWardsByDistrictQuery } =
-  districtApi;
+export const {
+  useGetAllDistrictsQuery,
+  useGetDistrictByIdQuery,
+  useGetAllWardsByDistrictQuery,
+} = districtApi;

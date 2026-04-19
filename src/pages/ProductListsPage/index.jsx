@@ -8,9 +8,10 @@ import {
 } from "@mui/material";
 import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useListCategoriesForUserQuery } from "@/services/api/categories";
+
 import { slugify } from "@/utils/slugify";
 import ProductItems from "./shared/ProductItems";
+import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const ProductLists = () => {
   const [searchParams] = useSearchParams();
@@ -22,9 +23,9 @@ const ProductLists = () => {
     data: dataCategories,
     isLoading,
     refetch: refetchCategory,
-  } = useListCategoriesForUserQuery({
-    pageNo: 1,
-    pageSize: 10,
+  } = useGetAllCategoriesByUserQuery({
+    page: 1,
+    size: 10,
   });
 
   // Normalize categories shape: support both {result.items} and direct array
@@ -43,7 +44,7 @@ const ProductLists = () => {
   });
 
   return (
-    <Box >
+    <Box>
       <Box m={2}>
         {isLoading ? (
           <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>

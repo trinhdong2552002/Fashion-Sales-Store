@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Fragment, useEffect, useState } from "react";
 import {
-  useUpdateUserMutation,
+  useUpdateByUserMutation,
   useUploadAvatarMutation,
 } from "@/services/api/user";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -48,7 +48,7 @@ const ProfileInform = () => {
   });
 
   const [updateUser, { isLoading: isLoadingUpdateUser }] =
-    useUpdateUserMutation();
+    useUpdateByUserMutation();
   const [uploadAvatar, { isLoading: isLoadingUploadAvatar }] =
     useUploadAvatarMutation();
 

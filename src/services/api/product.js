@@ -3,10 +3,11 @@ import { TAG_KEYS } from "@/constants/tagKeys.js";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listProductsForUser: builder.query({
-      query: ({ pageNo, pageSize }) => ({
-        url: "/v1/products",
-        params: { pageNo, pageSize },
+    // Get all products for users
+    getAllProductByUser: builder.query({
+      query: ({ page, size, sort }) => ({
+        url: "/v1/public/products",
+        params: { page, size, sort },
       }),
       transformResponse: (response) => {
         return response.result;
@@ -14,22 +15,36 @@ export const productApi = baseApi.injectEndpoints({
       providesTags: [TAG_KEYS.PRODUCT],
     }),
 
-    // TODO: Api search product for user has been error, need backend fix it
-    // TODO: Because i want to use search api for admin too the BE have not support it yet
-    // searchProducts: builder.query({
-    //   query: ({ pageNo, pageSize, search }) => ({
-    //     url: "/v1/products/search",
-    //     params: { pageNo, pageSize, search },
-    //   }),
-    //   providesTags: [TAG_KEYS.PRODUCT],
-    // }),
+    // Get product review by product id
+    getProductReviewById: builder.query({
+      query: (id, page, size, sort) => ({
+        url: `/v1/public/products/${id}/reviews`,
+        params: { page, size, sort },
+      }),
+      transformResponse: (response) => {
+        return response.result;
+      },
+      providesTags: [TAG_KEYS.PRODUCT],
+    }),
 
-    getProductById: builder.query({
-      query: (id) => {
+    // Get product detail by id
+    getProductDetailById: builder.query({
+      query: (productId) => {
         return {
-          url: `/v1/products/${id}`,
-          method: "GET",
+          url: `/v1/public/products/${productId}/details`,
         };
+      },
+      providesTags: [TAG_KEYS.PRODUCT],
+    }),
+
+    // Search products
+    searchProduct: builder.query({
+      query: (page, size, sort, search) => ({
+        url: "/v1/public/products/search",
+        params: { page, size, sort, search },
+      }),
+      transformResponse: (response) => {
+        return response.result;
       },
       providesTags: [TAG_KEYS.PRODUCT],
     }),
@@ -37,7 +52,7 @@ export const productApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useListProductsForUserQuery,
+  useGetAllProductByUserQuery,
   useSearchProductsQuery,
   useGetProductByIdQuery,
 } = productApi;

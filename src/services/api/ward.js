@@ -3,14 +3,27 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const wardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listWards: builder.query({
-      query: ({ pageNo, pageSize }) => ({
-        url: `/v1/wards`,
-        params: { pageNo, pageSize },
+    getAllWards: builder.query({
+      query: ({ page, size, sort }) => ({
+        url: "/v1/private/wards",
+        params: { page, size, sort },
       }),
+      transformResponse: (response) => {
+        return response.result;
+      },
+      providesTags: [TAG_KEYS.WARD],
+    }),
+
+    getWardsByCode: builder.query({
+      query: (code) => ({
+        url: `/v1/private/wards/${code}`,
+      }),
+      transformResponse: (response) => {
+        return response.result;
+      },
       providesTags: [TAG_KEYS.WARD],
     }),
   }),
 });
 
-export const { useListWardsQuery } = wardApi;
+export const { useGetAllWards, useGetWardsByCodeQuery } = wardApi;

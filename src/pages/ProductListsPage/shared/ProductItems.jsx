@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { useState, useEffect, useMemo, Fragment } from "react";
 
-import { useListProductsForUserQuery } from "@/services/api/product";
 import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
+import { useGetAllProductByUserQuery } from "@/services/api/product";
 
 // Vietnamese character encoding normalization for search
 const normalizeString = (str) => {
@@ -37,14 +37,14 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
   }, [selectedCategory, searchQuery]);
 
   const {
-    data: dataProducts,
-    isLoading,
-    isError,
-    error,
+    data: dataProduct,
+    isLoading: isLoadingProduct,
+    isError: isErrorProduct,
+    error: errorProduct,
     refetch: refetchProduct,
-  } = useListProductsForUserQuery({
-    pageNo: 1,
-    pageSize: 100,
+  } = useGetAllProductByUserQuery({
+    page: 1,
+    size: 100,
   });
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
 
   const filteredProducts = useMemo(() => {
     // Handle data structure safety
-    const items = dataProducts?.result?.items || dataProducts?.items || [];
+    const items = dataProduct?.result?.items || dataProduct?.items || [];
 
     return items.filter((item) => {
       // A. Check Category
@@ -79,7 +79,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
 
       return matchesCategory && matchesSearch;
     });
-  }, [dataProducts, selectedCategory, searchQuery]);
+  }, [dataProduct, selectedCategory, searchQuery]);
 
   // Sort products based on selected sort type
   const sortedProducts = useMemo(() => {
@@ -131,8 +131,8 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
 
   // Check if there are no products to display
   const hasNoProducts =
-    !isLoading &&
-    !isError &&
+    !isLoadingProduct &&
+    !isErrorProduct &&
     (!currentPageProducts || currentPageProducts.length === 0);
 
   return (
@@ -168,7 +168,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
         </Box>
       )}
 
-      {isLoading ? (
+      {isLoadingProduct ? (
         <Grid container spacing={2} columns={10}>
           {[...Array(pageSize)].map((_, index) => (
             <Grid size={2} key={index}>
@@ -183,9 +183,9 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
             </Grid>
           ))}
         </Grid>
-      ) : isError ? (
+      ) : isErrorProduct ? (
         <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-          <Typography color="error">{error.message}</Typography>
+          <Typography color="error">{errorProduct?.message}</Typography>
         </Box>
       ) : hasNoProducts ? (
         <Box

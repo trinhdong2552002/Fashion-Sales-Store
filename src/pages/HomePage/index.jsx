@@ -1,7 +1,7 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { useListCategoriesForUserQuery } from "@/services/api/categories";
+
 import BrandVideo from "./shared/BrandVideo";
 import styles from "./index.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,6 +19,7 @@ import Jacket from "@/assets/images/categories/Jacket.jpg";
 import Trouser from "@/assets/images/categories/Trouser.jpg";
 import Shorts from "@/assets/images/categories/Shorts.jpg";
 import Accessories from "@/assets/images/categories/Accessories.jpg";
+import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const slides = [banner_1, banner_2, banner_3, banner_4];
 
@@ -32,22 +33,27 @@ const categoryImageMap = {
 };
 
 const Home = () => {
-  const { data: dataCategories, refetch: refetchCategories } =
-    useListCategoriesForUserQuery({
-      pageNo: 1,
-      pageSize: 10,
-    });
+  const {
+    data: dataCategoriesByProduct,
+    isLoading: isLoadingCategories,
+    isError: isErrorCategories,
+    error: errorCategories,
+    refetch: refetchCategories,
+  } = useGetAllCategoriesByUserQuery({
+    page: 1,
+    size: 10,
+  });
 
   useEffect(() => {
     refetchCategories();
   }, []);
 
-  const activeCategories = Array.isArray(dataCategories)
-    ? dataCategories.filter((item) => item.status === "ACTIVE")
+  const activeCategories = Array.isArray(dataCategoriesByProduct)
+    ? dataCategoriesByProduct.filter((item) => item.status === "ACTIVE")
     : [];
 
   return (
-    <Box >
+    <Box>
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
@@ -129,41 +135,54 @@ const Home = () => {
           Danh mục sản phẩm
         </Typography>
 
-        <Grid container spacing={12}>
-          {activeCategories.map((item) => (
-            <Grid
-              my={6}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
-              key={item.id}
-            >
-              <Link
-                to={{
-                  pathname: "/all-products",
-                  search: `?category=${slugify(item.name)}`,
-                }}
+        {isErrorCategories ? (
+          <Box display={"flex"} justifyContent={"center"} my={6}>
+            <Typography color="error" variant="h6">
+              Đã có lỗi xảy ra:{" "}
+              {errorCategories?.data?.message || "Không thể tải danh mục"}
+            </Typography>
+          </Box>
+        ) : isLoadingCategories ? (
+          <Box display={"flex"} justifyContent={"center"} my={6}>
+            <Typography variant="h6">Đang tải danh mục...</Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={12}>
+            {activeCategories.map((item) => (
+              <Grid
+                my={6}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
+                key={item.id}
               >
-                <Box className={styles.wrapperImg}>
-                  <img
-                    className={styles.mediaImg}
-                    src={
-                      categoryImageMap[item.name] ||
-                      "/src/assets/images/categories/default.jpg"
-                    }
-                    alt={item.name}
-                  />
-                  <Box className={styles.contentImg}>
-                    <Typography fontSize={"1.8rem"} color="white">
-                      {item.name}
-                    </Typography>
+                <Link
+                  to={{
+                    pathname: "/all-products",
+                    search: `?category=${slugify(item.name)}`,
+                  }}
+                >
+                  <Box className={styles.wrapperImg}>
+                    <img
+                      className={styles.mediaImg}
+                      src={
+                        categoryImageMap[item.name] ||
+                        "/src/assets/images/categories/default.jpg"
+                      }
+                      alt={item.name}
+                    />
+                    <Box className={styles.contentImg}>
+                      <Typography fontSize={"1.8rem"} color="white">
+                        {item.name}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
       {/* Product newest */}

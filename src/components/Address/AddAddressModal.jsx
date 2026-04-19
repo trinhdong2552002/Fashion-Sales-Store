@@ -16,14 +16,15 @@ import {
 } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useCreateAddressMutation } from "@/services/api/address";
-import { useListWardsByDistrictQuery } from "@/services/api/district";
+
 import {
-  useListDistrictsByProvinceQuery,
-  useListProvincesQuery,
+  useGetAllDistrictsByProvinceQuery,
+  useGetAllProvincesQuery,
 } from "@/services/api/province";
 import { useSnackbar } from "@/components/Snackbar";
 import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
+import { useGetAllWardsByDistrictQuery } from "@/services/api/district";
 
 export const AddAddressModal = ({ refetchGetAllAddress }) => {
   const [openModalAddAddress, setOpenModalAddAddress] = useState(false);
@@ -55,29 +56,29 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
   });
 
   // Fetch provinces
-  const { data: dataListProvince } = useListProvincesQuery(
+  const { data: dataListProvince } = useGetAllProvincesQuery(
     {
-      pageNo: 1,
-      pageSize: 100,
+      page: 1,
+      size: 100,
     },
     {
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   // Fetch districts by selected province
-  const { data: dataDistrictsByProvince } = useListDistrictsByProvinceQuery(
-    { id: selectedProvinceId, pageNo: 1, pageSize: 100 },
+  const { data: dataDistrictsByProvince } = useGetAllDistrictsByProvinceQuery(
+    { id: selectedProvinceId, page: 1, size: 100 },
     {
       // If skip: true not call api when selectedProvinceId is null/undefined
       // after select province then call api to get districts
       skip: !selectedProvinceId,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   // Fetch wards by selected district
-  const { data: dataWardsByDistrict } = useListWardsByDistrictQuery(
+  const { data: dataWardsByDistrict } = useGetAllWardsByDistrictQuery(
     {
       id: selectedDistrictId,
       pageNo: 1,
@@ -86,7 +87,7 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
     {
       skip: !selectedDistrictId,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   const handleCheckboxDefaultAddress = (e) => {

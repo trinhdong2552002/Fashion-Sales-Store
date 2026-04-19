@@ -3,15 +3,15 @@ import { useTheme, useMediaQuery } from "@mui/material";
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileHeader";
 import { useEffect } from "react";
-import { useListCategoriesForUserQuery } from "@/services/api/categories";
+import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { data: dataCategories, refetch: refetchCategories } =
-    useListCategoriesForUserQuery({
-      pageNo: 1,
-      pageSize: 10,
+    useGetAllCategoriesByUserQuery({
+      page: 1,
+      size: 10,
     });
 
   useEffect(() => {

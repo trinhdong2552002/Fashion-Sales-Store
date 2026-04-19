@@ -1,36 +1,35 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
 
-let isRedirectingToLogin = false;
-
 export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params, headers }) => {
     const publicEndpoints = [
-      "/v1/auth/login",
-      "/v1/auth/refresh-token",
-      "/v1/auth/register",
-      "/v1/auth/register/verify",
-      "/v1/auth/forgot-password",
-      "/v1/auth/forgot-password/verify-code",
-      "/v1/auth/forgot-password/reset-password",
-      "/v1/products",
-      "/v1/products/{productId}/reviews",
-      "/v1/products/{id}/details",
-      "/v1/products/search",
-      "/v1/categories",
-      "/v1/categories/{categoriesId}/products",
-      "/v1/branches",
-      "/v1/branches/{id}",
-      "v1/colors",
-      "/v1/sizes",
+      "/v1/public/auth/login",
+      "/v1/public/register",
+      "/v1/public/auth/register/verify",
+      "/v1/public/auth/refresh-token",
+      "/v1/public/auth/forgot-password",
+      "/v1/public/auth/forgot-password/verify-code",
+      "/v1/public/auth/forgot-password/reset-password",
+      "/v1/public/promotions/search",
+      "/v1/public/products",
+      "/v1/public/products/{productId}/reviews",
+      "/v1/public/products/{id}/details",
+      "/v1/public/products/search",
+      "v1/public/colors",
+      "/v1/public/categories",
+      "/v1/public/categories/{categoryId}/products",
+      "/v1/public/branches",
+      "/v1/public/branches/{id}",
+      "/v1/public/sizes",
+      "/v1/public/qrcode",
     ];
 
     const token = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
     if (!publicEndpoints.includes(url) && !token && !refreshToken) {
-      console.log("No token found for non-public endpoint:", url);
       return {
         error: {
           status: 401,
@@ -69,17 +68,15 @@ export const axiosBaseQuery =
         data: axiosError.response?.data || axiosError.message,
       };
 
-      console.error("Axios error:", error);
-
       // HANDLE 401 / EXPIRED TOKEN HERE
-      if (error.status === 401 && url !== "/v1/auth/logout") {
+      if (error.status === 401 && url !== "/v1/private/auth/logout") {
         const expiredToken = localStorage.getItem("accessToken");
 
         // Call logout API if token exists
         if (expiredToken) {
           try {
             await axios.post(
-              "/v1/auth/logout",
+              "/v1/private/auth/logout",
               { accessToken: expiredToken },
               { baseURL: import.meta.env.VITE_API_URL },
             );
@@ -93,12 +90,6 @@ export const axiosBaseQuery =
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("persist:root");
 
-        // Redirect to login (prevent multiple redirects from concurrent requests)
-        // if (!isRedirectingToLogin) {
-        //   isRedirectingToLogin = true;
-        //   window.location.href = "/login";
-        // }
-
         return { error };
       }
 
@@ -111,22 +102,26 @@ export const baseApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: () => ({}),
   tagTypes: [
-    "Address",
-    "Auth",
-    "Branches",
-    "Cart",
-    "Categories",
-    "Color",
-    "District",
+    "User",
+    "Review",
     "Order",
+    "Cart",
+    "Cart_Item",
+    "Auth",
+    "Address",
+    "Promotion",
     "Product",
     "Product_Variant",
-    "Promotion",
-    "Province",
-    "Review",
-    "Role",
+    "Color",
+    "Category",
+    "Branch",
+    "Conversation",
     "Size",
-    "User",
+    "QrCode",
     "Ward",
+    "Province",
+    "Chat_Message",
+    "District",
+    "Role",
   ],
 });
