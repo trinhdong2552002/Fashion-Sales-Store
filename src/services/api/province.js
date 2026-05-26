@@ -4,25 +4,36 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const provinceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listProvinces: builder.query({
-      query: ({ pageNo, pageSize }) => ({
-        url: `/v1/provinces`,
+    getAllProvinces: builder.query({
+      query: ({ page, size, sort }) => ({
+        url: `/v1/private/provinces`,
         method: "GET",
-        params: { pageNo, pageSize },
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.PROVINCE],
     }),
 
-    listDistrictsByProvince: builder.query({
-      query: ({ id, pageNo, pageSize }) => ({
-        url: `/v1/provinces/${id}/districts`,
-        method: "GET",
-        params: { pageNo, pageSize },
+    getProvinceById: builder.query({
+      query: ({ provinceId, page, size, sort }) => ({
+        url: `/v1/private/provinces/${provinceId}`,
+
+        params: { page, size, sort },
+      }),
+      providesTags: [TAG_KEYS.PROVINCE],
+    }),
+
+    getAllDistrictsByProvince: builder.query({
+      query: ({ provinceId, page, size, sort }) => ({
+        url: `/v1/private/provinces/${provinceId}/districts`,
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.PROVINCE],
     }),
   }),
 });
 
-export const { useListProvincesQuery, useListDistrictsByProvinceQuery } =
-  provinceApi;
+export const {
+  useGetAllProvincesQuery,
+  useGetProvinceByIdQuery,
+  useGetAllDistrictsByProvinceQuery,
+} = provinceApi;

@@ -1,25 +1,22 @@
 import { Box, Typography, Paper } from "@mui/material";
-import { Fragment, useEffect } from "react";
-import { useGetAllAddressByUserQuery } from "@/services/api/address";
+import { Fragment } from "react";
+
 import { AddAddressModal } from "@/components/Address/AddAddressModal";
 import { UpdateAddressModal } from "@/components/Address/UpdateAddressModal";
 import { HideAddressModal } from "@/components/Address/HideAddressModal";
+import { useGetAllAddressesByUserQuery } from "@/services/api/user";
 
 const AddressInformation = () => {
   const {
-    data: dataGetAllAddress,
-    isLoading: isLoadingGetAllAddress,
-    isError: isErrorGetAllAddress,
-    error: errorGetAllAddress,
+    data: dataAddress,
+    isLoading: isLoadingAddress,
+    isError: isErrorAddress,
+    error: errorAddress,
     refetch: refetchGetAllAddress,
-  } = useGetAllAddressByUserQuery({
-    pageNo: 1,
-    pageSize: 100,
+  } = useGetAllAddressesByUserQuery({
+    page: 0,
+    size: 100,
   });
-
-  useEffect(() => {
-    refetchGetAllAddress();
-  }, []);
 
   return (
     <Fragment>
@@ -48,38 +45,26 @@ const AddressInformation = () => {
         <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
       </Box>
 
-      {dataGetAllAddress?.result?.items.length === 0 ? (
+      {isLoadingAddress ? (
         <Box textAlign="center" mt={5}>
-          <Typography
-            variant="body1"
-            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
-            color="#666"
-          >
-            Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
-          </Typography>
-        </Box>
-      ) : isLoadingGetAllAddress ? (
-        <Box textAlign="center" mt={5}>
-          <Typography
-            variant="body1"
-            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
-            color="#666"
-          >
+          <Typography variant="body1" color="#666">
             Đang tải địa chỉ...
           </Typography>
         </Box>
-      ) : isErrorGetAllAddress ? (
+      ) : isErrorAddress ? (
         <Box textAlign="center" mt={5}>
-          <Typography
-            variant="body1"
-            fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
-            color="error"
-          >
-            Lỗi tải địa chỉ: {errorGetAllAddress?.data?.message}
+          <Typography variant="body1" color="error">
+            Lỗi tải địa chỉ: {errorAddress?.data?.message}
+          </Typography>
+        </Box>
+      ) : dataAddress?.result?.items.length === 0 ? (
+        <Box textAlign="center" mt={5}>
+          <Typography variant="body1" color="#666">
+            Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
           </Typography>
         </Box>
       ) : (
-        dataGetAllAddress?.result?.items.map((address) => (
+        dataAddress?.result?.items.map((address) => (
           <Paper
             key={address.id}
             elevation={2}

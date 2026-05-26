@@ -4,9 +4,9 @@ import { TAG_KEYS } from "@/constants/tagKeys";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    updateUser: builder.mutation({
+    updateByUser: builder.mutation({
       query: ({ id, ...userData }) => ({
-        url: `v1/users/${id}`,
+        url: `/v1/private/users/${id}`,
         method: "PUT",
         data: userData,
       }),
@@ -16,7 +16,7 @@ export const userApi = baseApi.injectEndpoints({
     uploadAvatar: builder.mutation({
       async queryFn(file) {
         const formData = new FormData();
-        formData.append("fileImage", file);
+        formData.append("file", file);
 
         try {
           const token = localStorage.getItem("accessToken");
@@ -30,14 +30,14 @@ export const userApi = baseApi.injectEndpoints({
             };
           }
 
-          const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/v1/file/upload/image`,
+          const response = await axios.put(
+            `${import.meta.env.VITE_API_URL}/v1/private/users/avatar`,
             formData,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            }
+            },
           );
 
           return { data: response.data };
@@ -56,7 +56,34 @@ export const userApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [TAG_KEYS.USER],
     }),
+
+    getPromotionsByUser: builder.query({
+      query: ({ page, size }) => ({
+        url: "/v1/private/users/promotions/available",
+        params: { page, size },
+      }),
+      transformResponse: (response) => {
+        return response.result;
+      },
+      providesTags: [TAG_KEYS.USER],
+    }),
+
+    getAllAddressesByUser: builder.query({
+      query: ({ page, size }) => ({
+        url: "/v1/private/users/addresses",
+        params: { page, size },
+      }),
+      transformResponse: (response) => {
+        return response.result;
+      },
+      providesTags: [TAG_KEYS.USER],
+    }),
   }),
 });
 
-export const { useUpdateUserMutation, useUploadAvatarMutation } = userApi;
+export const {
+  useUpdateByUserMutation,
+  useUploadAvatarMutation,
+  useGetAllAddressesByUserQuery,
+  useGetPromotionsByUserQuery,
+} = userApi;

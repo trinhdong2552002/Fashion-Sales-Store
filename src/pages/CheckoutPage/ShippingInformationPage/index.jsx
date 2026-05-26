@@ -1,7 +1,7 @@
 import { AddAddressModal } from "@/components/Address/AddAddressModal";
 import { HideAddressModal } from "@/components/Address/HideAddressModal";
 import { UpdateAddressModal } from "@/components/Address/UpdateAddressModal";
-import { useGetAllAddressByUserQuery } from "@/services/api/address";
+
 import { Book, Close } from "@mui/icons-material";
 import {
   Box,
@@ -28,6 +28,7 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import cash_on_delivery from "@/assets/images/order/cash-on-delivery.png";
 import vnpay_logo from "@/assets/images/order/vnpay-logo.jpg";
+import { useGetAllAddressesByUserQuery } from "@/services/api/user";
 
 const ShippingInformation = () => {
   const theme = useTheme();
@@ -49,9 +50,9 @@ const ShippingInformation = () => {
     isError,
     error,
     refetch: refetchGetAllAddress,
-  } = useGetAllAddressByUserQuery({
-    pageNo: 1,
-    pageSize: 100,
+  } = useGetAllAddressesByUserQuery({
+    page: 1,
+    size: 100,
   });
 
   useEffect(() => {
@@ -523,13 +524,16 @@ const ShippingInformation = () => {
           </DialogContent>
 
           <DialogActions>
-            <Box  mx={{
+            <Box
+              mx={{
                 xl: 6,
                 lg: 6,
                 md: 6,
                 sm: 3,
                 xs: 3,
-              }} my={1}>
+              }}
+              my={1}
+            >
               <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
             </Box>
           </DialogActions>

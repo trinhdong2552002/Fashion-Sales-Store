@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/components/Snackbar";
-import { useAddToCartItemMutation } from "@/services/api/cart";
+import { useCreateCartItemMutation } from "@/services/api/cart_item";
 import { AddShoppingCart } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import { Fragment } from "react";
@@ -10,7 +10,7 @@ const ProductActions = ({ variantId, quantity }) => {
   const { showSnackbar } = useSnackbar();
 
   const [addToCartItem, { isLoading: isAddingToCart }] =
-    useAddToCartItemMutation();
+    useCreateCartItemMutation();
 
   const handleAddToCart = async () => {
     try {

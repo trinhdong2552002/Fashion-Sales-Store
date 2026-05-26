@@ -13,22 +13,23 @@ import { useNavigate } from "react-router-dom";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useListProductsForUserQuery } from "@/services/api/product";
+
 import { useEffect } from "react";
 import { KeyboardArrowRight } from "@mui/icons-material";
+import { useGetAllProductByUserQuery } from "@/services/api/product";
 
 const SwiperProducts = ({ title, type }) => {
   const navigate = useNavigate();
 
   const {
-    data: dataProducts,
+    data: dataProduct,
     isLoading: isLoadingProduct,
-    isError,
-    error,
+    isError: isErrorProduct,
+    error: errorProduct,
     refetch: refetchProduct,
-  } = useListProductsForUserQuery({
-    pageNo: 1,
-    pageSize: 20,
+  } = useGetAllProductByUserQuery({
+    page: 0,
+    size: 20,
   });
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const SwiperProducts = ({ title, type }) => {
   }, []);
 
   let products =
-    dataProducts?.items.filter((item) => item.status === "ACTIVE") || [];
+    dataProduct?.items.filter((item) => item.status === "ACTIVE") || [];
 
   // Filter theo type
   if (type === "newest") {
@@ -117,11 +118,13 @@ const SwiperProducts = ({ title, type }) => {
 
         {/* Swiper Products */}
 
-        {isError ? (
-          <Typography color="error" variant="h6">
-            {/* Không thể tải sản phẩm. Vui lòng thử lại sau. */}
-            {error.message}
-          </Typography>
+        {isErrorProduct ? (
+          <Box display={"flex"} justifyContent={"center"} my={6}>
+            <Typography color="error" variant="h6">
+              Đã có lỗi xảy ra:{" "}
+              {errorProduct?.data?.message || "Không thể tải sản phẩm"}
+            </Typography>
+          </Box>
         ) : isLoadingProduct ? (
           <Box
             display={"flex"}
@@ -147,7 +150,7 @@ const SwiperProducts = ({ title, type }) => {
               Đang tải sản phẩm...
             </Typography>
           </Box>
-        ) : dataProducts ? (
+        ) : dataProduct ? (
           <Swiper
             breakpoints={{
               // When window width is >= 640px

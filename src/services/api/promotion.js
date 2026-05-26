@@ -4,47 +4,28 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const promotionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listPromotions: builder.query({
-      query: () => ({
-        url: `/v1/promotions`,
-        method: "GET",
+    searchPromotion: builder.query({
+      query: ({ page, size, sort, search }) => ({
+        url: "/v1/public/promotions/search",
+        params: { page, size, sort, search },
       }),
+      transformResponse: (response) => {
+        return response.result;
+      },
       providesTags: [TAG_KEYS.PROMOTION],
-      transformResponse: (response) => ({
-        items: Array.isArray(response.result?.items)
-          ? response.result.items
-          : response.result || [],
-      }),
     }),
-    addPromotion: builder.mutation({
-      query: (promotion) => ({
-        url: `/v1/promotions`,
-        method: "POST",
-        data: promotion,
+
+    searchPromotionById: builder.query({
+      query: (promotionId) => ({
+        url: `/v1/private/promotions/${promotionId}`,
       }),
-      invalidatesTags: [TAG_KEYS.PROMOTION],
-    }),
-    updatePromotion: builder.mutation({
-      query: ({ id, ...promotion }) => ({
-        url: `/v1/promotions/${id}`,
-        method: "PUT",
-        data: promotion,
-      }),
-      invalidatesTags: [TAG_KEYS.PROMOTION],
-    }),
-    deletePromotion: builder.mutation({
-      query: (id) => ({
-        url: `/v1/promotions/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: [TAG_KEYS.PROMOTION],
+      transformResponse: (response) => {
+        return response.result;
+      },
+      providesTags: [TAG_KEYS.PROMOTION],
     }),
   }),
 });
 
-export const {
-  useListPromotionsQuery,
-  useAddPromotionMutation,
-  useUpdatePromotionMutation,
-  useDeletePromotionMutation,
-} = promotionApi;
+export const { useSearchPromotionQuery, useSearchPromotionByIdQuery } =
+  promotionApi;

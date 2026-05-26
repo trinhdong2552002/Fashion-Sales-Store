@@ -19,7 +19,7 @@ import "swiper/css/free-mode";
 import ProductActions from "./shared/ProductActions";
 
 import { useGetProductByIdQuery } from "@/services/api/product";
-import { useGetProductVariantByProductQuery } from "@/services/api/productVariant";
+import { useGetProductVariantByProductQuery } from "@/services/api/product_variant";
 
 const ProductDetails = () => {
   const { id } = useParams();

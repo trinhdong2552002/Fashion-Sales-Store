@@ -15,13 +15,14 @@ import {
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useUpdateAddressMutation } from "@/services/api/address";
-import { useListWardsByDistrictQuery } from "@/services/api/district";
-import {
-  useListDistrictsByProvinceQuery,
-  useListProvincesQuery,
-} from "@/services/api/province";
+
 import { useSnackbar } from "@/components/Snackbar";
 import { Controller, useForm } from "react-hook-form";
+import {
+  useGetAllDistrictsByProvinceQuery,
+  useGetAllProvincesQuery,
+} from "@/services/api/province";
+import { useGetAllWardsByDistrictQuery } from "@/services/api/district";
 
 export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
   const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
@@ -50,27 +51,27 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
   });
 
   // Fetch provinces
-  const { data: dataListProvince } = useListProvincesQuery(
+  const { data: dataListProvince } = useGetAllProvincesQuery(
     {
       pageNo: 1,
       pageSize: 100,
     },
     {
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   // Fetch districts by selected province
-  const { data: dataDistrictsByProvince } = useListDistrictsByProvinceQuery(
+  const { data: dataDistrictsByProvince } = useGetAllDistrictsByProvinceQuery(
     { id: selectedProvinceId, pageNo: 1, pageSize: 100 },
     {
       skip: !selectedProvinceId,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   // Fetch wards by selected district
-  const { data: dataWardsByDistrict } = useListWardsByDistrictQuery(
+  const { data: dataWardsByDistrict } = useGetAllWardsByDistrictQuery(
     {
       id: selectedDistrictId,
       pageNo: 1,
@@ -79,7 +80,7 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
     {
       skip: !selectedDistrictId,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   const handleCheckboxDefaultAddress = (e) => {
@@ -148,7 +149,7 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
       if (error && error.data && error.data.message) {
         showSnackbar(
           `Cập nhật địa chỉ thất bại! ${error.data.message}`,
-          "error"
+          "error",
         );
         return;
       }

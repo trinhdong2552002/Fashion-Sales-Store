@@ -3,37 +3,41 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const addressApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all addresses of user
-    getAllAddressByUser: builder.query({
-      query: ({ pageNo, pageSize }) => ({
-        url: "/v1/users/addresses",
-        method: "GET",
-        params: { pageNo, pageSize },
+    // Get address by id for current user
+    getAddressById: builder.query({
+      query: (addressId) => ({
+        url: `/v1/private/addresses/${addressId}`,
       }),
+      transformResponse: (response) => {
+        return response.result;
+      },
       providesTags: [TAG_KEYS.ADDRESS],
     }),
-    // Add new address
+
+    // Create new address by user
     createAddress: builder.mutation({
       query: (addressData) => ({
-        url: "/v1/addresses",
+        url: "/v1/private/addresses",
         method: "POST",
         data: addressData,
       }),
       invalidatesTags: [TAG_KEYS.ADDRESS],
     }),
-    // Update address
+
+    // Update address by user
     updateAddress: builder.mutation({
-      query: ({ id, ...addressData }) => ({
-        url: `/v1/addresses/${id}`,
+      query: ({ addressId, ...addressData }) => ({
+        url: `/v1/private/addresses/${addressId}`,
         method: "PUT",
         data: addressData,
       }),
       invalidatesTags: [TAG_KEYS.ADDRESS],
     }),
-    // Hide address from user (not delete)
+
+    // Hide address by user
     hideAddress: builder.mutation({
-      query: (id) => ({
-        url: `/v1/addresses/${id}/hide`,
+      query: (addressId) => ({
+        url: `/v1/addresses/${addressId}/hide`,
         method: "PATCH",
       }),
       invalidatesTags: [TAG_KEYS.ADDRESS],
@@ -42,7 +46,7 @@ export const addressApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetAllAddressByUserQuery,
+  useGetAddressByIdQuery,
   useCreateAddressMutation,
   useUpdateAddressMutation,
   useHideAddressMutation,

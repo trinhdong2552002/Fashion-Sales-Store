@@ -4,18 +4,15 @@ import { TAG_KEYS } from "/src/constants/tagKeys.js";
 
 export const sizeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    listSizes: builder.query({
-      query: ({ pageNo = 1, pageSize = 10, sortBy = "name-asc" } = {}) => ({
-        url: `/v1/sizes`,
+    getAllSizes: builder.query({
+      query: (page, size, sort) => ({
+        url: "/v1/public/sizes",
         method: "GET",
-        params: { pageNo, pageSize, sortBy },
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.SIZE],
-      transformResponse: (response) => ({
-        items: Array.isArray(response.result?.items) ? response.result.items : response.result || [],
-      }),
     }),
   }),
 });
 
-export const { useListSizesQuery } = sizeApi;
+export const { getAllSizesQuery } = sizeApi;

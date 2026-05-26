@@ -17,13 +17,11 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { useSnackbar } from "@/components/Snackbar";
-import {
-  useDeleteCartItemMutation,
-  useGetCartByUserQuery,
-} from "@/services/api/cart";
 import { useSelector } from "react-redux";
+import { useGetAllFetchedPaginatedByCurrentUserQuery } from "@/services/api/cart";
+import { useDeleteCartItemByIdMutation } from "@/services/api/cart_item";
 
 const CartButton = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -39,14 +37,14 @@ const CartButton = () => {
     isLoading,
     isError,
     error,
-  } = useGetCartByUserQuery(
+  } = useGetAllFetchedPaginatedByCurrentUserQuery(
     {
       pageNo: 1,
       pageSize: 10,
     },
     { skip: !authenticated },
   );
-  const [deleteCartItem] = useDeleteCartItemMutation();
+  const [deleteCartItemById] = useDeleteCartItemByIdMutation();
 
   const cartItems = dataCartByUser?.result?.items || [];
 
@@ -66,7 +64,7 @@ const CartButton = () => {
 
   const handleDeleteCartItem = async (id) => {
     try {
-      await deleteCartItem(id).unwrap();
+      await deleteCartItemById(id).unwrap();
       handleCloseModalConfirm();
       showSnackbar(" Xoá sản phẩm trong giỏ hàng thành công.", "success");
     } catch (error) {

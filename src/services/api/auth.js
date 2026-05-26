@@ -6,7 +6,7 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/login",
+        url: "/v1/public/auth/login",
         method: "POST",
         data: {
           email: credentials.email,
@@ -17,20 +17,9 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
 
-    logout: builder.mutation({
-      query: (credentials) => ({
-        url: "/v1/auth/logout",
-        method: "POST",
-        data: {
-          accessToken: credentials.accessToken,
-        },
-      }),
-      invalidatesTags: [TAG_KEYS.AUTH],
-    }),
-
     register: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/register",
+        url: "/v1/public/auth/register",
         method: "POST",
         data: {
           name: credentials.name,
@@ -44,7 +33,7 @@ export const authApi = baseApi.injectEndpoints({
 
     verifyOtp: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/register/verify",
+        url: "/v1/public/auth/register/verify",
         method: "POST",
         data: {
           email: credentials.email,
@@ -56,7 +45,7 @@ export const authApi = baseApi.injectEndpoints({
 
     forgotPassword: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/forgot-password",
+        url: "/v1/public/auth/forgot-password",
         method: "POST",
         data: {
           email: credentials.email,
@@ -67,7 +56,7 @@ export const authApi = baseApi.injectEndpoints({
 
     forgotPasswordVerify: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/forgot-password/verify-code",
+        url: "/v1/public/auth/forgot-password/verify-code",
         method: "POST",
         data: {
           email: credentials.email,
@@ -79,7 +68,7 @@ export const authApi = baseApi.injectEndpoints({
 
     resetPassword: builder.mutation({
       query: (credentials) => ({
-        url: "/v1/auth/forgot-password/reset-password",
+        url: "/v1/public/auth/forgot-password/reset-password",
         method: "POST",
         data: {
           forgotPasswordToken: credentials.forgotPasswordToken,
@@ -92,8 +81,8 @@ export const authApi = baseApi.injectEndpoints({
 
     changePassword: builder.mutation({
       query: ({ oldPassword, newPassword, confirmPassword }) => ({
-        url: "/v1/auth/change-password",
-        method: "POST",
+        url: "/v1/private/auth/change-password",
+        method: "PUT",
         data: {
           oldPassword,
           newPassword,
@@ -103,9 +92,20 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
 
+    logout: builder.mutation({
+      query: (credentials) => ({
+        url: "/v1/private/auth/logout",
+        method: "POST",
+        data: {
+          accessToken: credentials.accessToken,
+        },
+      }),
+      invalidatesTags: [TAG_KEYS.AUTH],
+    }),
+
     getMyInfo: builder.query({
       query: () => ({
-        url: "/v1/auth/myInfo",
+        url: "/v1/private/auth/myInfo",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
@@ -132,13 +132,13 @@ export const authApi = baseApi.injectEndpoints({
 
 export const {
   useLoginMutation,
-  useLogoutMutation,
   useRegisterMutation,
   useVerifyOtpMutation,
   useForgotPasswordMutation,
   useForgotPasswordVerifyMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
+  useLogoutMutation,
   useGetMyInfoQuery,
   useLazyGetMyInfoQuery,
 } = authApi;
