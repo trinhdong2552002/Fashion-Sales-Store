@@ -3,18 +3,14 @@ import { baseApi } from "./index";
 
 export const branchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all branches for user
-    getAllBranchesByUser: builder.query({
-      query: () => ({
+    getAllBranchesForUser: builder.query({
+      query: ({ page, size, sort }) => ({
         url: "/v1/public/branches",
+        params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.BRANCH],
-      transformResponse: (response) => {
-        return response.result;
-      },
     }),
 
-    // Get branch by id
     getBranchById: builder.query({
       query: (branchId) => ({
         url: `/v1/public/branches/${branchId}`,
@@ -24,5 +20,5 @@ export const branchApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllBranchesByUserQuery, useGetBranchByIdQuery } =
+export const { useGetAllBranchesForUserQuery, useGetBranchByIdQuery } =
   branchApi;

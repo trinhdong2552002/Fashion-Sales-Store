@@ -16,7 +16,7 @@ export const userApi = baseApi.injectEndpoints({
     uploadAvatar: builder.mutation({
       async queryFn(file) {
         const formData = new FormData();
-        formData.append("fileImage", file);
+        formData.append("file", file);
 
         try {
           const token = localStorage.getItem("accessToken");
@@ -30,7 +30,7 @@ export const userApi = baseApi.injectEndpoints({
             };
           }
 
-          const response = await axios.post(
+          const response = await axios.put(
             `${import.meta.env.VITE_API_URL}/v1/private/users/avatar`,
             formData,
             {

@@ -26,7 +26,7 @@ export const addressApi = baseApi.injectEndpoints({
 
     // Update address by user
     updateAddress: builder.mutation({
-      query: (addressId, ...addressData) => ({
+      query: ({ addressId, ...addressData }) => ({
         url: `/v1/private/addresses/${addressId}`,
         method: "PUT",
         data: addressData,

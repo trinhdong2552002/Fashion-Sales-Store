@@ -1,7 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-
 import BrandVideo from "./shared/BrandVideo";
 import styles from "./index.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,26 +12,23 @@ import banner_1 from "@/assets/images/banner/banner-1.jpg";
 import banner_2 from "@/assets/images/banner/banner-2.jpg";
 import banner_3 from "@/assets/images/banner/banner-3.jpg";
 import banner_4 from "@/assets/images/banner/banner-4.jpg";
-import T_Shirt from "@/assets/images/categories/T-shirt.jpg";
-import Shirt from "@/assets/images/categories/Shirt.jpg";
-import Jacket from "@/assets/images/categories/Jacket.jpg";
-import Trouser from "@/assets/images/categories/Trouser.jpg";
-import Shorts from "@/assets/images/categories/Shorts.jpg";
-import Accessories from "@/assets/images/categories/Accessories.jpg";
+
 import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const slides = [banner_1, banner_2, banner_3, banner_4];
 
-const categoryImageMap = {
-  "Áo thun": T_Shirt,
-  "Áo sơ mi": Shirt,
-  "Áo khoác": Jacket,
-  "Quần tây": Trouser,
-  "Quần shorts": Shorts,
-  "Phụ kiện": Accessories,
-};
-
 const Home = () => {
+  // const {
+  //   data: dataCategories,
+  //   isLoading: isLoadingCategories,
+  //   isError: isErrorCategories,
+  //   error: errorCategories,
+  //   refetch: refetchCategories,
+  // } = useGetAllCategoriesByUserQuery({
+  //   page: 0,
+  //   size: 10,
+  // });
+
   const {
     data: dataCategoriesByProduct,
     isLoading: isLoadingCategories,
@@ -40,7 +36,7 @@ const Home = () => {
     error: errorCategories,
     refetch: refetchCategories,
   } = useGetAllCategoriesByUserQuery({
-    page: 1,
+    page: 0,
     size: 10,
   });
 
@@ -163,7 +159,7 @@ const Home = () => {
                     search: `?category=${slugify(item.name)}`,
                   }}
                 >
-                  <Box className={styles.wrapperImg}>
+                  {/* <Box className={styles.wrapperImg}>
                     <img
                       className={styles.mediaImg}
                       src={
@@ -177,7 +173,7 @@ const Home = () => {
                         {item.name}
                       </Typography>
                     </Box>
-                  </Box>
+                  </Box> */}
                 </Link>
               </Grid>
             ))}

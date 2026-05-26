@@ -10,9 +10,6 @@ export const colorApi = baseApi.injectEndpoints({
         params: { page, size, sort },
       }),
       providesTags: [TAG_KEYS.COLOR],
-      transformResponse: (response) => {
-        return response.result;
-      },
     }),
   }),
 });

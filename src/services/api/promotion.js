@@ -27,9 +27,5 @@ export const promotionApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useListPromotionsQuery,
-  useAddPromotionMutation,
-  useUpdatePromotionMutation,
-  useDeletePromotionMutation,
-} = promotionApi;
+export const { useSearchPromotionQuery, useSearchPromotionByIdQuery } =
+  promotionApi;

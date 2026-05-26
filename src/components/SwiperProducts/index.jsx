@@ -28,7 +28,7 @@ const SwiperProducts = ({ title, type }) => {
     error: errorProduct,
     refetch: refetchProduct,
   } = useGetAllProductByUserQuery({
-    page: 1,
+    page: 0,
     size: 20,
   });
 

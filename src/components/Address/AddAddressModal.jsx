@@ -58,7 +58,7 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
   // Fetch provinces
   const { data: dataListProvince } = useGetAllProvincesQuery(
     {
-      page: 1,
+      page: 0,
       size: 100,
     },
     {
@@ -68,7 +68,7 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
 
   // Fetch districts by selected province
   const { data: dataDistrictsByProvince } = useGetAllDistrictsByProvinceQuery(
-    { id: selectedProvinceId, page: 1, size: 100 },
+    { provinceId: selectedProvinceId, page: 0, size: 100 },
     {
       // If skip: true not call api when selectedProvinceId is null/undefined
       // after select province then call api to get districts
@@ -80,9 +80,9 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
   // Fetch wards by selected district
   const { data: dataWardsByDistrict } = useGetAllWardsByDistrictQuery(
     {
-      id: selectedDistrictId,
-      pageNo: 1,
-      pageSize: 100,
+      districtId: selectedDistrictId,
+      page: 0,
+      size: 100,
     },
     {
       skip: !selectedDistrictId,

@@ -117,7 +117,7 @@ export const baseApi = createApi({
     "Branch",
     "Conversation",
     "Size",
-    "QrCode",
+    "QRCode",
     "Ward",
     "Province",
     "Chat_Message",

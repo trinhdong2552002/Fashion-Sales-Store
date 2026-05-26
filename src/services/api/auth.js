@@ -82,7 +82,7 @@ export const authApi = baseApi.injectEndpoints({
     changePassword: builder.mutation({
       query: ({ oldPassword, newPassword, confirmPassword }) => ({
         url: "/v1/private/auth/change-password",
-        method: "POST",
+        method: "PUT",
         data: {
           oldPassword,
           newPassword,

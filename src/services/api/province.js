@@ -6,7 +6,7 @@ export const provinceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllProvinces: builder.query({
       query: ({ page, size, sort }) => ({
-        url: `/v1/provinces`,
+        url: `/v1/private/provinces`,
         method: "GET",
         params: { page, size, sort },
       }),
@@ -15,7 +15,7 @@ export const provinceApi = baseApi.injectEndpoints({
 
     getProvinceById: builder.query({
       query: ({ provinceId, page, size, sort }) => ({
-        url: `/v1/provinces/${provinceId}`,
+        url: `/v1/private/provinces/${provinceId}`,
 
         params: { page, size, sort },
       }),
