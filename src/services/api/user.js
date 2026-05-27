@@ -62,9 +62,6 @@ export const userApi = baseApi.injectEndpoints({
         url: "/v1/private/users/promotions/available",
         params: { page, size },
       }),
-      transformResponse: (response) => {
-        return response.result;
-      },
       providesTags: [TAG_KEYS.USER],
     }),
 
@@ -73,9 +70,6 @@ export const userApi = baseApi.injectEndpoints({
         url: "/v1/private/users/addresses",
         params: { page, size },
       }),
-      transformResponse: (response) => {
-        return response.result;
-      },
       providesTags: [TAG_KEYS.USER],
     }),
   }),

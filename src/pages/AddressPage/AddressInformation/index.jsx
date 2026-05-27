@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 
 import { AddAddressModal } from "@/components/Address/AddAddressModal";
 import { UpdateAddressModal } from "@/components/Address/UpdateAddressModal";
@@ -15,8 +15,14 @@ const AddressInformation = () => {
     refetch: refetchGetAllAddress,
   } = useGetAllAddressesByUserQuery({
     page: 0,
-    size: 100,
+    size: 10,
   });
+
+  useEffect(() => {
+    refetchGetAllAddress();
+  }, []);
+
+  const addresses = dataAddress?.result?.items || [];
 
   return (
     <Fragment>
@@ -57,14 +63,14 @@ const AddressInformation = () => {
             Lỗi tải địa chỉ: {errorAddress?.data?.message}
           </Typography>
         </Box>
-      ) : dataAddress?.result?.items.length === 0 ? (
+      ) : addresses.length === 0 ? (
         <Box textAlign="center" mt={5}>
           <Typography variant="body1" color="#666">
             Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
           </Typography>
         </Box>
       ) : (
-        dataAddress?.result?.items.map((address) => (
+        addresses.map((address) => (
           <Paper
             key={address.id}
             elevation={2}

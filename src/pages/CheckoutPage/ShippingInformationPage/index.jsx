@@ -51,7 +51,7 @@ const ShippingInformation = () => {
     error,
     refetch: refetchGetAllAddress,
   } = useGetAllAddressesByUserQuery({
-    page: 1,
+    page: 0,
     size: 100,
   });
 

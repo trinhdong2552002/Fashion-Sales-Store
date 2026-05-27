@@ -2,25 +2,24 @@ import { useTheme, useMediaQuery } from "@mui/material";
 
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileHeader";
-import { useEffect } from "react";
 import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { data: dataCategories, refetch: refetchCategories } =
-    useGetAllCategoriesByUserQuery({
-      page: 1,
+  const { data: dataCategories } = useGetAllCategoriesByUserQuery(
+    {
+      page: 0,
       size: 10,
-    });
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
-  useEffect(() => {
-    refetchCategories();
-  }, []);
-
-  const activeCategories = Array.isArray(dataCategories)
-    ? dataCategories.filter((item) => item.status === "ACTIVE")
-    : [];
+  const activeCategories =
+    dataCategories?.result?.items.filter((item) => item.status === "ACTIVE") ||
+    [];
 
   return isMobile ? (
     <MobileHeader activeCategories={activeCategories} />

@@ -3,19 +3,8 @@ import {
   HelpOutline,
   InfoOutline,
   Menu as MenuIcon,
-  Search,
 } from "@mui/icons-material";
-import {
-  Box,
-  Container,
-  Drawer,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Container, Menu, MenuItem, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { slugify } from "@/utils/slugify";
@@ -26,11 +15,7 @@ import AuthButton from "./AuthButton";
 const DesktopHeader = ({ activeCategories }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const [searchOpen, setSearchOpen] = useState(false);
   const open = Boolean(anchorEl);
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("md", "lg"));
 
   const linkStyle = {
     color: "black",
