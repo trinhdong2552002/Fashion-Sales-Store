@@ -73,7 +73,7 @@ const CardProduct = ({ product }) => {
               },
             }}
           >
-            {product.price?.toLocaleString("vi-VN")}đ
+            {product.minPrice?.toLocaleString("vi-VN")}đ
           </Typography>
         </CardContent>
       </CardActionArea>

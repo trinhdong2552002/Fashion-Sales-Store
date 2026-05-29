@@ -34,7 +34,7 @@ const AccountSideBar = ({ id }) => {
         }}
         mb={2}
       >
-        Thông tin tài khoản
+        Thông tin người dùng
       </Typography>
 
       {menuItems.map((item) => (

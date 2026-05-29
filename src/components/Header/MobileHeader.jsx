@@ -67,7 +67,7 @@ const MobileHeader = ({ activeCategories }) => {
 
   const handleCategoryClick = (category) => {
     setOpenModal(false);
-    navigate(`/all-products?category=${slugify(category.name)}`);
+    navigate(`/all-products?category=${slugify(category.name)}&categoryId=${category.id}`);
   };
   
 

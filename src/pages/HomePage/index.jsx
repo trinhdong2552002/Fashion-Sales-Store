@@ -1,6 +1,5 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import BrandVideo from "./shared/BrandVideo";
 import styles from "./index.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,6 +7,7 @@ import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import SwiperProducts from "@/components/SwiperProducts";
 import { slugify } from "@/utils/slugify";
+
 import banner_1 from "@/assets/images/banner/banner-1.jpg";
 import banner_2 from "@/assets/images/banner/banner-2.jpg";
 import banner_3 from "@/assets/images/banner/banner-3.jpg";
@@ -23,17 +23,17 @@ const Home = () => {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
     error: errorCategories,
-    refetch: refetchCategories,
-  } = useGetAllCategoriesByUserQuery({
-    page: 0,
-    size: 10,
-  });
+  } = useGetAllCategoriesByUserQuery(
+    {
+      page: 0,
+      size: 10,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
-  useEffect(() => {
-    refetchCategories();
-  }, []);
-
-  const productCategories = dataCategories?.result?.items || [];
+  const categories = dataCategories?.result?.items || [];
 
   return (
     <Box>
@@ -131,7 +131,7 @@ const Home = () => {
           </Box>
         ) : (
           <Grid container spacing={12}>
-            {productCategories.map((category) => (
+            {categories.map((category) => (
               <Grid
                 my={6}
                 display={"flex"}
@@ -141,18 +141,12 @@ const Home = () => {
                 key={category.id}
               >
                 <Link
-                  to={{
-                    pathname: "/all-products",
-                    search: `?category=${slugify(category.name)}`,
-                  }}
+                  to={`/all-products?category=${slugify(category.name)}&categoryId=${category.id}`}
                 >
                   <Box className={styles.wrapperImg}>
                     <img
                       className={styles.mediaImg}
-                      src={
-                        category.imageUrl ||
-                        "/src/assets/images/categories/default.jpg"
-                      }
+                      src={category.imageUrl}
                       alt={category.name}
                     />
                     <Box className={styles.contentImg}>
