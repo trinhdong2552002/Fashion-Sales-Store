@@ -12,23 +12,14 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect, useMemo, Fragment } from "react";
-
+import { normalizeString } from "@/utils/normalizeString";
 import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
+import { useGetProductsByCategoryByUserQuery } from "@/services/api/category";
 import { useGetAllProductForUserQuery } from "@/services/api/product";
 
-// Vietnamese character encoding normalization for search
-const normalizeString = (str) => {
-  return str
-    .toLowerCase()
-    .normalize("NFD") // Split accents from letters
-    .replace(/[\u0300-\u036f]/g, "") // Remove accents
-    .replace(/đ/g, "d")
-    .replace(/Đ/g, "D");
-};
-
-const ProductItems = ({ selectedCategory, searchQuery }) => {
-  const [clientPageNo, setClientPageNo] = useState(1);
+const ProductItems = ({ selectedCategory, categoryId, searchQuery }) => {
+  const [clientPageNo, setClientPageNo] = useState(0);
   const [pageSize] = useState(18);
   const [sortType, setSortType] = useState("");
 
@@ -37,38 +28,66 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
   }, [selectedCategory, searchQuery]);
 
   const {
-    data: dataProduct,
-    isLoading: isLoadingProduct,
+    data: dataGetAllProductsByCategory,
+    isLoading: isLoadingAllProductsByCategory,
+    isError: isErrorGetAllProductsByCategory,
+    error: errorGetAllProductsByCategory,
+    refetch: refetchCategoryRaw,
+  } = useGetProductsByCategoryByUserQuery(
+    {
+      categoryId,
+      page: 0,
+      size: 100,
+    },
+    {
+      skip: !categoryId,
+    },
+  );
+
+  const {
+    data: dataAllProducts,
+    isLoading: isLoadingAllProducts,
     isError: isErrorProduct,
     error: errorProduct,
     refetch: refetchProduct,
-  } = useGetAllProductForUserQuery({
-    page: 0,
-    size: 100,
-  });
+  } = useGetAllProductForUserQuery(
+    {
+      page: 0,
+      size: 100,
+    },
+    {
+      skip: !!categoryId,
+    },
+  );
+
+  const dataProductsByCategory = categoryId
+    ? dataGetAllProductsByCategory
+    : dataAllProducts;
 
   useEffect(() => {
-    refetchProduct();
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }, [clientPageNo]);
+    if (categoryId) {
+      refetchCategoryRaw();
+    } else {
+      refetchProduct();
+    }
+  }, [categoryId]);
 
   const filteredProducts = useMemo(() => {
     // Handle data structure safety
-    const items = dataProduct?.result?.items || dataProduct?.items || [];
+    const items =
+      dataProductsByCategory?.result?.items ||
+      dataProductsByCategory?.items ||
+      [];
 
     return items.filter((item) => {
       // A. Check Category
-      const matchesCategory = selectedCategory
-        ? item.category?.name &&
-          slugify(item.category.name) === selectedCategory
-        : true;
+      // If we filtered by categoryId on the server, we bypass client-side category filtering
+      const matchesCategory = categoryId
+        ? true
+        : selectedCategory
+          ? item.category?.name &&
+            slugify(item.category.name) === selectedCategory
+          : true;
 
       // B. Check Search (Client Side)
       const matchesSearch = searchQuery
@@ -79,7 +98,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
 
       return matchesCategory && matchesSearch;
     });
-  }, [dataProduct, selectedCategory, searchQuery]);
+  }, [dataProductsByCategory, selectedCategory, categoryId, searchQuery]);
 
   // Sort products based on selected sort type
   const sortedProducts = useMemo(() => {
@@ -131,8 +150,8 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
 
   // Check if there are no products to display
   const hasNoProducts =
-    !isLoadingProduct &&
-    !isErrorProduct &&
+    !isLoadingAllProductsByCategory &&
+    !isErrorGetAllProductsByCategory &&
     (!currentPageProducts || currentPageProducts.length === 0);
 
   return (
@@ -168,7 +187,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
         </Box>
       )}
 
-      {isLoadingProduct ? (
+      {isLoadingAllProductsByCategory || isLoadingAllProducts ? (
         <Grid container spacing={2} columns={10}>
           {[...Array(pageSize)].map((_, index) => (
             <Grid size={2} key={index}>
@@ -183,9 +202,13 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
             </Grid>
           ))}
         </Grid>
-      ) : isErrorProduct ? (
+      ) : isErrorGetAllProductsByCategory || isErrorProduct ? (
         <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-          <Typography color="error">{errorProduct?.message}</Typography>
+          <Typography color="error">
+            {isErrorGetAllProductsByCategory
+              ? errorGetAllProductsByCategory?.message
+              : errorProduct?.message}
+          </Typography>
         </Box>
       ) : hasNoProducts ? (
         <Box
@@ -209,7 +232,7 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
       ) : (
         <Grid container spacing={2}>
           {currentPageProducts?.map((product) => (
-            <Grid size={{ xl: 2, lg: 3, md: 3, sm: 4, xs: 6 }} key={product.id}>
+            <Grid size={{ xl: 2, lg: 2, md: 3, sm: 4, xs: 6 }} key={product.id}>
               <CardProduct product={product} />
             </Grid>
           ))}

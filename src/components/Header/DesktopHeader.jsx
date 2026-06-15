@@ -35,7 +35,7 @@ const DesktopHeader = ({ activeCategories }) => {
 
   const handleCategoryClick = (category) => {
     handleClose();
-    navigate(`/all-products?category=${slugify(category.name)}`);
+    navigate(`/all-products?category=${slugify(category.name)}&categoryId=${category.id}`);
   };
 
   useEffect(() => {

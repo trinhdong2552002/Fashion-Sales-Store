@@ -11,7 +11,7 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: [TAG_KEYS.CATEGORIES],
     }),
 
-    getProductsByCategoryForUser: builder.query({
+    getProductsByCategoryByUser: builder.query({
       query: ({ categoryId, page, size, sort }) => ({
         url: `/v1/public/categories/${categoryId}/products`,
         params: { page, size, sort },
@@ -23,5 +23,5 @@ export const categoryApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllCategoriesByUserQuery,
-  useGetProductsByCategoryForUserQuery,
+  useGetProductsByCategoryByUserQuery,
 } = categoryApi;

@@ -46,7 +46,7 @@ const DesktopAuthButton = ({
                 navigate(`/account-information/profile/${myInfo.id}`)
               }
             >
-              Thông tin tài khoản
+              Thông tin người dùng
             </MenuItem>
             <MenuItem onClick={() => navigate("/my-order")}>
               Đơn hàng của tôi
