@@ -24,7 +24,7 @@ const ProductLists = () => {
     isLoading,
     refetch: refetchCategory,
   } = useGetAllCategoriesByUserQuery({
-    page: 1,
+    page: 0,
     size: 10,
   });
 

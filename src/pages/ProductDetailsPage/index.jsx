@@ -18,7 +18,7 @@ import "swiper/css/free-mode";
 
 import ProductActions from "./shared/ProductActions";
 
-import { useGetProductByIdQuery } from "@/services/api/product";
+import { useGetProductDetailByIdQuery } from "@/services/api/product";
 import { useGetProductVariantByProductQuery } from "@/services/api/product_variant";
 
 const ProductDetails = () => {
@@ -36,7 +36,7 @@ const ProductDetails = () => {
     isError: isErrorProductById,
     error: errorProductById,
     refetch: refetchProductById,
-  } = useGetProductByIdQuery(id);
+  } = useGetProductDetailByIdQuery(id);
 
   // Fetch variant details when color and size are selected
   const { data: dataProductVariantByProduct, isLoading: isLoadingVariant } =

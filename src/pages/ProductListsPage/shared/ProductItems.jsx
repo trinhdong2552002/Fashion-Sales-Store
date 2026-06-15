@@ -15,7 +15,7 @@ import { useState, useEffect, useMemo, Fragment } from "react";
 
 import { slugify } from "@/utils/slugify";
 import CardProduct from "./CardProduct";
-import { useGetAllProductByUserQuery } from "@/services/api/product";
+import { useGetAllProductForUserQuery } from "@/services/api/product";
 
 // Vietnamese character encoding normalization for search
 const normalizeString = (str) => {
@@ -42,8 +42,8 @@ const ProductItems = ({ selectedCategory, searchQuery }) => {
     isError: isErrorProduct,
     error: errorProduct,
     refetch: refetchProduct,
-  } = useGetAllProductByUserQuery({
-    page: 1,
+  } = useGetAllProductForUserQuery({
+    page: 0,
     size: 100,
   });
 

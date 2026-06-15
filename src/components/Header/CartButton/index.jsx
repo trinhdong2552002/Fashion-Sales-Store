@@ -39,8 +39,8 @@ const CartButton = () => {
     error,
   } = useGetAllFetchedPaginatedByCurrentUserQuery(
     {
-      pageNo: 1,
-      pageSize: 10,
+      page: 0,
+      size: 10,
     },
     { skip: !authenticated },
   );

@@ -12,7 +12,7 @@ import {
 
 import { useEffect } from "react";
 import styles from "./index.module.css";
-import { useGetAllBranchesByUserQuery } from "@/services/api/branch";
+import { useGetAllBranchesForUserQuery } from "@/services/api/branch";
 
 const Footer = () => {
   const {
@@ -21,9 +21,9 @@ const Footer = () => {
     error: errorBranches,
     isError: isErrorBranch,
     refetch: refetchBranch,
-  } = useGetAllBranchesByUserQuery({
-    pageNo: 1,
-    pageSize: 10,
+  } = useGetAllBranchesForUserQuery({
+    page: 0,
+    size: 10,
   });
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const Footer = () => {
                 Lỗi tải chi nhánh: {errorBranches?.data?.message}
               </Typography>
             ) : (
-              dataBranches?.items?.map((branch) => (
+              dataBranches?.result?.items?.map((branch) => (
                 <Box key={branch.id}>
                   <Box display="flex" alignItems="center">
                     <LocationOn sx={{ color: "#E0E0E0" }} />
@@ -190,7 +190,7 @@ const Footer = () => {
           }}
         >
           <Typography color="white">
-            © 2025 Fashion Store. All rights reserved.
+            © 2025-2026 Fashion Store. All rights reserved.
           </Typography>
         </Box>
       </Container>

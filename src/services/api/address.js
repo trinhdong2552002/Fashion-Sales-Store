@@ -37,7 +37,7 @@ export const addressApi = baseApi.injectEndpoints({
     // Hide address by user
     hideAddress: builder.mutation({
       query: (addressId) => ({
-        url: `/v1/addresses/${addressId}/hide`,
+        url: `/v1/private/addresses/${addressId}/hide`,
         method: "PATCH",
       }),
       invalidatesTags: [TAG_KEYS.ADDRESS],

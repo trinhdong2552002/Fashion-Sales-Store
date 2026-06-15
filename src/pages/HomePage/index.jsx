@@ -18,19 +18,8 @@ import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 const slides = [banner_1, banner_2, banner_3, banner_4];
 
 const Home = () => {
-  // const {
-  //   data: dataCategories,
-  //   isLoading: isLoadingCategories,
-  //   isError: isErrorCategories,
-  //   error: errorCategories,
-  //   refetch: refetchCategories,
-  // } = useGetAllCategoriesByUserQuery({
-  //   page: 0,
-  //   size: 10,
-  // });
-
   const {
-    data: dataCategoriesByProduct,
+    data: dataCategories,
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
     error: errorCategories,
@@ -44,9 +33,7 @@ const Home = () => {
     refetchCategories();
   }, []);
 
-  const activeCategories = Array.isArray(dataCategoriesByProduct)
-    ? dataCategoriesByProduct.filter((item) => item.status === "ACTIVE")
-    : [];
+  const productCategories = dataCategories?.result?.items || [];
 
   return (
     <Box>
@@ -144,36 +131,36 @@ const Home = () => {
           </Box>
         ) : (
           <Grid container spacing={12}>
-            {activeCategories.map((item) => (
+            {productCategories.map((category) => (
               <Grid
                 my={6}
                 display={"flex"}
                 justifyContent={"center"}
                 alignItems={"center"}
                 size={{ xl: 4, lg: 4, sm: 6, xs: 12 }}
-                key={item.id}
+                key={category.id}
               >
                 <Link
                   to={{
                     pathname: "/all-products",
-                    search: `?category=${slugify(item.name)}`,
+                    search: `?category=${slugify(category.name)}`,
                   }}
                 >
-                  {/* <Box className={styles.wrapperImg}>
+                  <Box className={styles.wrapperImg}>
                     <img
                       className={styles.mediaImg}
                       src={
-                        categoryImageMap[item.name] ||
+                        category.imageUrl ||
                         "/src/assets/images/categories/default.jpg"
                       }
-                      alt={item.name}
+                      alt={category.name}
                     />
                     <Box className={styles.contentImg}>
                       <Typography fontSize={"1.8rem"} color="white">
-                        {item.name}
+                        {category.name}
                       </Typography>
                     </Box>
-                  </Box> */}
+                  </Box>
                 </Link>
               </Grid>
             ))}

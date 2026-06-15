@@ -53,8 +53,8 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
   // Fetch provinces
   const { data: dataListProvince } = useGetAllProvincesQuery(
     {
-      pageNo: 1,
-      pageSize: 100,
+      page: 0,
+      size: 100,
     },
     {
       refetchOnMountOrArgChange: true,
@@ -63,7 +63,7 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
 
   // Fetch districts by selected province
   const { data: dataDistrictsByProvince } = useGetAllDistrictsByProvinceQuery(
-    { id: selectedProvinceId, pageNo: 1, pageSize: 100 },
+    { provinceId: selectedProvinceId, page: 0, size: 100 },
     {
       skip: !selectedProvinceId,
       refetchOnMountOrArgChange: true,
@@ -73,9 +73,9 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
   // Fetch wards by selected district
   const { data: dataWardsByDistrict } = useGetAllWardsByDistrictQuery(
     {
-      id: selectedDistrictId,
-      pageNo: 1,
-      pageSize: 100,
+      districtId: selectedDistrictId,
+      page: 0,
+      size: 100,
     },
     {
       skip: !selectedDistrictId,
@@ -134,7 +134,7 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
 
     try {
       await updateAddress({
-        id: address.id,
+        addressId: address.id,
         phone: data.phone,
         streetDetail: data.streetDetail,
         provinceId: selectedProvinceId,

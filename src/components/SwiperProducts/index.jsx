@@ -16,7 +16,7 @@ import "swiper/css";
 
 import { useEffect } from "react";
 import { KeyboardArrowRight } from "@mui/icons-material";
-import { useGetAllProductByUserQuery } from "@/services/api/product";
+import { useGetAllProductForUserQuery } from "@/services/api/product";
 
 const SwiperProducts = ({ title, type }) => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const SwiperProducts = ({ title, type }) => {
     isError: isErrorProduct,
     error: errorProduct,
     refetch: refetchProduct,
-  } = useGetAllProductByUserQuery({
+  } = useGetAllProductForUserQuery({
     page: 0,
     size: 20,
   });
@@ -37,7 +37,7 @@ const SwiperProducts = ({ title, type }) => {
   }, []);
 
   let products =
-    dataProduct?.items.filter((item) => item.status === "ACTIVE") || [];
+    dataProduct?.result?.items.filter((item) => item.status === "ACTIVE") || [];
 
   // Filter theo type
   if (type === "newest") {
@@ -153,34 +153,36 @@ const SwiperProducts = ({ title, type }) => {
         ) : dataProduct ? (
           <Swiper
             breakpoints={{
-              // When window width is >= 640px
               0: {
                 slidesPerView: 1,
                 spaceBetween: 20,
               },
-              600: {
+              480: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+
+              640: {
                 slidesPerView: 3,
                 spaceBetween: 30,
               },
-              // When window width is >= 768px
-              900: {
-                slidesPerView: 3,
-                spaceBetween: 40,
-              },
-              // When window width is >= 1024px
-              1200: {
+              1024: {
                 slidesPerView: 4,
-                spaceBetween: 50,
+                spaceBetween: 35,
+              },
+              1200: {
+                slidesPerView: 5,
+                spaceBetween: 30,
               },
               1536: {
                 slidesPerView: 5,
-                spaceBetween: 50,
+                spaceBetween: 40,
               },
             }}
             loop={true}
             centeredSlides={true}
             autoplay={{
-              delay: 5000,
+              delay: 3000,
               disableOnInteraction: false,
             }}
             pagination={{
@@ -253,7 +255,7 @@ const SwiperProducts = ({ title, type }) => {
                           mt={1}
                           fontWeight={"bold"}
                         >
-                          {product.price?.toLocaleString("vi-VN")}đ
+                          {product.minPrice?.toLocaleString("vi-VN")}đ
                         </Typography>
                       </CardContent>
                     </CardActionArea>
