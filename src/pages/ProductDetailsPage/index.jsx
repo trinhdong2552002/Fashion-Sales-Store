@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { skipToken } from "@reduxjs/toolkit/query";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navigation, Thumbs } from "swiper/modules";
@@ -19,16 +18,17 @@ import "swiper/css/free-mode";
 import ProductActions from "./shared/ProductActions";
 
 import { useGetProductDetailByIdQuery } from "@/services/api/product";
-import { useGetProductVariantByProductQuery } from "@/services/api/product_variant";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [mainSwiper, setMainSwiper] = useState(null);
+
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [displayPrice, setDisplayPrice] = useState(0);
 
   const {
     data: dataProductById,
@@ -38,49 +38,27 @@ const ProductDetails = () => {
     refetch: refetchProductById,
   } = useGetProductDetailByIdQuery(id);
 
-  // Fetch variant details when color and size are selected
-  const { data: dataProductVariantByProduct, isLoading: isLoadingVariant } =
-    useGetProductVariantByProductQuery(
-      // TODO: Check if both color and size are selected (is true) then call api else skip the query API not called
-      selectedColor && selectedSize
-        ? {
-            productId: id,
-            colorId: selectedColor.id,
-            sizeId: selectedSize.id,
-          }
-        : // TODO: If color or size not selected, skip the query API not called
-          skipToken,
-    );
-
   useEffect(() => {
     refetchProductById();
   }, [refetchProductById]);
 
-  // Get available stock from variant API
-  const availableStock = dataProductVariantByProduct?.result?.quantity || 0;
-  const variantPrice = dataProductVariantByProduct?.result?.price;
-  const isVariantAvailable = dataProductVariantByProduct?.result?.isAvailable;
+  // Find current variant based on user's selection
+  const currentVariant = dataProductById?.result?.variants?.find(
+    (v) => v.color?.id === selectedColor?.id && v.size?.id === selectedSize?.id,
+  );
 
-  // Reset quantity when variant changes
-  useEffect(() => {
-    if (dataProductVariantByProduct) {
-      // Reset to 1 or max available stock if current quantity exceeds it
-      setQuantity((prevQuantity) => {
-        if (prevQuantity > availableStock) {
-          return Math.min(1, availableStock);
-        }
-        return prevQuantity;
-      });
-    }
-  }, [dataProductVariantByProduct, availableStock]);
+  // If enough options are selected and a variant exists -> Get variant's data, otherwise get product's data
+  const availableStock =
+    selectedColor && selectedSize
+      ? currentVariant?.quantity || 0
+      : dataProductById?.result?.quantity || 0;
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }, []);
+  const isVariantAvailable =
+    selectedColor && selectedSize
+      ? currentVariant?.isAvailable && currentVariant?.quantity > 0
+      : dataProductById?.result?.isAvailable || false;
+
+  const variants = dataProductById?.result?.variants || [];
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
@@ -107,6 +85,53 @@ const ProductDetails = () => {
     : [];
   const mainImage = images[0] ?? null;
 
+  useEffect(() => {
+    // If data is not loaded yet, do nothing
+    if (!dataProductById?.result) return;
+
+    const product = dataProductById.result;
+    const variants = product.variants || [];
+
+    // If not fully selected Color and Size -> Keep minPrice as main price
+    if (!selectedColor || !selectedSize) {
+      setDisplayPrice(product.minPrice || 0);
+      return; // Stop the process here
+    }
+
+    // When User has selected BOTH Color and Size
+    // Find the variant that matches the ID coordinates in the flat array
+    const matchedVariant = variants.find(
+      (v) => v.color?.id === selectedColor.id && v.size?.id === selectedSize.id,
+    );
+
+    if (matchedVariant) {
+      if (matchedVariant.isAvailable && matchedVariant.quantity > 0) {
+        // If variant is valid and in stock -> Set the actual price of that Variant
+        setDisplayPrice(matchedVariant.price);
+      } else {
+        // Selected both but this pair is out of stock
+        // Still use minPrice as the main price
+        setDisplayPrice(product.minPrice || 0);
+      }
+    } else {
+      // If no variant matches (Empty Matrix) -> Fallback to minPrice
+      setDisplayPrice(product.minPrice || 0);
+    }
+  }, [selectedColor, selectedSize, dataProductById]);
+
+  // Reset quantity when variant changes
+  // useEffect(() => {
+  //   if (dataProductById) {
+  //     // Reset to 1 or max available stock if current quantity exceeds it
+  //     setQuantity((prevQuantity) => {
+  //       if (prevQuantity > availableStock) {
+  //         return Math.min(1, availableStock);
+  //       }
+  //       return prevQuantity;
+  //     });
+  //   }
+  // }, [dataProductById, availableStock]);
+
   // Initialize/reset selected image when product images load/change
   useEffect(() => {
     if (dataProductById?.result?.images?.length) {
@@ -119,16 +144,25 @@ const ProductDetails = () => {
     }
   }, [id, dataProductById?.result?.images]);
 
-  // Display price from variant if available, otherwise from product
-  const displayPrice = variantPrice || dataProductById?.result?.price;
+  // Get unique colors from variants
+  const sortedColors = [];
+  variants.forEach((v) => {
+    if (v.color && !sortedColors.some((c) => c.id === v.color.id)) {
+      sortedColors.push(v.color);
+    }
+  });
+  // Sort by ID increasingly to keep the UI button order fixed
+  sortedColors.sort((a, b) => a.id - b.id);
 
-  const sortedColors = dataProductById?.result?.colors
-    ? [...dataProductById.result.colors].sort((a, b) => a.id - b.id)
-    : [];
-
-  const sortedSizes = dataProductById?.result?.sizes
-    ? [...dataProductById.result.sizes].sort((a, b) => a.id - b.id)
-    : [];
+  // Filter unique sizes from variants
+  const sortedSizes = [];
+  variants.forEach((v) => {
+    if (v.size && !sortedSizes.some((s) => s.id === v.size.id)) {
+      sortedSizes.push(v.size);
+    }
+  });
+  // Sort by ID increasingly to keep the UI button order fixed
+  sortedSizes.sort((a, b) => a.id - b.id);
 
   return (
     <Fragment>
@@ -191,7 +225,11 @@ const ProductDetails = () => {
                                 img.id === (selectedImage?.id ?? mainImage?.id),
                             ),
                           )}
-                          style={{ width: "100%" }}
+                          style={{
+                            width: "100%",
+                            "--swiper-navigation-color": "black",
+                            "--swiper-navigation-size": "30px",
+                          }}
                         >
                           {images.map((image) => (
                             <SwiperSlide key={image.id}>
@@ -296,7 +334,7 @@ const ProductDetails = () => {
                   {/* Stock availability indicator */}
                   {selectedColor && selectedSize && (
                     <Box mt={2}>
-                      {isLoadingVariant ? (
+                      {isLoadingProductById ? (
                         <Typography variant="body2" color="text.secondary">
                           Đang kiểm tra tồn kho...
                         </Typography>
@@ -313,51 +351,111 @@ const ProductDetails = () => {
                   )}
 
                   <Typography mt={4} mb={2} variant="body1" fontSize={"1.1rem"}>
-                    Màu sắc: {selectedColor?.name || "Chưa chọn"}
+                    Màu sắc:{" "}
+                    <strong>{selectedColor?.name || "Chưa chọn"}</strong>
                   </Typography>
-                  {sortedColors.map((color) => (
-                    <Button
-                      key={color.id}
-                      onClick={() => handleColorSelect(color)}
-                      display={"flex"}
-                      flexDirection={"row"}
-                      alignItems={"center"}
-                      variant="outlined"
-                      sx={{
-                        fontSize: "1rem",
-                        mr: 1,
-                        mt: 1,
-                        borderColor:
-                          selectedColor?.id === color.id ? "black" : "#ccc",
-                      }}
-                    >
-                      {color.name}
-                    </Button>
-                  ))}
+
+                  {sortedColors.map((color) => {
+                    // Check if this color has any variants in stock
+                    const isColorInStock = variants.some(
+                      (v) =>
+                        v.color?.id === color.id &&
+                        v.isAvailable &&
+                        v.quantity > 0,
+                    );
+
+                    return (
+                      <Button
+                        key={color.id}
+                        onClick={() => handleColorSelect(color)}
+                        variant={
+                          selectedColor?.id === color.id
+                            ? "contained"
+                            : "outlined"
+                        }
+                        disabled={!isColorInStock} // Disable button if this color is out of stock
+                        sx={{
+                          fontSize: "1rem",
+                          mr: 1,
+                          mt: 1,
+                          textTransform: "none",
+                          color:
+                            selectedColor?.id === color.id ? "white" : "black",
+                          backgroundColor:
+                            selectedColor?.id === color.id
+                              ? "black"
+                              : "transparent",
+                          borderColor:
+                            selectedColor?.id === color.id ? "black" : "#ccc",
+                          "&:hover": {
+                            backgroundColor:
+                              selectedColor?.id === color.id
+                                ? "#222"
+                                : "#f5f5f5",
+                            borderColor: "black",
+                          },
+                        }}
+                      >
+                        {color.name}
+                      </Button>
+                    );
+                  })}
 
                   <Typography mt={4} mb={2} variant="body1" fontSize={"1.1rem"}>
                     Kích thước: {selectedSize?.name || "Chưa chọn"}
                   </Typography>
-                  {sortedSizes.map((size) => (
-                    <Button
-                      key={size.id}
-                      onClick={() => handleSizeSelect(size)}
-                      display={"flex"}
-                      flexDirection={"row"}
-                      alignItems={"center"}
-                      variant="outlined"
-                      sx={{
-                        fontSize: "1rem",
-                        mr: 1,
-                        mt: 1,
-                        borderColor:
-                          selectedSize?.id === size.id ? "black" : "#ccc",
-                      }}
-                    >
-                      {size.name}
-                    </Button>
-                  ))}
+                  {sortedSizes.map((size) => {
+                    // ĐỈNH CAO UX: Check chéo xem size này còn hàng tương ứng với màu đang chọn hay không
+                    const isSizeAvailable = variants.some((v) => {
+                      if (selectedColor) {
+                        return (
+                          v.color?.id === selectedColor.id &&
+                          v.size?.id === size.id &&
+                          v.isAvailable &&
+                          v.quantity > 0
+                        );
+                      }
+                      return (
+                        v.size?.id === size.id &&
+                        v.isAvailable &&
+                        v.quantity > 0
+                      );
+                    });
 
+                    return (
+                      <Button
+                        key={size.id}
+                        onClick={() => handleSizeSelect(size)}
+                        variant={
+                          selectedSize?.id === size.id
+                            ? "contained"
+                            : "outlined"
+                        }
+                        disabled={!isSizeAvailable} // Disabled button if this variant is out of stock
+                        sx={{
+                          fontSize: "1rem",
+                          mr: 1,
+                          mt: 1,
+                          textTransform: "none",
+                          color:
+                            selectedSize?.id === size.id ? "white" : "black",
+                          backgroundColor:
+                            selectedSize?.id === size.id
+                              ? "black"
+                              : "transparent",
+                          borderColor:
+                            selectedSize?.id === size.id ? "black" : "#ccc",
+                          "&:hover": {
+                            backgroundColor:
+                              selectedSize?.id === size.id ? "#222" : "#f5f5f5",
+                            borderColor: "black",
+                          },
+                        }}
+                      >
+                        {size.name}
+                      </Button>
+                    );
+                  })}
                   <Box display={"flex"} alignItems={"center"} mt={4} mb={2}>
                     <Button
                       variant="outlined"
@@ -399,7 +497,7 @@ const ProductDetails = () => {
 
                   {/* Product Actions buy now and add product to cart */}
                   <ProductActions
-                    variantId={dataProductVariantByProduct?.result?.id}
+                    variantId={dataProductById?.result?.id}
                     quantity={quantity}
                     disabled={
                       !selectedColor ||
