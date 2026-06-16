@@ -120,17 +120,17 @@ const ProductDetails = () => {
   }, [selectedColor, selectedSize, dataProductById]);
 
   // Reset quantity when variant changes
-  // useEffect(() => {
-  //   if (dataProductById) {
-  //     // Reset to 1 or max available stock if current quantity exceeds it
-  //     setQuantity((prevQuantity) => {
-  //       if (prevQuantity > availableStock) {
-  //         return Math.min(1, availableStock);
-  //       }
-  //       return prevQuantity;
-  //     });
-  //   }
-  // }, [dataProductById, availableStock]);
+  useEffect(() => {
+    if (dataProductById) {
+      // Reset to 1 or max available stock if current quantity exceeds it
+      setQuantity((prevQuantity) => {
+        if (prevQuantity > availableStock) {
+          return Math.min(1, availableStock);
+        }
+        return prevQuantity;
+      });
+    }
+  }, [dataProductById, availableStock]);
 
   // Initialize/reset selected image when product images load/change
   useEffect(() => {
