@@ -17,7 +17,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useSnackbar } from "@/components/Snackbar";
 import { useSelector } from "react-redux";
 import { useGetAllFetchedPaginatedByCurrentUserQuery } from "@/services/api/cart";
@@ -25,11 +25,9 @@ import { useDeleteCartItemByIdMutation } from "@/services/api/cart_item";
 
 const CartButton = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
-
   const { showSnackbar } = useSnackbar();
   const [openModalConfirm, setOpenModalConfirm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-
   const { authenticated } = useSelector((state) => state.auth);
 
   const {
@@ -44,6 +42,7 @@ const CartButton = () => {
     },
     { skip: !authenticated },
   );
+
   const [deleteCartItemById] = useDeleteCartItemByIdMutation();
 
   const cartItems = dataCartByUser?.result?.items || [];
@@ -82,7 +81,49 @@ const CartButton = () => {
       ? dataCartByUser.result.totalItems || 0
       : 0;
 
-  const CartDrawer = () => {
+  const renderCartContent = () => {
+    if (isLoading) {
+      return (
+        <Typography sx={{ p: 3, textAlign: "center", color: "#666" }}>
+          Đang tải giỏ hàng...
+        </Typography>
+      );
+    }
+
+    if (isError) {
+      return (
+        <Typography sx={{ p: 3, textAlign: "center", color: "red" }}>
+          Đã có lỗi xảy ra: {error?.data?.message || "Vui lòng thử lại."}
+        </Typography>
+      );
+    }
+
+    if (cartItems.length === 0) {
+      return (
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            p: 3,
+          }}
+        >
+          <RemoveShoppingCart sx={{ fontSize: 60, color: "#ccc" }} />
+          <Typography
+            textAlign={"center"}
+            mt={1}
+            variant="h6"
+            color="#666"
+            fontSize={{ xs: "1rem", sm: "1rem", md: "1.2rem" }}
+          >
+            Giỏ hàng của bạn đang trống.
+          </Typography>
+        </Box>
+      );
+    }
+
     return (
       <Box
         sx={{
@@ -128,90 +169,78 @@ const CartButton = () => {
 
         {/* Main content */}
         <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          {isLoading ? (
-            <>
-              <Typography sx={{ p: 2, textAlign: "center" }}>
-                Đang tải giỏ hàng...
-              </Typography>
-            </>
-          ) : isError ? (
-            <>
-              <Typography sx={{ p: 2, textAlign: "center", color: "red" }}>
-                Đã có lỗi xảy ra: {error?.data?.message || "Vui lòng thử lại."}
-              </Typography>
-            </>
-          ) : cartItems.length === 0 ? (
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <RemoveShoppingCart sx={{ fontSize: 60, color: "#ccc" }} />
-              <Typography
-                textAlign={"center"}
-                mt={1}
-                variant="h6"
-                color="#666"
-                fontSize={{
-                  xs: "1rem",
-                  sm: "1rem",
-                  md: "1.2rem",
-                }}
-              >
-                Giỏ hàng của bạn đang trống.
-              </Typography>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                flexGrow: 1,
-                overflowY: "auto",
-                maxHeight: "calc(100vh - 150px)",
-              }}
-            >
-              <Box spacing={2}>
-                {cartItems?.map((cartItem, id) => (
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              maxHeight: "calc(100vh - 150px)",
+            }}
+          >
+            <Box spacing={2}>
+              {cartItems?.map((cartItem, index) => (
+                <Box
+                  key={index || cartItem.id}
+                  display={"flex"}
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ borderBottom: "1px solid #ddd", p: 2 }}
+                >
                   <Box
-                    key={id}
-                    display={"flex"}
-                    spacing={2}
-                    alignItems="center"
-                    sx={{ borderBottom: "1px solid #ddd", p: 2 }}
+                    sx={{
+                      width: 70,
+                      height: 70,
+                      borderRadius: "5px",
+                      overflow: "hidden",
+                      border: "1px solid #e0e0e0",
+                      flexShrink: 0,
+                      marginRight: 2,
+                    }}
                   >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle2" fontWeight="bold">
-                        {cartItem.productVariantBasic.product.name}
-                      </Typography>
-                      <Typography variant="subtitle2" color="#666" my={1}>
-                        {cartItem.productVariantBasic.color.name} | Size{" "}
-                        {cartItem.productVariantBasic.size.name}
-                      </Typography>
-                      <Typography variant="subtitle2" color="#666" mb={1}>
-                        Số lượng: {cartItem.quantity}
-                      </Typography>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(cartItem.price)}
-                      </Typography>
-                    </Box>
-
-                    <IconButton
-                      onClick={() => handleOpenModalConfirm(cartItem)}
-                      sx={{ color: "black" }}
-                    >
-                      <Delete />
-                    </IconButton>
+                    <img
+                      src={
+                        cartItem.image?.imageUrl ||
+                        "https://via.placeholder.com/70"
+                      }
+                      alt={
+                        cartItem.productVariantBasic?.product?.name || "product"
+                      }
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </Box>
-                ))}
-              </Box>
+
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="subtitle2" fontWeight="bold">
+                      {cartItem.productVariantBasic?.product?.name}
+                    </Typography>
+                    <Typography variant="subtitle2" color="#666" my={1}>
+                      {cartItem.productVariantBasic.color.name} | Size{" "}
+                      {cartItem.productVariantBasic.size.name}
+                    </Typography>
+                    <Typography variant="subtitle2" color="#666" mb={1}>
+                      Số lượng: {cartItem.quantity}
+                    </Typography>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(cartItem.price)}
+                    </Typography>
+                  </Box>
+
+                  <IconButton
+                    onClick={() => handleOpenModalConfirm(cartItem)}
+                    sx={{ color: "black" }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              ))}
             </Box>
-          )}
+          </Box>
         </Box>
 
         {/* Button for footer cart items if cart item than bigger 0 will appear button else will hide it */}
@@ -279,7 +308,7 @@ const CartButton = () => {
       </IconButton>
 
       <Drawer anchor="right" open={openDrawer} onClose={toggleDrawer(false)}>
-        {CartDrawer()}
+        {renderCartContent()}
       </Drawer>
     </Fragment>
   );
