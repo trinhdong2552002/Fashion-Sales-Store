@@ -8,9 +8,6 @@ export const cartApi = baseApi.injectEndpoints({
         url: "/v1/private/carts/cart-items",
         params: { page, size },
       }),
-      transformResponse: (response) => {
-        return response.result;
-      },
       providesTags: [TAG_KEYS.CART],
     }),
   }),

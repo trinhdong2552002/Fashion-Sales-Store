@@ -5,7 +5,7 @@ import { Box, Button } from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProductActions = ({ variantId, quantity }) => {
+const ProductActions = ({ variantId, quantity, disabled }) => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
 
@@ -45,7 +45,7 @@ const ProductActions = ({ variantId, quantity }) => {
       >
         <Button
           variant="outlined"
-          disabled={isAddingToCart}
+          disabled={disabled}
           loading={isAddingToCart}
           loadingPosition="start"
           sx={{
@@ -63,6 +63,7 @@ const ProductActions = ({ variantId, quantity }) => {
 
         <Button
           variant="contained"
+          disabled={disabled}
           sx={{
             width: { xs: "100%", sm: "auto" },
           }}

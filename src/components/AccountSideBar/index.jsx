@@ -26,9 +26,9 @@ const AccountSideBar = ({ id }) => {
         variant="h4"
         fontWeight={"bold"}
         fontSize={{
-          xl: "1.6rem",
-          lg: "1.4rem",
-          md: "1.2rem",
+          xl: "1.5rem",
+          lg: "1.3rem",
+          md: "1.1rem",
           sm: "1.2rem",
           xs: "1.2rem",
         }}

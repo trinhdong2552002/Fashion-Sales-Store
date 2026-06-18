@@ -35,16 +35,13 @@ const ProductDetails = () => {
     isLoading: isLoadingProductById,
     isError: isErrorProductById,
     error: errorProductById,
-    refetch: refetchProductById,
   } = useGetProductDetailByIdQuery(id);
-
-  useEffect(() => {
-    refetchProductById();
-  }, [refetchProductById]);
 
   // Find current variant based on user's selection
   const currentVariant = dataProductById?.result?.variants?.find(
-    (v) => v.color?.id === selectedColor?.id && v.size?.id === selectedSize?.id,
+    (variant) =>
+      variant.color?.id === selectedColor?.id &&
+      variant.size?.id === selectedSize?.id,
   );
 
   // If enough options are selected and a variant exists -> Get variant's data, otherwise get product's data
@@ -497,7 +494,7 @@ const ProductDetails = () => {
 
                   {/* Product Actions buy now and add product to cart */}
                   <ProductActions
-                    variantId={dataProductById?.result?.id}
+                    variantId={currentVariant?.id}
                     quantity={quantity}
                     disabled={
                       !selectedColor ||

@@ -7,9 +7,6 @@ export const cartApi = baseApi.injectEndpoints({
       query: (cartItemId) => ({
         url: `/v1/cart-items/${cartItemId}`,
       }),
-      transformResponse: (response) => {
-        return response.result;
-      },
       providesTags: [TAG_KEYS.CART],
     }),
 
