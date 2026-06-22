@@ -1,40 +1,41 @@
 # 🛍️ Fashion Sales Store
 
-### 🔗 Live Demo & API
+### 🔗 Deployment
 * **Live App:** [https://fashion-sales-store.site.name.vn](https://fashion-sales-store.site.name.vn)
-* **Backend API:** [Swagger UI Link](https://springadamstore-production.up.railway.app/adamstore/swagger-ui/index.html)
+
+---
+
+### 🔐 User Credentials (Login Info)
+**Use this account to access the user page:**
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `trinhdong365@gmail.com` | `123456` |
+
+---
 
 ## 📸 Screenshots
 
-* Home Page
-  
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 09 41" src="https://github.com/user-attachments/assets/6f24702c-f509-4183-82cc-5507ec44600f" />
+<img width="1920" height="963" alt="Screenshot 2026-06-22 at 11 09 50" src="https://github.com/user-attachments/assets/b6f5dcbf-ad68-49dd-a61a-12c8cd10744a" />
+<img width="1920" height="963" alt="Screenshot 2026-06-22 at 11 10 00" src="https://github.com/user-attachments/assets/d6cdbb7c-ad10-4626-9a48-972d8ceb1804" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 10 12" src="https://github.com/user-attachments/assets/ff76c629-11c1-4cfb-97b3-150e10637ac6" />
+<img width="1920" height="963" alt="Screenshot 2026-06-22 at 11 10 24" src="https://github.com/user-attachments/assets/6aab59f3-82b0-419b-9724-c4ac925c905e" />
+<img width="1920" height="960" alt="Screenshot 2026-06-22 at 11 10 31" src="https://github.com/user-attachments/assets/2000371b-9d4b-476a-989c-555d41df0109" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 10 44" src="https://github.com/user-attachments/assets/b45c4b74-a811-4359-8307-cfb2f3058d73" />
+<img width="1920" height="961" alt="Screenshot 2026-06-22 at 11 10 51" src="https://github.com/user-attachments/assets/f17a85ee-fd31-4c1f-8240-64bf22de92ae" />
+<img width="1920" height="960" alt="Screenshot 2026-06-22 at 11 12 34" src="https://github.com/user-attachments/assets/d0994dd7-9ced-4a21-b354-15865b1eade0" />
+<img width="1920" height="961" alt="Screenshot 2026-06-22 at 11 12 42" src="https://github.com/user-attachments/assets/0daa7447-c608-4883-8504-b2ae1f577f17" />
+<img width="1919" height="962" alt="Screenshot 2026-06-22 at 11 11 01" src="https://github.com/user-attachments/assets/66edbcd5-013b-4be1-b0ea-e76a2dd129e4" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 11 06" src="https://github.com/user-attachments/assets/9f1a842c-6b6b-4424-b915-7954a5c371a9" />
+<img width="1918" height="963" alt="Screenshot 2026-06-22 at 11 11 32" src="https://github.com/user-attachments/assets/d8023d45-404c-4191-91bb-f1fa65ed18c3" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 11 43" src="https://github.com/user-attachments/assets/df7d9853-2a57-4ef2-9955-5b88975b6ea3" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 11 53" src="https://github.com/user-attachments/assets/a68cb628-11ac-40d0-b5a5-1ccc07ebd5d6" />
+<img width="1920" height="962" alt="Screenshot 2026-06-22 at 11 12 16" src="https://github.com/user-attachments/assets/5b14ac21-bc35-429d-8e03-96718dd7bf5e" />
+<img width="1918" height="959" alt="Screenshot 2026-06-22 at 11 12 51" src="https://github.com/user-attachments/assets/06b11580-0f5c-4c8d-aa07-a758087a9903" />
+<img width="1920" height="961" alt="Screenshot 2026-06-22 at 11 12 57" src="https://github.com/user-attachments/assets/296318d3-b95c-48f2-8186-3310133f75ff" />
+<img width="1920" height="964" alt="Screenshot 2026-06-22 at 11 13 02" src="https://github.com/user-attachments/assets/139219da-6052-4836-9612-afaa22e266e3" />
 
-<img width="1920" height="963" alt="image" src="https://github.com/user-attachments/assets/28df675b-1554-4609-8667-3cff64346471" />
-
-* Blog Page
-  
-
-<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/2232dc2e-a03f-4a13-8663-852d5b066ce9" />
-
-* Help Page
-  
-
-<img width="1920" height="961" alt="Screenshot 2025-12-18 at 16 34 39" src="https://github.com/user-attachments/assets/991a0cea-9b42-45e7-a229-b6047e6f6f11" />
-
-* About Page
-  
-
-<img width="1920" height="964" alt="Screenshot 2025-12-18 at 16 35 21" src="https://github.com/user-attachments/assets/34586839-e1b7-4f46-b3e2-b10c166e0705" />
-
-* Account Information Page
-  
-
-<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/f0919fb5-ffff-471f-b367-cffb74990d61" />
-
-* Product Page
-  
-
-<img width="1920" height="961" alt="image" src="https://github.com/user-attachments/assets/b964beca-74d5-4fcb-9fb5-60378da80e1f" />
 
 
 ## 🚀 Tech Stack
@@ -43,15 +44,10 @@
 * ![React](https://img.shields.io/badge/React-19-blue) **ReactJS (Vite)**
 * ![Redux](https://img.shields.io/badge/Redux-Toolkit-purple) **Redux Toolkit & RTK Query**
 * ![MUI](https://img.shields.io/badge/MUI-Material_UI-blue) **Material UI**
-* **Authentication:** JWT, React Router DOM
 
 ---
 
 ## 🛠️ Installation & Setup (Local Development)
-
-### 1. Frontend Setup (Client)
-
-Prerequisites: Node.js (v18+) and npm.
 
 ```bash
 # 1. Clone the repository
@@ -69,31 +65,6 @@ Open http://localhost:5173 to view it in the browser.
 
 To build for production:
    npm run build
-
-### 2. Backend Setup (Docker)
-You can run the full backend stack (Spring Boot + MySQL + Redis) instantly using Docker.
-```bash
-# 1. Clone the Backend repository
-git clone https://github.com/trinhdong2552002/Spring_AdamStore.git
-cd Spring_AdamStore
-
-# 2. Stop any running containers (optional)
-docker-compose down
-
-# 3. Start the application
-docker-compose up -d
-```
-Note: The backend service requires environment variables (.env). Please contact the author if you need the env file for local development, or use the Docker image provided.
-
-## 📖 API Documentation & Testing
-Once the backend is running (locally or live), you can explore the API endpoints via Swagger UI:
-
-``` bash
-Local Swagger: http://localhost:8080/adamstore/swagger-ui/index.html
-
-JSON Docs: http://localhost:8080/adamstore/v3/api-docs/backend-service
-```
-
 
 ## 📅 Project Roadmap & Management
 
