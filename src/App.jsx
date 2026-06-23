@@ -1,28 +1,28 @@
-import { Routes, Route } from "react-router-dom";
 import Login from "@/pages/login-page";
 import Register from "@/pages/register-page";
 import VerifyAccount from "@/pages/verify-account-page";
-import ResetPassword from "./pages/reset-password-page";
-import ForgotPassword from "./pages/forgot-password-page";
-import ForgotPasswordVerify from "./pages/forgot-password-page/shared/forgot-password-verify";
-import AccountInformation from "./layouts/account-information-layout";
-import Profile from "./pages/profile-page";
-import Address from "./pages/address-page";
+import ResetPassword from "@/pages/reset-password-page";
+import ForgotPassword from "@/pages/forgot-password-page";
+import ForgotPasswordVerify from "@/pages/forgot-password-page/shared/forgot-password-verify";
+import AccountInformation from "@/layouts/account-information-layout";
+import Profile from "@/pages/profile-page";
+import Address from "@/pages/address-page";
 import ProductDetails from "@/pages/product-detail-page";
 import ProductLists from "@/pages/product-list-page";
 import MainLayout from "@/layouts/main-layout";
-import ProductListsLayout from "./layouts/product-list-layout";
+import ProductListsLayout from "@/layouts/product-list-layout";
 import About from "@/pages/about-page";
 import Home from "@/pages/home-page";
-import Help from "./pages/help-page";
-import ProductDetailsLayout from "./layouts/product-detail-layout";
-import Blog from "./pages/blog-page";
-import BlogDetail from "./pages/blog-page/shared/blog-detail";
-import ChangePassword from "./pages/change-password-page";
-import MyOrders from "./pages/my-order-page";
-import Checkout from "./pages/checkout-page";
-import OrderSuccess from "./pages/order-success";
-import NotFound from "./pages/not-found-page";
+import Help from "@/pages/help-page";
+import ProductDetailsLayout from "@/layouts/product-detail-layout";
+import Blog from "@/pages/blog-page";
+import BlogDetail from "@/pages/blog-page/shared/blog-detail";
+import ChangePassword from "@/pages/change-password-page";
+import MyOrders from "@/pages/my-order-page";
+import Checkout from "@/pages/checkout-page";
+import OrderSuccess from "@/pages/order-success";
+import NotFound from "@/pages/not-found-page";
+import { Routes, Route } from "react-router-dom";
 
 const App = () => {
   return (
