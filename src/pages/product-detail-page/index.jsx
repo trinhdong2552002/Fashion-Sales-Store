@@ -92,10 +92,10 @@ const ProductDetail = () => {
     // If not fully selected Color and Size -> Keep minPrice as main price
     if (!selectedColor || !selectedSize) {
       setDisplayPrice(product.minPrice || 0);
-      return; // Stop the process here
+      return;
     }
 
-    // When User has selected BOTH Color and Size
+    // When User has selected both Color and Size
     // Find the variant that matches the ID coordinates in the flat array
     const matchedVariant = variants.find(
       (v) => v.color?.id === selectedColor.id && v.size?.id === selectedSize.id,
@@ -402,7 +402,6 @@ const ProductDetail = () => {
                     Kích thước: {selectedSize?.name || "Chưa chọn"}
                   </Typography>
                   {sortedSizes.map((size) => {
-                    // ĐỈNH CAO UX: Check chéo xem size này còn hàng tương ứng với màu đang chọn hay không
                     const isSizeAvailable = variants.some((v) => {
                       if (selectedColor) {
                         return (
@@ -502,6 +501,17 @@ const ProductDetail = () => {
                       !isVariantAvailable ||
                       availableStock === 0
                     }
+                    buyNowData={{
+                      productId: dataProductById?.result?.id,
+                      productName: dataProductById?.result?.name,
+                      productImage:
+                        dataProductById?.result?.images?.[0]?.imageUrl,
+                      price: currentVariant?.price,
+                      quantity: quantity,
+                      color: selectedColor?.name,
+                      size: selectedSize?.name,
+                      productVariantId: currentVariant?.id,
+                    }}
                   />
                 </Grid>
               </Grid>

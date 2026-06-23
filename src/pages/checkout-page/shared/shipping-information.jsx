@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -46,18 +47,14 @@ const ShippingInformation = () => {
 
   const {
     data: dataGetAllAddress,
-    isLoading,
-    isError,
-    error,
+    isLoading: isLoadingGetAllAddress,
+    isError: isErrorGetAllAddress,
+    error: errorGetAllAddress,
     refetch: refetchGetAllAddress,
   } = useGetAllAddressesByUserQuery({
     page: 0,
     size: 100,
   });
-
-  useEffect(() => {
-    refetchGetAllAddress();
-  }, []);
 
   const handleAddressInformationChange = (field, value) => {
     setAddressInformation((prev) => ({
@@ -110,6 +107,35 @@ const ShippingInformation = () => {
     }
   }, [defaultAddress]);
 
+  if (isLoadingGetAllAddress) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        my={4}
+      >
+        <CircularProgress />
+        <Typography>Đang tải địa chỉ...</Typography>
+      </Box>
+    );
+  }
+
+  if (isErrorGetAllAddress) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        color="error"
+      >
+        Lỗi khi tải địa chỉ:{" "}
+        {errorGetAllAddress?.data?.message || "Lỗi không xác định"}
+      </Box>
+    );
+  }
+
   return (
     <Fragment>
       <Box display={"flex"} flexDirection="column" gap={2}>
@@ -151,394 +177,352 @@ const ShippingInformation = () => {
           </Button>
         </Box>
 
-        <Box>
-          {isLoading ? (
-            <Typography>Đang tải địa chỉ...</Typography>
-          ) : isError ? (
-            <Typography color="error">
-              Lỗi địa chỉ: {error.toString()}
-            </Typography>
-          ) : dataGetAllAddress && addressItems.length === 0 ? (
-            <Box>
-              <Typography
-                variant="body1"
-                fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
-                color="#666"
-                textAlign={"center"}
-                my={4}
-              >
-                Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
-              </Typography>
-            </Box>
-          ) : (
-            defaultAddress && (
-              <Box mb={2}>
-                {/* Just display address if isDefault is true */}
-
-                <>
-                  <Box mb={2}>
-                    <Typography
-                      variant="body1"
-                      mb={1}
-                      fontSize={{
-                        xs: "1rem",
-                        sm: "1rem",
-                        md: "1.2rem",
-                      }}
-                    >
-                      Email
-                    </Typography>
-                    <TextField
-                      id="email"
-                      fullWidth
-                      disabled
-                      value={defaultAddress.userName}
-                    />
-                  </Box>
-
-                  <Box mb={2}>
-                    <Typography
-                      variant="body1"
-                      mb={1}
-                      fontSize={{
-                        xs: "1rem",
-                        sm: "1rem",
-                        md: "1.2rem",
-                      }}
-                    >
-                      Số điện thoại
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      id="phone-number"
-                      name="phone-number"
-                      value={addressInformation.phoneNumber}
-                      onChange={(e) =>
-                        handleAddressInformationChange(
-                          "phoneNumber",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </Box>
-
-                  <Box mb={2}>
-                    <Typography
-                      variant="body1"
-                      mb={1}
-                      fontSize={{
-                        xs: "1rem",
-                        sm: "1rem",
-                        md: "1.2rem",
-                      }}
-                    >
-                      Địa chỉ đường
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      id="address-street"
-                      name="address-street"
-                      value={addressInformation.addressStreet}
-                      onChange={(e) =>
-                        handleAddressInformationChange(
-                          "addressStreet",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </Box>
-
-                  {isMobile ? (
-                    <Fragment>
-                      <FormControl fullWidth sx={{ my: 2 }}>
-                        <InputLabel id="select-ward-label">
-                          Phường/xã
-                        </InputLabel>
-                        <Select
-                          labelId="select-ward-label"
-                          id="select-ward"
-                          value={addressInformation.ward}
-                          label="Chọn phường/xã"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "ward",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          {/* Get each state to match after selected ward */}
-                          <MenuItem value={addressInformation.ward || ""}>
-                            {addressInformation.ward || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl fullWidth sx={{ my: 2 }}>
-                        <InputLabel id="select-district-label">
-                          Quận/huyện
-                        </InputLabel>
-                        <Select
-                          labelId="select-district-label"
-                          id="select-district"
-                          value={addressInformation.district}
-                          label="Chọn quận/huyện"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "district",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          <MenuItem value={addressInformation.district || ""}>
-                            {addressInformation.district || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl fullWidth sx={{ my: 2 }}>
-                        <InputLabel id="select-province-label">
-                          Tỉnh/thành phố
-                        </InputLabel>
-                        <Select
-                          labelId="select-province-label"
-                          id="select-province"
-                          value={addressInformation.province}
-                          label="Chọn tỉnh/thành phố"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "province",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          <MenuItem value={addressInformation.province || ""}>
-                            {addressInformation.province || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Fragment>
-                  ) : (
-                    <Box display={"flex"} alignItems={"center"} gap={2} my={4}>
-                      <FormControl fullWidth>
-                        <InputLabel id="select-ward-label">
-                          Phường/xã
-                        </InputLabel>
-                        <Select
-                          labelId="select-ward-label"
-                          id="select-ward"
-                          value={addressInformation.ward}
-                          label="Chọn phường/xã"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "ward",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          <MenuItem value={addressInformation.ward || ""}>
-                            {addressInformation.ward || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl fullWidth>
-                        <InputLabel id="select-district-label">
-                          Quận/huyện
-                        </InputLabel>
-                        <Select
-                          labelId="select-district-label"
-                          id="select-district"
-                          value={addressInformation.district}
-                          label="Chọn quận/huyện"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "district",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          <MenuItem value={addressInformation.district || ""}>
-                            {addressInformation.district || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <FormControl fullWidth>
-                        <InputLabel id="select-province-label">
-                          Tỉnh/thành phố
-                        </InputLabel>
-                        <Select
-                          labelId="select-province-label"
-                          id="select-province"
-                          value={addressInformation.province}
-                          label="Chọn tỉnh/thành phố"
-                          onChange={(e) =>
-                            handleAddressInformationChange(
-                              "province",
-                              e.target.value,
-                            )
-                          }
-                        >
-                          <MenuItem value={addressInformation.province || ""}>
-                            {addressInformation.province || ""}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  )}
-                </>
-              </Box>
-            )
-          )}
-        </Box>
-
-        {/* Payment Method */}
-        <Typography variant="h6" fontWeight="bold">
-          2. Hình thức thanh toán
-        </Typography>
-        <Card variant="outlined" sx={{ padding: "16px" }}>
-          <FormControl>
-            <RadioGroup
-              name="payment-method"
-              value={paymentMethod}
-              onChange={handlePaymentMethodChange}
-              sx={{ mt: 1 }}
+        {isErrorGetAllAddress ? (
+          <Typography color="error">
+            Lỗi địa chỉ: {errorGetAllAddress.toString()}
+          </Typography>
+        ) : dataGetAllAddress && addressItems.length === 0 ? (
+          <Box>
+            <Typography
+              variant="body1"
+              fontSize={{ xs: "1rem", sm: "1rem", md: "1rem" }}
+              color="#666"
+              textAlign={"center"}
+              my={4}
             >
-              <Box display="flex" flexDirection={"column"}>
-                <FormControlLabel
-                  value="cod"
-                  control={<Radio />}
-                  label="Thanh toán khi nhận hàng"
-                  sx={{
-                    fontSize: {
+              Chưa có địa chỉ nào được thêm vào. Vui lòng thêm địa chỉ.
+            </Typography>
+          </Box>
+        ) : (
+          defaultAddress && (
+            <Box mb={2}>
+              {/* Just display address if isDefault is true */}
+              <>
+                <Box mb={2}>
+                  <Typography
+                    variant="body1"
+                    mb={1}
+                    fontSize={{
                       xs: "1rem",
                       sm: "1rem",
                       md: "1.2rem",
-                    },
-                  }}
-                />
+                    }}
+                  >
+                    Số điện thoại
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    id="phone-number"
+                    name="phone-number"
+                    value={addressInformation.phoneNumber}
+                    onChange={(e) =>
+                      handleAddressInformationChange(
+                        "phoneNumber",
+                        e.target.value,
+                      )
+                    }
+                  />
+                </Box>
 
-                <img
-                  src={cash_on_delivery}
-                  alt="Cash-delivery"
-                  style={{ width: 30, height: 30, marginLeft: 34 }}
-                />
-              </Box>
-
-              <Box display="flex" flexDirection={"column"} mt={2}>
-                <FormControlLabel
-                  value="vnpay"
-                  control={<Radio />}
-                  label="Thanh toán thẻ VNPAY"
-                />
-
-                <img
-                  src={vnpay_logo}
-                  alt="VNPAY"
-                  style={{ width: 30, height: 30, marginLeft: 34 }}
-                />
-              </Box>
-            </RadioGroup>
-          </FormControl>
-        </Card>
-
-        {/* Modal open address book */}
-        <Dialog
-          fullWidth
-          open={openModalAddressBook}
-          onClose={handleCloseModalAddressBook}
-        >
-          <DialogTitle
-            variant="h4"
-            fontWeight="bold"
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            fontSize={{
-              xl: "1.6rem",
-              lg: "1.6rem",
-              md: "1.4rem",
-              sm: "1.2rem",
-              xs: "1.1rem",
-            }}
-          >
-            Sổ địa chỉ
-            <IconButton
-              aria-label="close"
-              onClick={handleCloseModalAddressBook}
-            >
-              <Close />
-            </IconButton>
-          </DialogTitle>
-
-          <DialogContent>
-            {addressItems.length === 0 ? (
-              <Typography>Chưa có địa chỉ nào trong danh sách.</Typography>
-            ) : (
-              addressItems.map((address) => (
-                <Paper
-                  key={address.id}
-                  elevation={2}
-                  sx={{
-                    p: 3,
-                    mt: 1,
-                    mb: 3,
-                    cursor: "pointer",
-                    backgroundColor:
-                      chooseAddressFromBook &&
-                      chooseAddressFromBook.id === address.id
-                        ? "#f0f0f0"
-                        : "transparent",
-                  }}
-                  onClick={() => handleChooseAddress(address)}
-                >
+                <Box mb={2}>
                   <Typography
                     variant="body1"
-                    fontWeight={address.isDefault ? "bold" : "normal"}
+                    mb={1}
+                    fontSize={{
+                      xs: "1rem",
+                      sm: "1rem",
+                      md: "1.2rem",
+                    }}
                   >
-                    {address.phone}
+                    Địa chỉ đường
                   </Typography>
-                  <Typography variant="body2">
-                    {address.streetDetail}, {address.ward.name},{" "}
-                    {address.district.name}, {address.province.name}
-                  </Typography>
-                  {address.isDefault && (
-                    <Typography variant="body2" fontWeight="bold">
-                      Địa chỉ mặc định
-                    </Typography>
-                  )}
+                  <TextField
+                    fullWidth
+                    id="address-street"
+                    name="address-street"
+                    value={addressInformation.addressStreet}
+                    onChange={(e) =>
+                      handleAddressInformationChange(
+                        "addressStreet",
+                        e.target.value,
+                      )
+                    }
+                  />
+                </Box>
 
-                  <Box display="flex" justifyContent="flex-end" gap={2}>
-                    <UpdateAddressModal
-                      address={address}
-                      refetchGetAllAddress={refetchGetAllAddress}
-                    />
-                    <HideAddressModal
-                      addressId={address.id}
-                      refetchGetAllAddress={refetchGetAllAddress}
-                    />
+                {isMobile ? (
+                  <Fragment>
+                    <FormControl fullWidth sx={{ my: 2 }}>
+                      <InputLabel id="select-ward-label">Phường/xã</InputLabel>
+                      <Select
+                        labelId="select-ward-label"
+                        id="select-ward"
+                        value={addressInformation.ward}
+                        label="Chọn phường/xã"
+                        onChange={(e) =>
+                          handleAddressInformationChange("ward", e.target.value)
+                        }
+                      >
+                        {/* Get each state to match after selected ward */}
+                        <MenuItem value={addressInformation.ward || ""}>
+                          {addressInformation.ward || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth sx={{ my: 2 }}>
+                      <InputLabel id="select-district-label">
+                        Quận/huyện
+                      </InputLabel>
+                      <Select
+                        labelId="select-district-label"
+                        id="select-district"
+                        value={addressInformation.district}
+                        label="Chọn quận/huyện"
+                        onChange={(e) =>
+                          handleAddressInformationChange(
+                            "district",
+                            e.target.value,
+                          )
+                        }
+                      >
+                        <MenuItem value={addressInformation.district || ""}>
+                          {addressInformation.district || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth sx={{ my: 2 }}>
+                      <InputLabel id="select-province-label">
+                        Tỉnh/thành phố
+                      </InputLabel>
+                      <Select
+                        labelId="select-province-label"
+                        id="select-province"
+                        value={addressInformation.province}
+                        label="Chọn tỉnh/thành phố"
+                        onChange={(e) =>
+                          handleAddressInformationChange(
+                            "province",
+                            e.target.value,
+                          )
+                        }
+                      >
+                        <MenuItem value={addressInformation.province || ""}>
+                          {addressInformation.province || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Fragment>
+                ) : (
+                  <Box display={"flex"} alignItems={"center"} gap={2} my={4}>
+                    <FormControl fullWidth>
+                      <InputLabel id="select-ward-label">Phường/xã</InputLabel>
+                      <Select
+                        labelId="select-ward-label"
+                        id="select-ward"
+                        value={addressInformation.ward}
+                        label="Chọn phường/xã"
+                        onChange={(e) =>
+                          handleAddressInformationChange("ward", e.target.value)
+                        }
+                      >
+                        <MenuItem value={addressInformation.ward || ""}>
+                          {addressInformation.ward || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth>
+                      <InputLabel id="select-district-label">
+                        Quận/huyện
+                      </InputLabel>
+                      <Select
+                        labelId="select-district-label"
+                        id="select-district"
+                        value={addressInformation.district}
+                        label="Chọn quận/huyện"
+                        onChange={(e) =>
+                          handleAddressInformationChange(
+                            "district",
+                            e.target.value,
+                          )
+                        }
+                      >
+                        <MenuItem value={addressInformation.district || ""}>
+                          {addressInformation.district || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth>
+                      <InputLabel id="select-province-label">
+                        Tỉnh/thành phố
+                      </InputLabel>
+                      <Select
+                        labelId="select-province-label"
+                        id="select-province"
+                        value={addressInformation.province}
+                        label="Chọn tỉnh/thành phố"
+                        onChange={(e) =>
+                          handleAddressInformationChange(
+                            "province",
+                            e.target.value,
+                          )
+                        }
+                      >
+                        <MenuItem value={addressInformation.province || ""}>
+                          {addressInformation.province || ""}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
                   </Box>
-                </Paper>
-              ))
-            )}
-          </DialogContent>
-
-          <DialogActions>
-            <Box
-              mx={{
-                xl: 6,
-                lg: 6,
-                md: 6,
-                sm: 3,
-                xs: 3,
-              }}
-              my={1}
-            >
-              <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
+                )}
+              </>
             </Box>
-          </DialogActions>
-        </Dialog>
+          )
+        )}
       </Box>
+
+      {/* Payment Method */}
+      <Typography variant="h6" fontWeight="bold">
+        2. Hình thức thanh toán
+      </Typography>
+      <Card variant="outlined" sx={{ padding: "16px" }}>
+        <FormControl>
+          <RadioGroup
+            name="payment-method"
+            value={paymentMethod}
+            onChange={handlePaymentMethodChange}
+            sx={{ mt: 1 }}
+          >
+            <Box display="flex" flexDirection={"column"}>
+              <FormControlLabel
+                value="cod"
+                control={<Radio />}
+                label="Thanh toán khi nhận hàng"
+                sx={{
+                  fontSize: {
+                    xs: "1rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                  },
+                }}
+              />
+
+              <img
+                src={cash_on_delivery}
+                alt="Cash-delivery"
+                style={{ width: 30, height: 30, marginLeft: 34 }}
+              />
+            </Box>
+
+            <Box display="flex" flexDirection={"column"} mt={2}>
+              <FormControlLabel
+                value="vnpay"
+                control={<Radio />}
+                label="Thanh toán thẻ VNPAY"
+              />
+
+              <img
+                src={vnpay_logo}
+                alt="VNPAY"
+                style={{ width: 30, height: 30, marginLeft: 34 }}
+              />
+            </Box>
+          </RadioGroup>
+        </FormControl>
+      </Card>
+
+      {/* Modal open address book */}
+      <Dialog
+        fullWidth
+        open={openModalAddressBook}
+        onClose={handleCloseModalAddressBook}
+      >
+        <DialogTitle
+          variant="h4"
+          fontWeight="bold"
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          fontSize={{
+            xl: "1.6rem",
+            lg: "1.6rem",
+            md: "1.4rem",
+            sm: "1.2rem",
+            xs: "1.1rem",
+          }}
+        >
+          Sổ địa chỉ
+          <IconButton aria-label="close" onClick={handleCloseModalAddressBook}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent>
+          {addressItems.map((address) => (
+            <Paper
+              key={address.id}
+              elevation={2}
+              sx={{
+                p: 3,
+                mt: 1,
+                mb: 3,
+                cursor: "pointer",
+                backgroundColor:
+                  chooseAddressFromBook &&
+                  chooseAddressFromBook.id === address.id
+                    ? "#f0f0f0"
+                    : "transparent",
+              }}
+              onClick={() => handleChooseAddress(address)}
+            >
+              <Typography
+                variant="body1"
+                fontWeight={address.isDefault ? "bold" : "normal"}
+              >
+                {address.phone}
+              </Typography>
+              <Typography variant="body2">
+                {address.streetDetail}, {address.ward.name},{" "}
+                {address.district.name}, {address.province.name}
+              </Typography>
+              {address.isDefault && (
+                <Typography variant="body2" fontWeight="bold">
+                  Địa chỉ mặc định
+                </Typography>
+              )}
+
+              <Box display="flex" justifyContent="flex-end" gap={2}>
+                <UpdateAddressModal
+                  address={address}
+                  refetchGetAllAddress={refetchGetAllAddress}
+                />
+                <HideAddressModal
+                  addressId={address.id}
+                  refetchGetAllAddress={refetchGetAllAddress}
+                />
+              </Box>
+            </Paper>
+          ))}
+        </DialogContent>
+
+        <DialogActions>
+          <Box
+            mx={{
+              xl: 6,
+              lg: 6,
+              md: 6,
+              sm: 3,
+              xs: 3,
+            }}
+            my={1}
+          >
+            <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
+          </Box>
+        </DialogActions>
+      </Dialog>
     </Fragment>
   );
 };
