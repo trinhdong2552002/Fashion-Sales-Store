@@ -5,7 +5,7 @@ import {
   errorInterceptor,
   requestInterceptor,
   responseInterceptor,
-} from "./Interceptor";
+} from "./interceptor";
 
 import { API_URL } from "@/constants/api";
 

@@ -1,4 +1,4 @@
-import { TAG_KEYS } from "@/constants/tagKeys";
+import { TAG_KEYS } from "@/constants/tag-keys";
 import { baseApi } from "./index";
 
 export const branchApi = baseApi.injectEndpoints({

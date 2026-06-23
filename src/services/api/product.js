@@ -1,5 +1,5 @@
 import { baseApi } from "/src/services/api/index.js";
-import { TAG_KEYS } from "@/constants/tagKeys.js";
+import { TAG_KEYS } from "@/constants/tag-keys.js";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

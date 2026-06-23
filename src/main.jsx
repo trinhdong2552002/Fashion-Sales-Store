@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { persistor, store } from "@/store";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { customTheme } from "./theme/index.js";
-import { SnackbarProvider } from "./components/Snackbar/index.jsx";
+import { SnackbarProvider } from "./components/snackbar/index.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -23,5 +23,5 @@ createRoot(document.getElementById("root")).render(
         </PersistGate>
       </Provider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

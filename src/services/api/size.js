@@ -1,6 +1,6 @@
 // services/api/size.js
 import { baseApi } from "./index";
-import { TAG_KEYS } from "/src/constants/tagKeys.js";
+import { TAG_KEYS } from "/src/constants/tag-keys.js";
 
 export const sizeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
