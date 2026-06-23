@@ -1,7 +1,7 @@
 import { useTheme, useMediaQuery } from "@mui/material";
 
-import DesktopHeader from "./DesktopHeader";
-import MobileHeader from "./MobileHeader";
+import DesktopHeader from "./desktop-header";
+import MobileHeader from "./mobile-header";
 import { useGetAllCategoriesByUserQuery } from "@/services/api/category";
 
 const Header = () => {

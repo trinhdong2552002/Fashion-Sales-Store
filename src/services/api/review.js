@@ -1,5 +1,5 @@
 import { baseApi } from ".";
-import { TAG_KEYS } from "@/constants/tagKeys";
+import { TAG_KEYS } from "@/constants/tag-keys";
 
 export const reviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
