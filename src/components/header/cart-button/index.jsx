@@ -17,7 +17,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { useSnackbar } from "@/components/snackbar";
 import { useSelector } from "react-redux";
 import { useGetAllFetchedPaginatedByCurrentUserQuery } from "@/services/api/cart";

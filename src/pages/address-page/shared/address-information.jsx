@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 
 import { AddAddressModal } from "@/components/address/add-address-modal";
 import { UpdateAddressModal } from "@/components/address/update-address-modal";
@@ -12,15 +12,10 @@ const AddressInformation = () => {
     isLoading: isLoadingAddress,
     isError: isErrorAddress,
     error: errorAddress,
-    refetch: refetchGetAllAddress,
   } = useGetAllAddressesByUserQuery({
     page: 0,
     size: 10,
   });
-
-  useEffect(() => {
-    refetchGetAllAddress();
-  }, []);
 
   const addresses = dataAddress?.result?.items || [];
 
@@ -48,7 +43,7 @@ const AddressInformation = () => {
           Danh sách địa chỉ
         </Typography>
 
-        <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
+        <AddAddressModal />
       </Box>
 
       {isLoadingAddress ? (
@@ -104,14 +99,8 @@ const AddressInformation = () => {
               )}
             </Box>
             <Box display="flex" justifyContent="flex-end" gap={2}>
-              <UpdateAddressModal
-                address={address}
-                refetchGetAllAddress={refetchGetAllAddress}
-              />
-              <HideAddressModal
-                addressId={address.id}
-                refetchGetAllAddress={refetchGetAllAddress}
-              />
+              <UpdateAddressModal address={address} />
+              <HideAddressModal addressId={address.id} />
             </Box>
           </Paper>
         ))

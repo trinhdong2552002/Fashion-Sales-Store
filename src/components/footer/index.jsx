@@ -10,7 +10,6 @@ import {
   Twitter,
 } from "@mui/icons-material";
 
-import { useEffect } from "react";
 import styles from "./index.module.css";
 import { useGetAllBranchesForUserQuery } from "@/services/api/branch";
 
@@ -20,15 +19,10 @@ const Footer = () => {
     isLoading: isLoadingBranches,
     error: errorBranches,
     isError: isErrorBranch,
-    refetch: refetchBranch,
   } = useGetAllBranchesForUserQuery({
     page: 0,
     size: 10,
   });
-
-  useEffect(() => {
-    refetchBranch();
-  }, []);
 
   const footerData = [
     {

@@ -14,7 +14,6 @@ import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-import { useEffect } from "react";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import { useGetAllProductForUserQuery } from "@/services/api/product";
 
@@ -26,15 +25,10 @@ const SwiperProduct = ({ title, type }) => {
     isLoading: isLoadingProduct,
     isError: isErrorProduct,
     error: errorProduct,
-    refetch: refetchProduct,
   } = useGetAllProductForUserQuery({
     page: 0,
     size: 20,
   });
-
-  useEffect(() => {
-    refetchProduct();
-  }, []);
 
   let products =
     dataProduct?.result?.items.filter((item) => item.status === "ACTIVE") || [];
