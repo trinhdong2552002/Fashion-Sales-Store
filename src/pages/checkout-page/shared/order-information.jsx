@@ -1,10 +1,58 @@
 import { Box, Card, Typography, Divider, Button } from "@mui/material";
 import { Fragment } from "react";
-import { useLocation } from "react-router-dom";
+import { useSnackbar } from "@/components/snackbar";
+import { useCreateOrderMutation } from "@/services/api/order";
+import { useNavigate } from "react-router-dom";
 
-const OrderInformation = () => {
-  const location = useLocation();
-  const orderInfo = location.state?.orderInfo;
+const OrderInformation = ({
+  orderInfo,
+  shippingFee,
+  isCalculatingShipping,
+  selectedAddressId,
+  selectedPaymentMethod,
+}) => {
+  const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const [createOrder, { isLoading: isCreatingOrder }] =
+    useCreateOrderMutation();
+
+  const handlePlaceOrder = async () => {
+    if (!selectedAddressId) {
+      showSnackbar("Vui lòng chọn địa chỉ giao hàng", "error");
+      return;
+    }
+    if (!selectedPaymentMethod) {
+      showSnackbar("Vui lòng chọn hình thức thanh toán", "error");
+      return;
+    }
+    if (!orderInfo) {
+      showSnackbar("Không có thông tin sản phẩm", "error");
+      return;
+    }
+
+    try {
+      await createOrder({
+        addressId: selectedAddressId,
+        orderItems: [
+          {
+            productVariantId: orderInfo.productVariantId,
+            quantity: orderInfo.quantity,
+          },
+        ],
+        promotionId: null,
+        shippingFee: shippingFee,
+        paymentMethod: selectedPaymentMethod === "vnpay" ? "VNPAY" : "CASH",
+      }).unwrap();
+      showSnackbar("Tạo đơn hàng thành công!", "success");
+
+      navigate("/order-success");
+    } catch (error) {
+      showSnackbar(
+        error?.data?.message || "Có lỗi xảy ra khi tạo đơn hàng",
+        "error",
+      );
+    }
+  };
 
   return (
     <Fragment>
@@ -70,18 +118,27 @@ const OrderInformation = () => {
 
           <Box display="flex" justifyContent="space-between" mb={2}>
             <Typography>Phí vận chuyển:</Typography>
-            <Typography fontWeight="bold">Chưa tính</Typography>
+            <Typography fontWeight="bold">
+              {isCalculatingShipping
+                ? "Đang tính..."
+                : shippingFee > 0
+                  ? `${shippingFee.toLocaleString("vi-VN")}đ`
+                  : "Miễn phí"}
+            </Typography>
           </Box>
 
           <Divider sx={{ my: 2 }} />
 
-          <Box display="flex" justifyContent="space-between" mb={3}>
-            <Typography variant="h6" fontWeight={"bold"}>
+          <Box display="flex" justifyContent="space-between" my={3}>
+            <Typography variant="h5" fontWeight="bold">
               Tổng cộng:
             </Typography>
-            <Typography variant="h6" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold">
               {orderInfo
-                ? (orderInfo.price * orderInfo.quantity).toLocaleString("vi-VN")
+                ? (
+                    orderInfo.price * orderInfo.quantity +
+                    shippingFee
+                  ).toLocaleString("vi-VN")
                 : 0}
               đ
             </Typography>
@@ -91,14 +148,11 @@ const OrderInformation = () => {
             variant="contained"
             fullWidth
             size="large"
-            disabled={!orderInfo}
-            // loading={isCreatingOrder}
-            // loadingPosition="start"
-            sx={{ mt: 2 }}
-            // onClick={() => {}}
+            disabled={!orderInfo || isCreatingOrder || isCalculatingShipping}
+            onClick={handlePlaceOrder}
           >
             <Typography fontSize={"1.1rem"} fontWeight={"bold"}>
-              Đặt hàng
+              {isCreatingOrder ? "Đang xử lý..." : "Thanh toán"}
             </Typography>
           </Button>
         </Card>

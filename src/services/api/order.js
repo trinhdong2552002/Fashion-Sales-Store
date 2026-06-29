@@ -23,7 +23,7 @@ export const orderApi = baseApi.injectEndpoints({
 
     calculateShippingFee: builder.mutation({
       query: (shippingData) => ({
-        url: "/v1/private/shipping/caculate-fee",
+        url: "/v1/private/shipping/calculate-fee",
         method: "POST",
         data: shippingData,
       }),

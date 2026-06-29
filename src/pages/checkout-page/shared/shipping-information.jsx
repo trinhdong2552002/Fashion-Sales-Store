@@ -31,7 +31,7 @@ import cash_on_delivery from "@/assets/images/order/cash-on-delivery.png";
 import vnpay_logo from "@/assets/images/order/vnpay-logo.jpg";
 import { useGetAllAddressesByUserQuery } from "@/services/api/user";
 
-const ShippingInformation = () => {
+const ShippingInformation = ({ onAddressSelected, onPaymentMethodChange }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [addressInformation, setAddressInformation] = useState({
@@ -65,6 +65,9 @@ const ShippingInformation = () => {
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
+    if (onPaymentMethodChange) {
+      onPaymentMethodChange(event.target.value);
+    }
   };
 
   const handleOpenModalAddressBook = () => {
@@ -75,7 +78,6 @@ const ShippingInformation = () => {
     setOpenModalAddressBook(false);
   };
 
-  //
   const handleChooseAddress = (address) => {
     setChooseAddressFromBook(address);
 
@@ -87,6 +89,10 @@ const ShippingInformation = () => {
       province: address.province.name || "",
     });
     setOpenModalAddressBook(false);
+
+    if (onAddressSelected) {
+      onAddressSelected(address.id);
+    }
   };
 
   const addressItems = dataGetAllAddress?.result?.items || [];
@@ -104,8 +110,11 @@ const ShippingInformation = () => {
         district: defaultAddress.district.name || "",
         province: defaultAddress.province.name || "",
       });
+      if (onAddressSelected && !chooseAddressFromBook) {
+        onAddressSelected(defaultAddress.id);
+      }
     }
-  }, [defaultAddress]);
+  }, [defaultAddress, chooseAddressFromBook, onAddressSelected]);
 
   if (isLoadingGetAllAddress) {
     return (
@@ -399,7 +408,7 @@ const ShippingInformation = () => {
             <Box display="flex" flexDirection={"column"}>
               <FormControlLabel
                 value="cod"
-                control={<Radio />}
+                control={<Radio color="default" />}
                 label="Thanh toán khi nhận hàng"
                 sx={{
                   fontSize: {
@@ -420,7 +429,7 @@ const ShippingInformation = () => {
             <Box display="flex" flexDirection={"column"} mt={2}>
               <FormControlLabel
                 value="vnpay"
-                control={<Radio />}
+                control={<Radio color="default" />}
                 label="Thanh toán thẻ VNPAY"
               />
 
