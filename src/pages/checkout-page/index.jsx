@@ -1,10 +1,4 @@
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { Fragment, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ShippingInformation from "./shared/shipping-information";
@@ -22,7 +16,6 @@ const Checkout = () => {
     calculateShippingFee,
     {
       data: dataShippingFee,
-      isLoading: isCalculateShippingFeeLoading,
       isError: isErrorCalculateShippingFee,
       error: errorCalculateShippingFee,
     },
@@ -43,22 +36,6 @@ const Checkout = () => {
       });
     }
   }, [selectedAddressId, orderInfo, calculateShippingFee]);
-
-  if (isCalculateShippingFeeLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <CircularProgress />
-          <Typography mt={2}>Đang tính phí vận chuyển...</Typography>
-        </Box>
-      </Box>
-    );
-  }
 
   if (isErrorCalculateShippingFee) {
     return (
@@ -94,7 +71,6 @@ const Checkout = () => {
             <OrderInformation
               orderInfo={orderInfo}
               shippingFee={shippingFee}
-              isCalculatingShipping={isCalculateShippingFeeLoading}
               selectedAddressId={selectedAddressId}
               selectedPaymentMethod={selectedPaymentMethod}
             />

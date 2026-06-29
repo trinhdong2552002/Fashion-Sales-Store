@@ -1,4 +1,11 @@
-import { Box, Card, Typography, Divider, Button } from "@mui/material";
+import {
+  Box,
+  Card,
+  Typography,
+  Divider,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { Fragment } from "react";
 import { useSnackbar } from "@/components/snackbar";
 import { useCreateOrderMutation } from "@/services/api/order";
@@ -31,7 +38,7 @@ const OrderInformation = ({
     }
 
     try {
-      await createOrder({
+      const response = await createOrder({
         addressId: selectedAddressId,
         orderItems: [
           {
@@ -45,7 +52,7 @@ const OrderInformation = ({
       }).unwrap();
       showSnackbar("Tạo đơn hàng thành công!", "success");
 
-      navigate("/order-success");
+      navigate("/checkout-success", { state: { orderData: response.result } });
     } catch (error) {
       showSnackbar(
         error?.data?.message || "Có lỗi xảy ra khi tạo đơn hàng",
@@ -53,6 +60,21 @@ const OrderInformation = ({
       );
     }
   };
+
+  if (isCreatingOrder) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        my={4}
+      >
+        <CircularProgress color="inherit" />
+        <Typography>Đang xử lý đơn hàng...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Fragment>
@@ -120,7 +142,7 @@ const OrderInformation = ({
             <Typography>Phí vận chuyển:</Typography>
             <Typography fontWeight="bold">
               {isCalculatingShipping
-                ? "Đang tính..."
+                ? "Đang tính phí vận chuyển..."
                 : shippingFee > 0
                   ? `${shippingFee.toLocaleString("vi-VN")}đ`
                   : "Miễn phí"}

@@ -20,7 +20,7 @@ import BlogDetail from "@/pages/blog-page/shared/blog-detail";
 import ChangePassword from "@/pages/change-password-page";
 import MyOrders from "@/pages/my-order-page";
 import Checkout from "@/pages/checkout-page";
-import OrderSuccess from "@/pages/order-success";
+import CheckoutSuccess from "@/pages/checkout-success-page";
 import NotFound from "@/pages/not-found-page";
 import { Routes, Route } from "react-router-dom";
 
@@ -38,7 +38,7 @@ const App = () => {
         <Route path="blog/:id" element={<BlogDetail />} />
         <Route path="about" element={<About />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="order-success" element={<OrderSuccess />} />
+        <Route path="checkout-success" element={<CheckoutSuccess />} />
         <Route path="my-order" element={<MyOrders />} />
       </Route>
 

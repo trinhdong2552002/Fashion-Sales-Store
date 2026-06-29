@@ -20,7 +20,7 @@ const BreadcrumbNav = () => {
     "/my-order": "Đơn hàng của tôi",
   };
 
-  const hiddenPaths = ["/order-success"];
+  const hiddenPaths = ["/checkout-success"];
 
   // Do not render breadcrumb for these paths
   if (hiddenPaths.includes(location.pathname)) {
