@@ -50,7 +50,6 @@ const ShippingInformation = ({ onAddressSelected, onPaymentMethodChange }) => {
     isLoading: isLoadingGetAllAddress,
     isError: isErrorGetAllAddress,
     error: errorGetAllAddress,
-    refetch: refetchGetAllAddress,
   } = useGetAllAddressesByUserQuery({
     page: 0,
     size: 100,
@@ -504,14 +503,8 @@ const ShippingInformation = ({ onAddressSelected, onPaymentMethodChange }) => {
               )}
 
               <Box display="flex" justifyContent="flex-end" gap={2}>
-                <UpdateAddressModal
-                  address={address}
-                  refetchGetAllAddress={refetchGetAllAddress}
-                />
-                <HideAddressModal
-                  addressId={address.id}
-                  refetchGetAllAddress={refetchGetAllAddress}
-                />
+                <UpdateAddressModal address={address} />
+                <HideAddressModal addressId={address.id} />
               </Box>
             </Paper>
           ))}
@@ -528,7 +521,7 @@ const ShippingInformation = ({ onAddressSelected, onPaymentMethodChange }) => {
             }}
             my={1}
           >
-            <AddAddressModal refetchGetAllAddress={refetchGetAllAddress} />
+            <AddAddressModal />
           </Box>
         </DialogActions>
       </Dialog>

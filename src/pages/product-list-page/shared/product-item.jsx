@@ -32,7 +32,6 @@ const ProductItem = ({ selectedCategory, categoryId, searchQuery }) => {
     isLoading: isLoadingAllProductsByCategory,
     isError: isErrorGetAllProductsByCategory,
     error: errorGetAllProductsByCategory,
-    refetch: refetchCategoryRaw,
   } = useGetProductsByCategoryByUserQuery(
     {
       categoryId,
@@ -49,7 +48,6 @@ const ProductItem = ({ selectedCategory, categoryId, searchQuery }) => {
     isLoading: isLoadingAllProducts,
     isError: isErrorProduct,
     error: errorProduct,
-    refetch: refetchProduct,
   } = useGetAllProductForUserQuery(
     {
       page: 0,
@@ -63,14 +61,6 @@ const ProductItem = ({ selectedCategory, categoryId, searchQuery }) => {
   const dataProductsByCategory = categoryId
     ? dataGetAllProductsByCategory
     : dataAllProducts;
-
-  useEffect(() => {
-    if (categoryId) {
-      refetchCategoryRaw();
-    } else {
-      refetchProduct();
-    }
-  }, [categoryId]);
 
   const filteredProducts = useMemo(() => {
     // Handle data structure safety

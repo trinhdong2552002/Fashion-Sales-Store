@@ -26,7 +26,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
 import { useGetAllWardsByDistrictQuery } from "@/services/api/district";
 
-export const AddAddressModal = ({ refetchGetAllAddress }) => {
+export const AddAddressModal = () => {
   const [openModalAddAddress, setOpenModalAddAddress] = useState(false);
 
   // Separate state for selected id to know which one is selected
@@ -143,7 +143,6 @@ export const AddAddressModal = ({ refetchGetAllAddress }) => {
         district: "",
         ward: "",
       });
-      refetchGetAllAddress();
       showSnackbar("Thêm địa chỉ thành công!", "success");
     } catch (error) {
       if (error && error.data && error.data.message) {

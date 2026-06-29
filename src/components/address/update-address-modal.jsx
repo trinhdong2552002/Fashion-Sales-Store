@@ -24,7 +24,7 @@ import {
 } from "@/services/api/province";
 import { useGetAllWardsByDistrictQuery } from "@/services/api/district";
 
-export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
+export const UpdateAddressModal = ({ address }) => {
   const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
 
   // Separate state for selected IDs
@@ -143,7 +143,6 @@ export const UpdateAddressModal = ({ address, refetchGetAllAddress }) => {
         isDefault: checkedDefaultAddress,
       }).unwrap();
       setOpenModalUpdateAddress(false);
-      refetchGetAllAddress();
       showSnackbar("Cập nhật địa chỉ thành công!", "success");
     } catch (error) {
       if (error && error.data && error.data.message) {
