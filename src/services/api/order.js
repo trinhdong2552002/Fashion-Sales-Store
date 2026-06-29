@@ -41,9 +41,9 @@ export const orderApi = baseApi.injectEndpoints({
 
     createPaymentCallbackByOrder: builder.mutation({
       query: ({ orderId, responseCode }) => ({
-        url: `/v1/private/orders/${orderId}/payment-callback`,
+        url: `/v1/private/orders/vn-pay-callback`,
         method: "POST",
-        data: responseCode,
+        params: { orderId, responseCode },
       }),
       invalidatesTags: [TAG_KEYS.ORDER],
     }),
@@ -98,6 +98,7 @@ export const {
   useCreatePaymentCallbackByOrderMutation,
   useGetOrdersByCurrentUserQuery,
   useGetPaymentByOrderQuery,
+  useLazyGetPaymentByOrderQuery,
   useGetRetryPaymentByOrderQuery,
   useGetOrderDetailByIdQuery,
 } = orderApi;
