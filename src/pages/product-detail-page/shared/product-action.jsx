@@ -5,12 +5,18 @@ import { Box, Button } from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProductAction = ({ variantId, quantity, disabled }) => {
+const ProductAction = ({ variantId, quantity, disabled, buyNowData }) => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
 
-  const [addToCartItem, { isLoading: isAddingToCart }] =
-    useCreateCartItemMutation();
+  const [
+    addToCartItem,
+    {
+      isLoading: isAddingToCart,
+      isError: isErrorAddingToCart,
+      error: errorAddingToCart,
+    },
+  ] = useCreateCartItemMutation();
 
   const handleAddToCart = async () => {
     try {
@@ -26,6 +32,13 @@ const ProductAction = ({ variantId, quantity, disabled }) => {
       );
     }
   };
+
+  if (isErrorAddingToCart) {
+    showSnackbar(
+      errorAddingToCart?.data?.message || "Thêm vào giỏ hàng thất bại!",
+      "error",
+    );
+  }
 
   return (
     <Fragment>
@@ -67,7 +80,9 @@ const ProductAction = ({ variantId, quantity, disabled }) => {
           sx={{
             width: { xs: "100%", sm: "auto" },
           }}
-          onClick={() => navigate("/checkout")}
+          onClick={() =>
+            navigate("/checkout", { state: { orderInfo: buyNowData } })
+          }
         >
           Mua ngay
         </Button>
