@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Fragment } from "react";
 import { useSnackbar } from "@/components/snackbar";
-import { useCreateOrderMutation } from "@/services/api/order";
+import { useCreateOrderMutation, useLazyGetPaymentByOrderQuery } from "@/services/api/order";
 import { useNavigate } from "react-router-dom";
 
 const OrderInformation = ({
@@ -22,6 +22,7 @@ const OrderInformation = ({
   const navigate = useNavigate();
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOrderMutation();
+  const [getPaymentUrl, { isFetching: isGettingPaymentUrl }] = useLazyGetPaymentByOrderQuery();
 
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
@@ -38,7 +39,7 @@ const OrderInformation = ({
     }
 
     try {
-      const response = await createOrder({
+      const res = await createOrder({
         addressId: selectedAddressId,
         orderItems: [
           {
@@ -50,9 +51,17 @@ const OrderInformation = ({
         shippingFee: shippingFee,
         paymentMethod: selectedPaymentMethod === "vnpay" ? "VNPAY" : "CASH",
       }).unwrap();
-      showSnackbar("Tạo đơn hàng thành công!", "success");
+      
+      if (selectedPaymentMethod === "vnpay") {
+        const vnpayRes = await getPaymentUrl(res.result.id).unwrap();
+        if (vnpayRes?.paymentUrl) {
+          window.location.href = vnpayRes.paymentUrl;
+          return;
+        }
+      }
 
-      navigate("/checkout-success", { state: { orderData: response.result } });
+      showSnackbar("Tạo đơn hàng thành công!", "success");
+      navigate("/checkout-success", { state: { orderData: res.result } });
     } catch (error) {
       showSnackbar(
         error?.data?.message || "Có lỗi xảy ra khi tạo đơn hàng",
@@ -170,11 +179,11 @@ const OrderInformation = ({
             variant="contained"
             fullWidth
             size="large"
-            disabled={!orderInfo || isCreatingOrder || isCalculatingShipping}
+            disabled={!orderInfo || isCreatingOrder || isCalculatingShipping || isGettingPaymentUrl}
             onClick={handlePlaceOrder}
           >
             <Typography fontSize={"1.1rem"} fontWeight={"bold"}>
-              {isCreatingOrder ? "Đang xử lý..." : "Thanh toán"}
+              {isCreatingOrder || isGettingPaymentUrl ? "Đang xử lý..." : "Thanh toán"}
             </Typography>
           </Button>
         </Card>

@@ -22,6 +22,7 @@ import MyOrders from "@/pages/my-order-page";
 import Checkout from "@/pages/checkout-page";
 import CheckoutSuccess from "@/pages/checkout-success-page";
 import NotFound from "@/pages/not-found-page";
+import VnPayReturn from "@/pages/vnpay-return-page";
 import { Routes, Route } from "react-router-dom";
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="about" element={<About />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="checkout-success" element={<CheckoutSuccess />} />
+        <Route path="vnpay-return" element={<VnPayReturn />} />
         <Route path="my-order" element={<MyOrders />} />
       </Route>
 
