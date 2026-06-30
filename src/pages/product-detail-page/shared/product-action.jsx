@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const ProductAction = ({ variantId, quantity, disabled, buyNowData }) => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const token = localStorage.getItem("accessToken");
 
   const [
     addToCartItem,
@@ -19,6 +20,12 @@ const ProductAction = ({ variantId, quantity, disabled, buyNowData }) => {
   ] = useCreateCartItemMutation();
 
   const handleAddToCart = async () => {
+    if (!token) {
+      navigate("/login");
+      showSnackbar("Vui lòng đăng nhập để mua hàng!", "warning");
+      return;
+    }
+
     try {
       await addToCartItem({
         productVariantId: variantId,
@@ -31,6 +38,16 @@ const ProductAction = ({ variantId, quantity, disabled, buyNowData }) => {
         "error",
       );
     }
+  };
+
+  const handleBuyNow = () => {
+    if (!token) {
+      navigate("/login");
+      showSnackbar("Vui lòng đăng nhập để mua hàng!", "warning");
+      return;
+    }
+
+    navigate("/checkout", { state: { orderInfo: buyNowData } });
   };
 
   if (isErrorAddingToCart) {
@@ -80,9 +97,7 @@ const ProductAction = ({ variantId, quantity, disabled, buyNowData }) => {
           sx={{
             width: { xs: "100%", sm: "auto" },
           }}
-          onClick={() =>
-            navigate("/checkout", { state: { orderInfo: buyNowData } })
-          }
+          onClick={handleBuyNow}
         >
           Mua ngay
         </Button>
