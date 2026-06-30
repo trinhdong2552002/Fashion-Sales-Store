@@ -36,19 +36,21 @@ const AuthButton = ({ onCloseDrawer }) => {
       if (accessToken) {
         await logout({ accessToken }).unwrap();
       }
-
+    } catch (error) {
+      if (error?.status !== 401) {
+        if (error?.data?.message) {
+          showSnackbar(error.data.message, "error");
+        } else {
+          showSnackbar("Đã có lỗi xảy ra trong quá trình đăng xuất.", "error");
+        }
+      }
+    } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 
       dispatch(resetStore());
 
       handleMenuClose();
-    } catch (error) {
-      if (error?.data?.message) {
-        showSnackbar(error.data.message, "error");
-      } else {
-        showSnackbar("Đã có lỗi xảy ra trong quá trình đăng xuất.", "error");
-      }
     }
   };
 

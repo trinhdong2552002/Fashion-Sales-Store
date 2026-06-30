@@ -4,32 +4,12 @@ import axios from "axios";
 export const axiosBaseQuery =
   () =>
   async ({ url, method, data, params, headers }) => {
-    const publicEndpoints = [
-      "/v1/public/auth/login",
-      "/v1/public/register",
-      "/v1/public/auth/register/verify",
-      "/v1/public/auth/refresh-token",
-      "/v1/public/auth/forgot-password",
-      "/v1/public/auth/forgot-password/verify-code",
-      "/v1/public/auth/forgot-password/reset-password",
-      "/v1/public/promotions/search",
-      "/v1/public/products",
-      "/v1/public/products/{productId}/reviews",
-      "/v1/public/products/{id}/details",
-      "/v1/public/products/search",
-      "v1/public/colors",
-      "/v1/public/categories",
-      "/v1/public/categories/{categoryId}/products",
-      "/v1/public/branches",
-      "/v1/public/branches/{id}",
-      "/v1/public/sizes",
-      "/v1/public/qrcode",
-    ];
+    const isPublicEndpoint = url.startsWith("/v1/public");
 
     const token = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
-    if (!publicEndpoints.includes(url) && !token && !refreshToken) {
+    if (!isPublicEndpoint && !token && !refreshToken) {
       return {
         error: {
           status: 401,
