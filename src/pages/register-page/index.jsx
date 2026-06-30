@@ -49,7 +49,7 @@ const Register = () => {
           "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
           "success",
         );
-        navigate("/register/verify-account", { state: { email: data.email } });
+        navigate("/verify-account", { state: { email: data.email } });
       }
     } catch (error) {
       if (error && error.data && error.data.message) {
