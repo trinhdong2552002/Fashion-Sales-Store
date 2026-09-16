@@ -7,12 +7,11 @@ const LoadingItem = ({ title }) => {
       flexDirection={"column"}
       justifyContent={"center"}
       alignItems={"center"}
-      my={6}
+      height="100vh"
     >
-      <CircularProgress color="inherit" />
+      <CircularProgress color="inherit" aria-label="Loading…" />
       <Typography
         mt={3}
-        textAlign="center"
         variant="h6"
         color="#666"
         fontSize={{

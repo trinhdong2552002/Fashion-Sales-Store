@@ -8,6 +8,8 @@ import {
   Box,
   Grid,
   Typography,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,9 +31,16 @@ const Login = () => {
 
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: localStorage.getItem("rememberedEmail") || "",
+      password: localStorage.getItem("rememberedPassword") || "",
+      rememberMe: !!localStorage.getItem("rememberedEmail"),
+    },
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
@@ -55,6 +64,14 @@ const Login = () => {
         localStorage.setItem("accessToken", response?.result?.accessToken);
         localStorage.setItem("refreshToken", response?.result?.refreshToken);
 
+        if (data?.rememberMe) {
+          localStorage.setItem("rememberedEmail", data?.email);
+          localStorage.setItem("rememberedPassword", data?.password);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedPassword");
+        }
+
         await triggerMyInfo();
         showSnackbar("Đăng nhập thành công!", "success");
         navigate("/");
@@ -62,6 +79,8 @@ const Login = () => {
     } catch (error) {
       if (error && error.data && error.data.message) {
         showSnackbar(`${error.data.message}`, "error");
+      } else {
+        showSnackbar("Đăng nhập thất bại! Vui lòng thử lại.", "error");
       }
     }
   };
@@ -198,7 +217,7 @@ const Login = () => {
                   variant="outlined"
                   disabled={isLoading}
                   fullWidth
-                  sx={{ mb: 4 }}
+                  sx={{ mb: 2 }}
                   error={!!errors.password}
                   helperText={errors.password?.message}
                   {...register("password", {
@@ -225,6 +244,22 @@ const Login = () => {
                         </IconButton>
                       </InputAdornment>
                     ),
+                  }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="inherit"
+                      id="rememberMe"
+                      {...register("rememberMe")}
+                      disabled={isLoading}
+                    />
+                  }
+                  label="Ghi nhớ tài khoản"
+                  sx={{
+                    mb: 2,
+                    mr: 0,
                   }}
                 />
 

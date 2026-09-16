@@ -15,6 +15,7 @@ import { useGetOrderDetailByIdQuery } from "@/services/api/order";
 import dayjs from "dayjs";
 import { STATUS_CONFIG } from "@/constants";
 import ErrorItem from "@/components/error-item/error-item";
+import OrderItemReviewActions from "./order-item-review-actions";
 
 const OrderDetailDialog = ({ open, onClose, orderId, onCancelOrder }) => {
   const {
@@ -65,19 +66,31 @@ const OrderDetailDialog = ({ open, onClose, orderId, onCancelOrder }) => {
                 </Typography>
                 <Typography variant="body1" fontWeight={"bold"} mt={1}>
                   Người nhận:{" "}
-                  <Typography variant="span" color="#666" fontWeight={"normal"}>
+                  <Typography
+                    component="span"
+                    color="#666"
+                    fontWeight={"normal"}
+                  >
                     {dataOrder.customerName || "N/A"}
                   </Typography>
                 </Typography>
                 <Typography variant="body1" fontWeight={"bold"} mt={1}>
                   Số điện thoại:{" "}
-                  <Typography variant="span" color="#666" fontWeight={"normal"}>
+                  <Typography
+                    component="span"
+                    color="#666"
+                    fontWeight={"normal"}
+                  >
                     {dataOrder.address?.phone || "N/A"}
                   </Typography>
                 </Typography>
                 <Typography variant="body1" fontWeight={"bold"} mt={1}>
                   Địa chỉ:{" "}
-                  <Typography variant="span" color="#666" fontWeight={"normal"}>
+                  <Typography
+                    component="span"
+                    color="#666"
+                    fontWeight={"normal"}
+                  >
                     {dataOrder.address
                       ? `${dataOrder.address.streetDetail}, ${dataOrder.address.ward?.name || ""}, ${
                           dataOrder.address.district?.name || ""
@@ -93,7 +106,11 @@ const OrderDetailDialog = ({ open, onClose, orderId, onCancelOrder }) => {
                 </Typography>
                 <Typography variant="body1" fontWeight={"bold"} mt={1}>
                   Ngày đặt hàng:{" "}
-                  <Typography variant="span" color="#666" fontWeight={"normal"}>
+                  <Typography
+                    component="span"
+                    color="#666"
+                    fontWeight={"normal"}
+                  >
                     {dayjs(dataOrder.orderDate).format("DD/MM/YYYY HH:mm")}
                   </Typography>
                 </Typography>
@@ -120,52 +137,66 @@ const OrderDetailDialog = ({ open, onClose, orderId, onCancelOrder }) => {
             <Typography variant="h6" fontWeight="bold" mb={1}>
               Sản phẩm đã đặt
             </Typography>
-            <Stack spacing={2} mb={3}>
+            <Stack spacing={3} mb={3} divider={<Divider />}>
               {dataOrder.orderItems?.map((item) => (
-                <Box key={item.id} display="flex" alignItems="center" gap={2}>
-                  <img
-                    src={
-                      item.image?.imageUrl ||
-                      item.productVariant?.product?.images?.[0]?.imageUrl
-                    }
-                    alt={item.productVariant?.product?.name || "Product image"}
-                    style={{
-                      width: 64,
-                      height: 64,
-                      objectFit: "cover",
-                      borderRadius: 8,
-                      border: "1px solid #eee",
-                    }}
-                  />
-                  <Box flex={1}>
+                <Box key={item.id}>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <img
+                      src={
+                        item.image?.imageUrl ||
+                        item.productVariant?.product?.images?.[0]?.imageUrl
+                      }
+                      alt={
+                        item.productVariant?.product?.name || "Product image"
+                      }
+                      style={{
+                        width: 64,
+                        height: 64,
+                        objectFit: "cover",
+                        borderRadius: 8,
+                        border: "1px solid #eee",
+                      }}
+                    />
+                    <Box flex={1}>
+                      <Typography variant="body1" fontWeight="bold">
+                        {item.productVariant?.product?.name || "Sản phẩm"}
+                      </Typography>
+                      <Typography variant="body1" fontWeight={"bold"} mt={0.5}>
+                        Phân loại:{" "}
+                        <Typography
+                          component="span"
+                          color="#666"
+                          fontWeight={"normal"}
+                        >
+                          {item.productVariant?.color?.name || ""},{" "}
+                          {item.productVariant?.size?.name || ""}
+                        </Typography>
+                      </Typography>
+                      <Typography variant="body1" fontWeight={"bold"} mt={0.5}>
+                        Số lượng:{" "}
+                        <Typography
+                          component="span"
+                          color="#666"
+                          fontWeight={"normal"}
+                        >
+                          {item.quantity}
+                        </Typography>
+                      </Typography>
+                    </Box>
                     <Typography variant="body1" fontWeight="bold">
-                      {item.productVariant?.product?.name || "Sản phẩm"}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={"bold"} mt={0.5}>
-                      Phân loại:{" "}
-                      <Typography
-                        variant="span"
-                        color="#666"
-                        fontWeight={"normal"}
-                      >
-                        {item.productVariant?.color?.name || ""},{" "}
-                        {item.productVariant?.size?.name || ""}
-                      </Typography>
-                    </Typography>
-                    <Typography variant="body1" fontWeight={"bold"} mt={0.5}>
-                      Số lượng:{" "}
-                      <Typography
-                        variant="span"
-                        color="#666"
-                        fontWeight={"normal"}
-                      >
-                        {item.quantity}
-                      </Typography>
+                      {(item.unitPrice * item.quantity).toLocaleString("vi-VN")}
+                      đ
                     </Typography>
                   </Box>
-                  <Typography variant="body1" fontWeight="bold">
-                    {(item.unitPrice * item.quantity).toLocaleString("vi-VN")}đ
-                  </Typography>
+                  {/* {dataOrder.orderStatus === "DELIVERED" && (
+                    <Box display="flex" justifyContent="flex-end" mt={2}>
+                      <OrderItemReviewActions orderItemId={item.id} />
+                    </Box>
+                  )} */}
+
+                  <Box display="flex" justifyContent="flex-end" mt={2}>
+                    <OrderItemReviewActions orderItemId={item.id} />
+                  </Box>
                 </Box>
               ))}
             </Stack>
@@ -208,6 +239,7 @@ const OrderDetailDialog = ({ open, onClose, orderId, onCancelOrder }) => {
               dataOrder.orderStatus === "PROCESSING") && (
               <Button
                 variant="contained"
+                disabled={isLoadingOrder}
                 color="error"
                 onClick={() => onCancelOrder(dataOrder.id)}
               >

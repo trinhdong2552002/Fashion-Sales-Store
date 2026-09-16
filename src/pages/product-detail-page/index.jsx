@@ -18,6 +18,7 @@ import "swiper/css/free-mode";
 import ProductActions from "./shared/product-action";
 
 import { useGetProductDetailByIdQuery } from "@/services/api/product";
+import ProductDetailTabAction from "./shared/product-detail-tab-section";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -515,6 +516,11 @@ const ProductDetail = () => {
                   />
                 </Grid>
               </Grid>
+
+              <ProductDetailTabAction
+                productId={id}
+                dataProductById={dataProductById}
+              />
             </Fragment>
           )}
         </Box>

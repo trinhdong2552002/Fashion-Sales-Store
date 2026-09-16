@@ -46,7 +46,8 @@ const Checkout = () => {
         height="100vh"
       >
         <Box display="flex" flexDirection="column" alignItems="center">
-          <Typography mt={2}>
+          <Typography mt={2} color="error">
+            Đã có xảy ra lỗi:{" "}
             {errorCalculateShippingFee?.data?.message ||
               "Lỗi khi tính phí vận chuyển"}
           </Typography>
