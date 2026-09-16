@@ -13,4 +13,7 @@ export const cartApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllFetchedPaginatedByCurrentUserQuery } = cartApi;
+export const {
+  useGetAllFetchedPaginatedByCurrentUserQuery,
+  useLazyGetAllFetchedPaginatedByCurrentUserQuery,
+} = cartApi;
