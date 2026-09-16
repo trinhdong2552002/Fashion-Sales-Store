@@ -1,4 +1,3 @@
-import axios from "axios";
 import { baseApi } from "./index";
 import { TAG_KEYS } from "@/constants/tag-keys";
 
@@ -14,45 +13,14 @@ export const userApi = baseApi.injectEndpoints({
     }),
 
     uploadAvatar: builder.mutation({
-      async queryFn(file) {
+      query: (file) => {
         const formData = new FormData();
         formData.append("file", file);
-
-        try {
-          const token = localStorage.getItem("accessToken");
-
-          if (!token) {
-            return {
-              error: {
-                status: 401,
-                data: { message: "Không tìm thấy token xác thực" },
-              },
-            };
-          }
-
-          const response = await axios.put(
-            `${import.meta.env.VITE_API_URL}/v1/private/users/avatar`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
-
-          return { data: response.data };
-        } catch (error) {
-          console.error("Upload error:", error);
-
-          return {
-            error: {
-              status: error.response?.status || 500,
-              data: error.response?.data || {
-                message: error.message || "Upload thất bại",
-              },
-            },
-          };
-        }
+        return {
+          url: "/v1/private/users/avatar",
+          method: "PUT",
+          data: formData,
+        };
       },
       invalidatesTags: [TAG_KEYS.USER],
     }),
