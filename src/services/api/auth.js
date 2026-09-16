@@ -103,6 +103,16 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: [TAG_KEYS.AUTH],
     }),
 
+    refreshToken: builder.mutation({
+      query: (credentials) => ({
+        url: "/v1/public/auth/refresh-token",
+        method: "POST",
+        data: {
+          refreshToken: credentials.refreshToken,
+        },
+      }),
+    }),
+
     getMyInfo: builder.query({
       query: () => ({
         url: "/v1/private/auth/myInfo",
@@ -139,6 +149,7 @@ export const {
   useResetPasswordMutation,
   useChangePasswordMutation,
   useLogoutMutation,
+  useRefreshTokenMutation,
   useGetMyInfoQuery,
   useLazyGetMyInfoQuery,
 } = authApi;

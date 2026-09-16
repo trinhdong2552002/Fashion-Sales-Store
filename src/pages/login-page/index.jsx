@@ -38,7 +38,6 @@ const Login = () => {
     defaultValues: {
       email: localStorage.getItem("rememberedEmail") || "",
       password: localStorage.getItem("rememberedPassword") || "",
-      rememberMe: !!localStorage.getItem("rememberedEmail"),
     },
   });
 
@@ -57,20 +56,13 @@ const Login = () => {
         dispatch(
           setAuth({
             accessToken: response?.result?.accessToken,
+            refreshToken: response?.result?.refreshToken,
             email: data?.email,
             roles: response?.result?.roles,
           }),
         );
         localStorage.setItem("accessToken", response?.result?.accessToken);
         localStorage.setItem("refreshToken", response?.result?.refreshToken);
-
-        if (data?.rememberMe) {
-          localStorage.setItem("rememberedEmail", data?.email);
-          localStorage.setItem("rememberedPassword", data?.password);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
-        }
 
         await triggerMyInfo();
         showSnackbar("Đăng nhập thành công!", "success");
@@ -244,22 +236,6 @@ const Login = () => {
                         </IconButton>
                       </InputAdornment>
                     ),
-                  }}
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="inherit"
-                      id="rememberMe"
-                      {...register("rememberMe")}
-                      disabled={isLoading}
-                    />
-                  }
-                  label="Ghi nhớ tài khoản"
-                  sx={{
-                    mb: 2,
-                    mr: 0,
                   }}
                 />
 

@@ -4,6 +4,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     accessToken: null,
+    refreshToken: null,
     authenticated: false,
     email: null,
     roles: null,
@@ -11,12 +12,20 @@ const authSlice = createSlice({
   reducers: {
     setAuth: (state, action) => {
       state.accessToken = action.payload.accessToken;
+      if (action.payload.refreshToken) {
+        state.refreshToken = action.payload.refreshToken;
+      }
       state.authenticated = true;
-      state.email = action.payload.email;
-      state.roles = action.payload.roles;
+      if (action.payload.email !== undefined) {
+        state.email = action.payload.email;
+      }
+      if (action.payload.roles !== undefined) {
+        state.roles = action.payload.roles;
+      }
     },
     clearAuth: (state) => {
       state.accessToken = null;
+      state.refreshToken = null;
       state.authenticated = false;
       state.email = null;
       state.roles = null;
