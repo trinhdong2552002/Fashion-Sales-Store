@@ -8,7 +8,10 @@ import {
 } from "@mui/material";
 import { Fragment } from "react";
 import { useSnackbar } from "@/components/snackbar";
-import { useCreateOrderMutation, useLazyGetPaymentByOrderQuery } from "@/services/api/order";
+import {
+  useCreateOrderMutation,
+  useLazyGetPaymentByOrderQuery,
+} from "@/services/api/order";
 import { useNavigate } from "react-router-dom";
 
 const OrderInformation = ({
@@ -22,7 +25,8 @@ const OrderInformation = ({
   const navigate = useNavigate();
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOrderMutation();
-  const [getPaymentUrl, { isFetching: isGettingPaymentUrl }] = useLazyGetPaymentByOrderQuery();
+  const [getPaymentUrl, { isFetching: isGettingPaymentUrl }] =
+    useLazyGetPaymentByOrderQuery();
 
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
@@ -51,7 +55,7 @@ const OrderInformation = ({
         shippingFee: shippingFee,
         paymentMethod: selectedPaymentMethod === "vnpay" ? "VNPAY" : "CASH",
       }).unwrap();
-      
+
       if (selectedPaymentMethod === "vnpay") {
         const vnpayRes = await getPaymentUrl(res.result.id).unwrap();
         if (vnpayRes?.paymentUrl) {
@@ -179,11 +183,18 @@ const OrderInformation = ({
             variant="contained"
             fullWidth
             size="large"
-            disabled={!orderInfo || isCreatingOrder || isCalculatingShipping || isGettingPaymentUrl}
+            disabled={
+              !orderInfo ||
+              isCreatingOrder ||
+              isCalculatingShipping ||
+              isGettingPaymentUrl
+            }
             onClick={handlePlaceOrder}
           >
             <Typography fontSize={"1.1rem"} fontWeight={"bold"}>
-              {isCreatingOrder || isGettingPaymentUrl ? "Đang xử lý..." : "Thanh toán"}
+              {isCreatingOrder || isGettingPaymentUrl
+                ? "Đang xử lý..."
+                : "Thanh toán"}
             </Typography>
           </Button>
         </Card>

@@ -11,7 +11,7 @@ export const cartApi = baseApi.injectEndpoints({
     }),
 
     updateCartItem: builder.mutation({
-      query: (cartItemId, ...cartData) => ({
+      query: ({ cartItemId, ...cartData }) => ({
         url: `/v1/private/cart-items/${cartItemId}`,
         method: "PUT",
         data: cartData,

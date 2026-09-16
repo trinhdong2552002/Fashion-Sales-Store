@@ -23,6 +23,7 @@ import BlogDetail from "@/pages/blog-page/shared/blog-detail";
 import ChangePassword from "@/pages/change-password-page";
 import MyOrders from "@/pages/my-order-page";
 import Checkout from "@/pages/checkout-page";
+import Cart from "@/pages/cart-page";
 import CheckoutSuccess from "@/pages/checkout-success-page";
 import NotFound from "@/pages/not-found-page";
 import VnPayReturn from "@/pages/vnpay-return-page";
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<BlogDetail />} />
         <Route path="about" element={<About />} />
+        <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="checkout-success" element={<CheckoutSuccess />} />
         <Route path="vnpay-return" element={<VnPayReturn />} />

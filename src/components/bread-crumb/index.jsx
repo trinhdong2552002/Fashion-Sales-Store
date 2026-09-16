@@ -18,6 +18,7 @@ const BreadcrumbNav = () => {
     "/product-details": "Chi tiết sản phẩm",
     "/checkout": "Thanh toán",
     "/my-order": "Đơn hàng của tôi",
+    "/cart": "Giỏ hàng",
   };
 
   const hiddenPaths = ["/checkout-success", "/vnpay-return"];
