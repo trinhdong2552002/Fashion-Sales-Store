@@ -12,7 +12,7 @@ export const productApi = baseApi.injectEndpoints({
     }),
 
     getProductReviewById: builder.query({
-      query: (productId, page, size, sort) => ({
+      query: ({ productId, page, size, sort }) => ({
         url: `/v1/public/products/${productId}/reviews`,
         params: { page, size, sort },
       }),
@@ -30,7 +30,7 @@ export const productApi = baseApi.injectEndpoints({
     }),
 
     searchProduct: builder.query({
-      query: (page, size, sort, search) => ({
+      query: ({ page, size, sort, search }) => ({
         url: "/v1/public/products/search",
         params: { page, size, sort, search },
       }),

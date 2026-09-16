@@ -1,7 +1,5 @@
 import {
   Container,
-  Tab,
-  Tabs,
   Box,
   Typography,
   Card,
@@ -10,7 +8,6 @@ import {
   Button,
   Chip,
   Divider,
-  Stack,
 } from "@mui/material";
 import { Fragment, useState } from "react";
 import dayjs from "dayjs";
@@ -20,12 +17,13 @@ import {
 } from "@/services/api/order";
 import { useSnackbar } from "@/components/snackbar";
 import WallpaperRepresentative from "@/components/wallpaper-representative";
-import { ORDER_STATUS_TABS, STATUS_CONFIG } from "@/constants";
 import OrderDetailDialog from "./shared/order-detail-dialog";
 import CancelConfirmDialog from "./shared/cancel-confim-order";
 import { useNavigate } from "react-router-dom";
 import LoadingItem from "@/components/loading-item/loading-item";
 import ErrorItem from "@/components/error-item/error-item";
+import CustomTabs from "@/components/tabs";
+import { ORDER_STATUS_TABS, STATUS_CONFIG } from "@/constants";
 
 const MyOrder = () => {
   const token = localStorage.getItem("accessToken");
@@ -38,9 +36,8 @@ const MyOrder = () => {
   const [orderToCancel, setOrderToCancel] = useState(null);
 
   const {
-    data: orders,
-    isLoading,
-    isFetching,
+    data: dataOrder,
+    isLoading: isLoadingOrder,
     isError,
   } = useGetOrdersByCurrentUserQuery(status);
 
@@ -51,8 +48,8 @@ const MyOrder = () => {
     return;
   }
 
-  const handleTabChange = (event, newValue) => {
-    setStatus(newValue);
+  const handleTabChange = (value) => {
+    setStatus(value);
   };
 
   const handleOpenDetail = (orderId) => {
@@ -80,15 +77,17 @@ const MyOrder = () => {
     if (!orderToCancel) return;
     try {
       await cancelOrder(orderToCancel).unwrap();
-      showSnackbar("Hủy đơn hàng thành công!", "success");
+      showSnackbar("Đã hủy đơn hàng", "success");
       handleCloseCancel();
-      // If detail dialog was open for this order, close it as well
       if (selectedOrderId === orderToCancel) {
         handleCloseDetail();
       }
-    } catch (err) {
-      const errMsg = err?.data?.message || "Có lỗi xảy ra khi hủy đơn hàng.";
-      showSnackbar(errMsg, "error");
+    } catch (error) {
+      if (error && error.data && error.data.message) {
+        showSnackbar(`${error.data.message}`, "error");
+      } else {
+        showSnackbar("Hủy đơn hàng thất bại");
+      }
     }
   };
 
@@ -96,9 +95,9 @@ const MyOrder = () => {
     handleOpenCancel(orderId);
   };
 
-  const orderList = orders || [];
+  const orderList = dataOrder || [];
 
-  if (isLoading) {
+  if (isLoadingOrder) {
     return <LoadingItem title={"Đang tải đơn hàng..."} />;
   }
 
@@ -110,23 +109,12 @@ const MyOrder = () => {
     <Fragment>
       <WallpaperRepresentative titleHeader="Đơn hàng của tôi" />
 
-      <Container maxWidth="lg" sx={{ pb: 8 }}>
-        <Tabs
-          value={status}
+      <Container maxWidth="lg">
+        <CustomTabs
+          defaultTab={status}
+          tabs={ORDER_STATUS_TABS}
           onChange={handleTabChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{
-            my: 4,
-            "& .MuiTab-root": { color: "black", fontSize: "1rem" },
-            "& .Mui-selected": { color: "black", fontWeight: "bold" },
-            "& .MuiTabs-indicator": { backgroundColor: "black" },
-          }}
-        >
-          {ORDER_STATUS_TABS.map((tab) => (
-            <Tab key={tab.value} value={tab.value} label={tab.label} />
-          ))}
-        </Tabs>
+        />
 
         {orderList.length === 0 ? (
           <Box textAlign="center" py={8}>
@@ -135,11 +123,7 @@ const MyOrder = () => {
             </Typography>
           </Box>
         ) : (
-          <Grid
-            container
-            spacing={3}
-            sx={{ opacity: isFetching ? 0.5 : 1, transition: "opacity 0.2s" }}
-          >
+          <Grid container spacing={3}>
             {orderList.map((order) => (
               <Grid size={{ xs: 12 }} key={order.id}>
                 <Card
@@ -173,7 +157,7 @@ const MyOrder = () => {
                         >
                           Ngày đặt:{" "}
                           <Typography
-                            variant="span"
+                            component="span"
                             color="#666"
                             fontWeight={"normal"}
                           >
@@ -199,7 +183,7 @@ const MyOrder = () => {
                         <Typography variant="body1" fontWeight={"bold"}>
                           Người nhận:{" "}
                           <Typography
-                            variant="span"
+                            component="span"
                             color="#666"
                             fontWeight={"normal"}
                           >
@@ -211,15 +195,13 @@ const MyOrder = () => {
                           fontWeight={"bold"}
                           sx={{ mt: 0.5 }}
                         >
-                          <Typography variant="body1" fontWeight={"bold"}>
-                            Số điện thoại:{" "}
-                            <Typography
-                              variant="span"
-                              color="#666"
-                              fontWeight={"normal"}
-                            >
-                              {order.address?.phone}
-                            </Typography>
+                          Số điện thoại:{" "}
+                          <Typography
+                            component="span"
+                            color="#666"
+                            fontWeight={"normal"}
+                          >
+                            {order.address?.phone}
                           </Typography>
                         </Typography>
                         <Typography
@@ -229,7 +211,7 @@ const MyOrder = () => {
                         >
                           Địa chỉ:{" "}
                           <Typography
-                            variant="span"
+                            component="span"
                             color="#666"
                             fontWeight={"normal"}
                           >
@@ -261,26 +243,15 @@ const MyOrder = () => {
                             {order.totalPrice.toLocaleString("vi-VN")}đ
                           </Typography>
                         </Box>
-                        <Stack direction="row" spacing={2} mt={1}>
-                          {(order.orderStatus === "PENDING" ||
-                            order.orderStatus === "PROCESSING") && (
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              onClick={(e) => handleOpenCancel(order.id, e)}
-                            >
-                              Hủy đơn
-                            </Button>
-                          )}
-                          <Button
-                            variant="contained"
-                            size="small"
-                            onClick={() => handleOpenDetail(order.id)}
-                          >
-                            Xem chi tiết
-                          </Button>
-                        </Stack>
+
+                        <Button
+                          variant="contained"
+                          size="small"
+                          sx={{ mt: 1 }}
+                          onClick={() => handleOpenDetail(order.id)}
+                        >
+                          Xem chi tiết đơn hàng
+                        </Button>
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -291,7 +262,6 @@ const MyOrder = () => {
         )}
       </Container>
 
-      {/* Order Details Dialog */}
       <OrderDetailDialog
         open={openDetail}
         onClose={handleCloseDetail}
@@ -299,7 +269,6 @@ const MyOrder = () => {
         onCancelOrder={handleCancelFromDetail}
       />
 
-      {/* Cancel Confirmation Dialog */}
       <CancelConfirmDialog
         open={openCancel}
         onClose={handleCloseCancel}

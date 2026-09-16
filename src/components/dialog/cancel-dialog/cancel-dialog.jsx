@@ -51,10 +51,15 @@ const CancelDialog = ({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button color="error" variant="outlined" onClick={onClose}>
+        <Button variant="outlined" onClick={onClose}>
           Quay lại
         </Button>
-        <Button variant="contained" color="error" onClick={onConfirm}>
+        <Button
+          sx={{ color: "white" }}
+          variant="contained"
+          disabled={isCancelling}
+          onClick={onConfirm}
+        >
           {isCancelling ? "Đang hủy..." : "Xác nhận hủy"}
         </Button>
       </DialogActions>

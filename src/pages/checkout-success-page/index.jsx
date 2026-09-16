@@ -15,7 +15,6 @@ const CheckoutSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const orderData = location.state?.orderData;
-  console.log("orderData", orderData);
 
   const {
     id,
@@ -76,19 +75,19 @@ const CheckoutSuccess = () => {
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="body1" fontWeight={"bold"} gutterBottom>
               Người nhận:{" "}
-              <Typography variant="span" fontWeight={"normal"}>
+              <Typography component="span" fontWeight={"normal"}>
                 {customerName}
               </Typography>
             </Typography>
             <Typography variant="body1" fontWeight={"bold"} gutterBottom>
               Số điện thoại:{" "}
-              <Typography variant="span" fontWeight={"normal"}>
+              <Typography component="span" fontWeight={"normal"}>
                 {address?.phone}
               </Typography>
             </Typography>
             <Typography variant="body1" fontWeight={"bold"} gutterBottom>
               Địa chỉ:{" "}
-              <Typography variant="span" fontWeight={"normal"}>
+              <Typography component="span" fontWeight={"normal"}>
                 {address?.streetDetail}, {address?.ward?.name},{" "}
                 {address?.district?.name}, {address?.province?.name}
               </Typography>

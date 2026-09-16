@@ -4,7 +4,7 @@ import { TAG_KEYS } from "@/constants/tag-keys";
 export const reviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     updateReviewByUser: builder.mutation({
-      query: (reviewId, ...reviewData) => ({
+      query: ({ reviewId, ...reviewData }) => ({
         url: `/v1/private/reviews/${reviewId}`,
         method: "PUT",
         data: reviewData,
@@ -31,7 +31,7 @@ export const reviewApi = baseApi.injectEndpoints({
 
     getReviewByOrderItemIdTheCurrentUser: builder.query({
       query: (orderItemId) => ({
-        url: `/v1/private/reviews/order-item/${orderItemId}`,
+        url: `/v1/private/reviews/order-items/${orderItemId}`,
         method: "GET",
       }),
       transformResponse: (response) => {
@@ -54,7 +54,7 @@ export const reviewApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useUpdateByUserMutation,
+  useUpdateReviewByUserMutation,
   useDeleteReviewByUserMutation,
   useCreateReviewByUserMutation,
   useGetReviewByOrderItemIdTheCurrentUserQuery,
